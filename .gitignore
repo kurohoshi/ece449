@@ -1,0 +1,14 @@
+ipch
+Debug
+Release
+*.golden
+*.sdf
+*.opensdf
+*.suo
+*.o
+*.tokens
+*.syntax
+*.netlist
+*.evl_output
+myevl.exe
+myevl
