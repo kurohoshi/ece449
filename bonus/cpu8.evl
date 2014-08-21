@@ -1,0 +1,460 @@
+// Copyright (c) 2008-2014 Illinois Institute of Technology
+//               All rights reserved.
+// Author:       Jia Wang, jwang@ece.iit,edu
+
+// Adopted for ECE 449
+
+// Basic circuit elements
+
+module decoder2to4(input [1:0] in, output [3:0] out, input en);
+   
+   wire [1:0] 	nn;
+   
+   not(nn[0], in[0]);
+   not(nn[1], in[1]);
+
+   and(out[0], nn[1], nn[0], en);
+   and(out[1], nn[1], in[0], en);
+   and(out[2], in[1], nn[0], en);
+   and(out[3], in[1], in[0], en);
+
+endmodule // decoder2to4
+
+
+module decoder3to8(input [2:0] in, output [7:0] out, input en);
+
+   wire 	nn2, en0, en1;
+   
+   not(nn2, in[2]);
+   and(en0, nn2, en);
+   and(en1, in[2], en);
+   
+   decoder2to4 d0(in[1:0], out[3:0], en0);
+   decoder2to4 d1(in[1:0], out[7:4], en1);
+
+endmodule // decoder3to8
+
+
+module decoder4to16(input [3:0] in, output [15:0] out, input en);
+
+   wire 	 nn3, en0, en1;
+   
+   not(nn3, in[3]);
+   and(en0, nn3, en);
+   and(en1, in[3], en);
+   
+   decoder3to8 d0(in[2:0], out[7:0], en0);
+   decoder3to8 d1(in[2:0], out[15:8], en1);
+
+endmodule // decoder4to16
+
+
+module tris_8(input [7:0] in, input sel, output [7:0] out);
+
+   tris(out[0], in[0], sel);
+   tris(out[1], in[1], sel);
+   tris(out[2], in[2], sel);
+   tris(out[3], in[3], sel);
+   tris(out[4], in[4], sel);
+   tris(out[5], in[5], sel);
+   tris(out[6], in[6], sel);
+   tris(out[7], in[7], sel);
+      
+endmodule // tris_8
+
+
+module dff_8(input [7:0] d, output [7:0] q);
+
+   wire clk; evl_clock(clk);
+
+   evl_dff(q[0], d[0], clk);
+   evl_dff(q[1], d[1], clk);
+   evl_dff(q[2], d[2], clk);
+   evl_dff(q[3], d[3], clk);
+   evl_dff(q[4], d[4], clk);
+   evl_dff(q[5], d[5], clk);
+   evl_dff(q[6], d[6], clk);
+   evl_dff(q[7], d[7], clk);
+   
+endmodule // dff_8
+
+
+module mux2to1(input in0, input in1, input sel, output out);
+
+   wire   nsel, n0, n1;
+
+   not(nsel, sel);
+
+   and(n0, nsel, in0);
+   and(n1, sel, in1);
+
+   or(out, n0, n1);
+   
+endmodule // mux2to1
+
+
+module mux2to1_8(input [7:0] in0, input [7:0] in1, input sel, output [7:0] out);
+
+   mux2to1 m0(in0[0], in1[0], sel, out[0]);
+   mux2to1 m1(in0[1], in1[1], sel, out[1]);
+   mux2to1 m2(in0[2], in1[2], sel, out[2]);
+   mux2to1 m3(in0[3], in1[3], sel, out[3]);
+   mux2to1 m4(in0[4], in1[4], sel, out[4]);
+   mux2to1 m5(in0[5], in1[5], sel, out[5]);
+   mux2to1 m6(in0[6], in1[6], sel, out[6]);
+   mux2to1 m7(in0[7], in1[7], sel, out[7]);
+   
+endmodule // mux2to1_8
+
+
+module memory_8(
+   output [7:0] port_a, input sel_a,
+   output [7:0] port_b, input sel_b,
+   input [7:0] port_s, input write_en);
+   
+   wire [7:0] 	dout, mux_out;
+   
+   mux2to1_8 m0(dout, port_s, write_en, mux_out);
+   
+   dff_8 d(mux_out, dout);
+   
+   tris_8 ta(dout, sel_a, port_a);
+   tris_8 tb(dout, sel_b, port_b);
+   
+endmodule // memory_8
+
+
+module memory16_8(
+   output [7:0] port_a, input [3:0] addr_a,
+   output [7:0] port_b, input [3:0] addr_b,
+   input [7:0] port_s, input [3:0] addr_s, input write_en);
+   
+   wire [15:0] 	sel_a, sel_b, sel_s;
+   wire t;
+   
+   evl_one(t);
+  
+   //Decoding address line
+   decoder4to16 da(addr_a, sel_a, t);
+   decoder4to16 db(addr_b, sel_b, t);
+   decoder4to16 ds(addr_s, sel_s, write_en);
+
+   memory_8 m0(port_a, sel_a[0], port_b, sel_b[0], port_s, sel_s[0]);
+   memory_8 m1(port_a, sel_a[1], port_b, sel_b[1], port_s, sel_s[1]);
+   memory_8 m2(port_a, sel_a[2], port_b, sel_b[2], port_s, sel_s[2]);
+   memory_8 m3(port_a, sel_a[3], port_b, sel_b[3], port_s, sel_s[3]);
+   memory_8 m4(port_a, sel_a[4], port_b, sel_b[4], port_s, sel_s[4]);
+   memory_8 m5(port_a, sel_a[5], port_b, sel_b[5], port_s, sel_s[5]);
+   memory_8 m6(port_a, sel_a[6], port_b, sel_b[6], port_s, sel_s[6]);
+   memory_8 m7(port_a, sel_a[7], port_b, sel_b[7], port_s, sel_s[7]);
+   memory_8 m8(port_a, sel_a[8], port_b, sel_b[8], port_s, sel_s[8]);
+   memory_8 m9(port_a, sel_a[9], port_b, sel_b[9], port_s, sel_s[9]);
+   memory_8 m10(port_a, sel_a[10], port_b, sel_b[10], port_s, sel_s[10]);
+   memory_8 m11(port_a, sel_a[11], port_b, sel_b[11], port_s, sel_s[11]);
+   memory_8 m12(port_a, sel_a[12], port_b, sel_b[12], port_s, sel_s[12]);
+   memory_8 m13(port_a, sel_a[13], port_b, sel_b[13], port_s, sel_s[13]);
+   memory_8 m14(port_a, sel_a[14], port_b, sel_b[14], port_s, sel_s[14]);
+   memory_8 m15(port_a, sel_a[15], port_b, sel_b[15], port_s, sel_s[15]);
+   
+endmodule // memory16_8
+
+
+// Logic module in ALU
+
+module and_8(output [7:0] s, input [7:0] a, input [7:0] b);
+   
+   and(s[0], a[0], b[0]);
+   and(s[1], a[1], b[1]);
+   and(s[2], a[2], b[2]);
+   and(s[3], a[3], b[3]);
+   and(s[4], a[4], b[4]);
+   and(s[5], a[5], b[5]);
+   and(s[6], a[6], b[6]);
+   and(s[7], a[7], b[7]);
+   
+endmodule // and_8
+
+
+module xnor_8(output [7:0] s, input [7:0] a, input [7:0] b);
+
+   wire [7:0] x;
+   
+   xor(x[0], a[0], b[0]);
+   xor(x[1], a[1], b[1]);
+   xor(x[2], a[2], b[2]);
+   xor(x[3], a[3], b[3]);
+   xor(x[4], a[4], b[4]);
+   xor(x[5], a[5], b[5]);
+   xor(x[6], a[6], b[6]);
+   xor(x[7], a[7], b[7]);
+   
+   not(s[0], x[0]);
+   not(s[1], x[1]);
+   not(s[2], x[2]);
+   not(s[3], x[3]);
+   not(s[4], x[4]);
+   not(s[5], x[5]);
+   not(s[6], x[6]);
+   not(s[7], x[7]);
+   
+endmodule // xnor_8
+
+
+// Adder in ALU
+
+module adder(output s, output co, input a, input b, input ci);
+   
+   wire   o0, o1, o2;
+   
+   xor(s, a, b, ci);
+   
+   or(o0, a, b);
+   or(o1, b, ci);
+   or(o2, ci, a);
+   and(co, o0, o1, o2);
+   
+endmodule // adder
+
+
+module adder_8(output [7:0] s, output co, output of,
+   input [7:0] a, input [7:0] b, input ci);
+
+   wire 	c1, c2, c3, c4, c5, c6, c7;
+
+   adder a0(s[0], c1, a[0], b[0], ci);
+   adder a1(s[1], c2, a[1], b[1], c1);
+   adder a2(s[2], c3, a[2], b[2], c2);
+   adder a3(s[3], c4, a[3], b[3], c3);
+   adder a4(s[4], c5, a[4], b[4], c4);
+   adder a5(s[5], c6, a[5], b[5], c5);
+   adder a6(s[6], c7, a[6], b[6], c6);
+   adder a7(s[7], co, a[7], b[7], c7);
+   
+   xor(of, co, c7);
+   
+endmodule // adder_8
+
+
+module addsub_8(output [7:0] s, output co, output of,
+   input [7:0] a, input [7:0] b, input sub);
+
+   wire [7:0] 	xb;
+   
+   xor x0(xb[0], b[0], sub);
+   xor x1(xb[1], b[1], sub);
+   xor x2(xb[2], b[2], sub);
+   xor x3(xb[3], b[3], sub);
+   xor x4(xb[4], b[4], sub);
+   xor x5(xb[5], b[5], sub);
+   xor x6(xb[6], b[6], sub);
+   xor x7(xb[7], b[7], sub);
+   
+   adder_8 myadder(s, co, of, a, xb, sub);
+
+endmodule // addsub_8
+
+
+// for PC
+module inc_8(output [7:0] s, input [7:0] a);
+
+   wire 	co, c1, c2, c3, c4, c5, c6, c7;
+   
+   wire t, f;
+   
+   evl_one(t);
+   evl_zero(f);
+
+   adder a0(s[0], c1, a[0], f, t);
+   adder a1(s[1], c2, a[1], f, c1);
+   adder a2(s[2], c3, a[2], f, c2);
+   adder a3(s[3], c4, a[3], f, c3);
+   adder a4(s[4], c5, a[4], f, c4);
+   adder a5(s[5], c6, a[5], f, c5);
+   adder a6(s[6], c7, a[6], f, c6);
+   adder a7(s[7], co, a[7], f, c7);
+
+endmodule // inc_8
+
+
+// Shifter in ALU
+
+module shift_left_logic_8(output [7:0] s, input [7:0] a, input [7:0] b);
+   
+   wire [7:0] m1, m2, m4;
+   wire [7:0] s1, s2;
+   
+   evl_zero(m1[0]); assign m1[7:1]=a[6:0];
+   mux2to1_8 mux1(a, m1, b[0], s1);
+   
+   evl_zero(m2[1:0]); assign m2[7:2]=s1[5:0];
+   mux2to1_8 mux2(s1, m2, b[1], s2);
+
+   evl_zero(m4[3:0]); assign m4[7:4]=s2[3:0];
+   mux2to1_8 mux4(s2, m4, b[2], s);
+
+endmodule // shift_left_logic_8
+   
+
+module shift_right_logic_8(output [7:0] s, input [7:0] a, input [7:0] b);
+   
+   wire [7:0] m1, m2, m4;
+   wire [7:0] s1, s2;
+   
+   evl_zero(m1[7]); assign m1[6:0]=a[7:1];
+   mux2to1_8 mux1(a, m1, b[0], s1);
+   
+   evl_zero(m2[7:6]); assign m2[5:0]=s1[7:2];
+   mux2to1_8 mux2(s1, m2, b[1], s2);
+
+   evl_zero(m4[7:4]); assign m4[3:0]=s2[7:4];
+   mux2to1_8 mux4(s2, m4, b[2], s);
+
+endmodule // shift_right_logic_8
+
+
+// ALU
+
+module alu_8(output [7:0] s, input [7:0] a, input [7:0] b, input [2:0] op);
+
+   wire 	co, of;
+   wire [7:0] 	sand, sxnor, saddsub, ssl, ssr;
+   
+   shift_left_logic_8 mysll(ssl, a, b);
+   shift_right_logic_8 mysrl(ssr, a, b);
+   addsub_8 myadder(saddsub, co, of, a, b, op[0]);
+   and_8 myand(sand, a, b);
+   xnor_8 myxnor(sxnor, a, b);
+   
+   wire [7:0] 	s00, s01, s10, s11, s0, s1;
+   
+   mux2to1_8 mux00(ssl, ssr, op[0], s00);
+   mux2to1_8 mux10(sand, sxnor, op[0], s10);
+
+   mux2to1_8 mux0(s00, saddsub, op[1], s0);
+
+   mux2to1_8 muxs(s0, s10, op[2], s);
+
+endmodule // alu_8
+
+
+// PC: program conuter
+
+module PC(output [7:0] pc, input [7:0] branch_pc, input branch_en, input stop_en, output [7:0] next_pc);
+   
+   wire [7:0] 	inc_pc, temp_pc;
+   wire 	ci;
+   
+   dff_8 d(next_pc, pc);
+
+   inc_8 myinc(inc_pc, pc);
+   
+   mux2to1_8 mux0(inc_pc, branch_pc, branch_en, temp_pc);
+   mux2to1_8 mux1(temp_pc, pc, stop_en, next_pc);
+
+endmodule // PC
+
+
+module control(input [15:0] code,
+   output write_en, output [3:0] addr_s,
+   output [3:0] addr_a, output [3:0] addr_b,
+   output [2:0] alu_op,
+   output jz_en, output jnz_en, output [7:0] branch_pc,
+   output imm_en, output [7:0] imm, output stop_en);
+
+   wire 	n15, n14, n13, n12;
+
+   // ADD/SUB/SLL1/SLR1/AND/XNOR
+   //   code: "0 alu_op[2:0] regs rega regb"
+   //   signals: write_en
+   
+   // LOADI
+   //   code: "1010 regs imm[7:0]"
+   //   signals: write_en, imm_en
+
+   // JZ
+   //   code: "1000 pc[7:4] rega pc[3:0]"
+   //   signals: jz_en
+
+   // JNZ
+   //   code: "1001 pc[7:4] rega pc[3:0]"
+   //   signals: jnz_en
+
+   // STOP
+   //   code: "1111 xxxx xxxx xxxx"
+   //   signals: stop_en
+   
+   assign alu_op = code[14:12];
+   assign addr_s = code[11:8];
+   assign addr_a = code[7:4];
+   assign addr_b = code[3:0];
+   
+   assign imm = code[7:0];
+   
+   assign branch_pc[3:0] = code[3:0];
+   assign branch_pc[7:4] = code[11:8];
+   
+   not(n15, code[15]);
+   not(n14, code[14]);
+   not(n13, code[13]);
+   not(n12, code[12]);
+
+   and(stop_en, code[15], code[14], code[13], code[12]);
+
+   and(imm_en, code[15], n14, code[13], n12);
+   
+   or(write_en, imm_en, n15);
+
+   and(jz_en, code[15], n14, n13, n12);
+
+   and(jnz_en, code[15], n14, n13, code[12]);
+
+endmodule // control
+
+
+// CPU
+
+module cpu8(output [7:0] pc, output [7:0] mem_s, input [15:0] code,
+   output write_en, output imm_en,output branch_en, output [7:0] next_pc);
+
+   wire [7:0] 	 a, b, alu_s, imm_ext;
+   wire 	 a_nz, a_z, bz, bnz, stop_en, jz_en, jnz_en;
+   wire [7:0] 	 imm, branch_pc;
+   wire [3:0] 	 addr_a, addr_b, addr_s;
+   wire [2:0] 	 alu_op;
+   
+   PC mypc(pc, branch_pc, branch_en, stop_en, next_pc);
+   
+   control myctl(code, write_en, addr_s, addr_a, addr_b, alu_op,
+		 jz_en, jnz_en, branch_pc, imm_en, imm, stop_en);
+   
+   alu_8 myalu(alu_s, a, b, alu_op);
+   
+   memory16_8 myram(a, addr_a, b, addr_b, mem_s, addr_s, write_en);
+   
+   // Branch logic
+   or(a_nz, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
+   not(a_z, a_nz);
+   and(bz, a_z, jz_en);
+   and(bnz, a_nz, jnz_en);
+   or(branch_en, bz, bnz);
+
+   // Choose output
+   mux2to1_8 alu_out(alu_s, imm, imm_en, mem_s);
+   
+endmodule // cpu
+
+
+module stimulus;
+   
+   wire [7:0] pc, next_pc;
+   wire [7:0] mem_s;   
+   wire [15:0] code;
+   wire        write_en, imm_en, branch_en;
+   
+   cpu8 mycpu(pc, mem_s, code, write_en, imm_en, branch_en, next_pc);
+
+   evl_lut program(code, pc);
+   
+   evl_output sim_out(pc, next_pc, code, mem_s, write_en, imm_en, branch_en);
+
+endmodule // stimulus

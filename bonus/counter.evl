@@ -1,0 +1,110 @@
+// 16-bit counter with set
+
+module mux_2to1(output out, input in0, input in1, input sel);
+
+  wire nsel, in0_sel, in1_sel;
+
+  not(nsel, sel);
+  and(in0_sel, in0, nsel);
+  and(in1_sel, in1, sel);
+  or(out, in0_sel, in1_sel);
+
+endmodule
+
+module mux_2to1_16(output [15:0] out, input [15:0] in0, input [15:0] in1, input sel);
+
+  mux_2to1 mux0(out[0], in0[0], in1[0], sel);
+  mux_2to1 mux1(out[1], in0[1], in1[1], sel);
+  mux_2to1 mux2(out[2], in0[2], in1[2], sel);
+  mux_2to1 mux3(out[3], in0[3], in1[3], sel);
+  mux_2to1 mux4(out[4], in0[4], in1[4], sel);
+  mux_2to1 mux5(out[5], in0[5], in1[5], sel);
+  mux_2to1 mux6(out[6], in0[6], in1[6], sel);
+  mux_2to1 mux7(out[7], in0[7], in1[7], sel);
+  mux_2to1 mux8(out[8], in0[8], in1[8], sel);
+  mux_2to1 mux9(out[9], in0[9], in1[9], sel);
+  mux_2to1 mux10(out[10], in0[10], in1[10], sel);
+  mux_2to1 mux11(out[11], in0[11], in1[11], sel);
+  mux_2to1 mux12(out[12], in0[12], in1[12], sel);
+  mux_2to1 mux13(out[13], in0[13], in1[13], sel);
+  mux_2to1 mux14(out[14], in0[14], in1[14], sel);
+  mux_2to1 mux15(out[15], in0[15], in1[15], sel);
+
+endmodule
+
+module counter;
+
+  // input/output
+
+  wire [15:0] a, in, s, mux_o;
+  wire set;
+
+  evl_input sim_in(set, in);
+  evl_output sim_out(a, s, in, set, mux_o);
+  
+  // states
+  wire clk;
+  evl_clock(clk);
+
+  evl_dff(a[0], mux_o[0], clk);
+  evl_dff(a[1], mux_o[1], clk);
+  evl_dff(a[2], mux_o[2], clk);
+  evl_dff(a[3], mux_o[3], clk);
+  evl_dff(a[4], mux_o[4], clk);
+  evl_dff(a[5], mux_o[5], clk);
+  evl_dff(a[6], mux_o[6], clk);
+  evl_dff(a[7], mux_o[7], clk);
+  evl_dff(a[8], mux_o[8], clk);
+  evl_dff(a[9], mux_o[9], clk);
+  evl_dff(a[10], mux_o[10], clk);
+  evl_dff(a[11], mux_o[11], clk);
+  evl_dff(a[12], mux_o[12], clk);
+  evl_dff(a[13], mux_o[13], clk);
+  evl_dff(a[14], mux_o[14], clk);
+  evl_dff(a[15], mux_o[15], clk);
+       
+  // compute s=a+1
+  
+  wire [16:0] ci;
+  
+  evl_one(ci[0]);
+  
+  xor(s[0], a[0], ci[0]);
+  xor(s[1], a[1], ci[1]);
+  xor(s[2], a[2], ci[2]);
+  xor(s[3], a[3], ci[3]);
+  xor(s[4], a[4], ci[4]);
+  xor(s[5], a[5], ci[5]);
+  xor(s[6], a[6], ci[6]);
+  xor(s[7], a[7], ci[7]);
+  xor(s[8], a[8], ci[8]);
+  xor(s[9], a[9], ci[9]);
+  xor(s[10], a[10], ci[10]);
+  xor(s[11], a[11], ci[11]);
+  xor(s[12], a[12], ci[12]);
+  xor(s[13], a[13], ci[13]);
+  xor(s[14], a[14], ci[14]);
+  xor(s[15], a[15], ci[15]);
+
+  and(ci[1], a[0], ci[0]);
+  and(ci[2], a[1], ci[1]);
+  and(ci[3], a[2], ci[2]);
+  and(ci[4], a[3], ci[3]);
+  and(ci[5], a[4], ci[4]);
+  and(ci[6], a[5], ci[5]);
+  and(ci[7], a[6], ci[6]);
+  and(ci[8], a[7], ci[7]);
+  and(ci[9], a[8], ci[8]);
+  and(ci[10], a[9], ci[9]);
+  and(ci[11], a[10], ci[10]);
+  and(ci[12], a[11], ci[11]);
+  and(ci[13], a[12], ci[12]);
+  and(ci[14], a[13], ci[13]);
+  and(ci[15], a[14], ci[14]);
+  and(ci[16], a[15], ci[15]);
+    
+  // choose between s and in using set
+
+  mux_2to1_16 mux(mux_o, s, in, set);
+    
+endmodule // counter

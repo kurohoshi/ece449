@@ -1,0 +1,102 @@
+// test adder by using random numbers
+
+module lfsr10(output [9:0] r, input clk);
+
+  wire [9:0] s;
+  wire nx, x;
+
+  assign r = s;
+  
+  evl_dff(s[0], x, clk);
+  evl_dff(s[1], s[0], clk);
+  evl_dff(s[2], s[1], clk);
+  evl_dff(s[3], s[2], clk);
+  evl_dff(s[4], s[3], clk);
+  evl_dff(s[5], s[4], clk);
+  evl_dff(s[6], s[5], clk);
+  evl_dff(s[7], s[6], clk);
+  evl_dff(s[8], s[7], clk);
+  evl_dff(s[9], s[8], clk);
+  
+  xor(nx, s[9], s[6]);
+  not(x, nx);
+  
+endmodule
+
+module full_adder(output s, output co, input a, input b, input ci);
+
+  wire ab, bc, ca;
+
+  xor(s, a, b, ci);
+
+  and(ab, a, b);
+  and(bc, b, ci);
+  and(ca, ci, a);
+
+  or(co, ab, bc, ca);
+
+endmodule
+
+module adder10(output [9:0] s, output co, input [9:0] a, input [9:0] b, input ci);
+
+  wire [10:0] c;
+
+  assign c[0] = ci;
+  assign co = c[10];
+
+  full_adder a0(s[0], c[1], a[0], b[0], c[0]);
+  full_adder a1(s[1], c[2], a[1], b[1], c[1]);
+  full_adder a2(s[2], c[3], a[2], b[2], c[2]);
+  full_adder a3(s[3], c[4], a[3], b[3], c[3]);
+  full_adder a4(s[4], c[5], a[4], b[4], c[4]);
+  full_adder a5(s[5], c[6], a[5], b[5], c[5]);
+  full_adder a6(s[6], c[7], a[6], b[6], c[6]);
+  full_adder a7(s[7], c[8], a[7], b[7], c[7]);
+  full_adder a8(s[8], c[9], a[8], b[8], c[8]);
+  full_adder a9(s[9], c[10], a[9], b[9], c[9]);
+
+endmodule
+
+module test;
+
+  // driver
+  wire clk;
+  wire [9:0] a, b;
+
+  evl_clock(clk);
+  lfsr10 r_a(a, clk);
+  lfsr10 r_b(b, clk);
+
+  // dut
+  wire [10:0] s;
+  wire zz;
+  evl_zero(zz);
+  adder10 dut(s[9:0], s[10], a, b, zz);
+
+  // golden
+  wire [10:0] s_g;
+  evl_zero(s_g[0]);
+  lfsr10 r_g(s_g[10:1], clk);
+
+  // test
+  wire [10:0] eq;
+  xnor(eq[0], s[0], s_g[0]);
+  xnor(eq[1], s[1], s_g[1]);
+  xnor(eq[2], s[2], s_g[2]);
+  xnor(eq[3], s[3], s_g[3]);
+  xnor(eq[4], s[4], s_g[4]);
+  xnor(eq[5], s[5], s_g[5]);
+  xnor(eq[6], s[6], s_g[6]);
+  xnor(eq[7], s[7], s_g[7]);
+  xnor(eq[8], s[8], s_g[8]);
+  xnor(eq[9], s[9], s_g[9]);
+  xnor(eq[10], s[10], s_g[10]);
+
+  wire all_eq;
+  and(all_eq, eq[0], eq[1], eq[2], eq[3], eq[4],
+    eq[5], eq[6], eq[7], eq[8], eq[9], eq[10]);
+
+  // output
+  evl_output test_out(a, b, s, s_g, all_eq);
+
+endmodule
