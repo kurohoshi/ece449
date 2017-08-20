@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     }
 
     std::string output_file_name = std::string(argv[1])+".tokens";
-    std::ofstream output_file(output_file_name.c_str());
+    std::ofstream output_file(output_file_name);
     if (!output_file)
     {
         std::cerr << "I can't write " << argv[1] << ".tokens ." << std::endl;
