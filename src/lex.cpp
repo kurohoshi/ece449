@@ -37,6 +37,10 @@ int main(int argc, char *argv[])
         //iterate through each character of the line
         for (size_t i = 0; i < line.size();)
         {
+            //print current character to be processed
+            //std::cout << line[i] << std::endl;
+
+            //std::cout << "checking comments" << std::endl;
             // comments
             if (line[i] == '/')
             {
@@ -50,6 +54,7 @@ int main(int argc, char *argv[])
                 break; // skip the rest of the line by exiting the loop
             }
 
+            //std::cout << "checking whitespaces" << std::endl;
             // spaces
             if ((line[i] == ' ') || (line[i] == '\t')
                 || (line[i] == '\r') || (line[i] == '\n'))
@@ -58,6 +63,7 @@ int main(int argc, char *argv[])
                 continue; // skip the rest of the iteration
             }
 
+            //std::cout << "checking singles" << std::endl;
             // SINGLE
             if ((line[i] == '(') || (line[i] == ')')
                 || (line[i] == '[') || (line[i] == ']')
@@ -69,6 +75,7 @@ int main(int argc, char *argv[])
                 continue; // skip the rest of the iteration
             }
 
+            //std::cout << "checking name" << std::endl;
             // NAME
             if (((line[i] >= 'a') && (line[i] <= 'z'))       // a to z
                 || ((line[i] >= 'A') && (line[i] <= 'Z'))    // A to Z
@@ -87,8 +94,10 @@ int main(int argc, char *argv[])
                 }
                 output_file << "NAME "
                     << line.substr(name_begin, i-name_begin) << std::endl;
+                continue;
             }
 
+            //std::cout << "checking number" << std::endl;
             //NUMBER
             if((line[i] >= '0') && (line[i] <= '9'))
             {
@@ -117,6 +126,7 @@ int main(int argc, char *argv[])
                 }
                 output_file << "NUMBER "
                     << line.substr(num_begin, i-num_begin) << std::endl;
+                continue;
             }
 
             else
