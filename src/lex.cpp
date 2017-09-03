@@ -110,13 +110,13 @@ int main(int argc, char *argv[])
                     {
                         //throw error for not a number
                         std::cerr << "LINE " << line_no
-                            << ": INVALID NUMBER" << std::end1;
+                            << ": INVALID NUMBER" << std::endl;
                         return -1;
                     }
                     continue; //continue to check next character in number string
                 }
                 output_file << "NUMBER "
-                    << line.substr(num_begin, i-num_begin) << std::end1;
+                    << line.substr(num_begin, i-num_begin) << std::endl;
             }
 
             else
