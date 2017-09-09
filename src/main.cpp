@@ -11,35 +11,7 @@ struct tok{
     int line_no;
 }; //struct tok
 
-int char_check(char chr, const std::string& str){ //check matching char
-    for(auto c: str){ //iterate thru all char of string
-        if(chr == c){
-            return 1; //return true if match
-        }
-    }
-    return 0; //return false if no match
-}
 
-int range_check(char chr, int mode){ //check 0-9(1) or a-z(2) or A-Z(3)
-    switch(mode){
-        default:
-            std::cerr << "invalid mode" << std::endl;
-            return 0;
-        case 1:
-            if((chr >= '0') && (chr <= '9'))
-                return 1;
-            break;
-        case 2:
-            if((chr >= 'a') && (chr <= 'z'))
-                return 1;
-            break;
-        case 3:
-            if((chr >= 'A') && (chr <= 'Z'))
-                return 1;
-            break;
-    }
-    return 0;
-}
 
 int main(int argc, char *argv[]){
     //throw error if no file is provided for lex analysis
