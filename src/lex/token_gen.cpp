@@ -1,3 +1,7 @@
+#include <string>
+
+#include "token_gen.hpp"
+
 std::string SPACE_CHAR = " \t\r\n";
 std::string SINGLE_CHAR = "()[]:;,";
 
