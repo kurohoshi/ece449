@@ -4,8 +4,8 @@
 
 #include "evl_token.hpp"
 
-#include "../lex/token_gen.hpp"
-#include "../lex/store_token.hpp"
+#include "token_gen.hpp"
+#include "store_token.hpp"
 
 int main(int argc, char *argv[]){
     //throw error if no file is provided for lex analysis
