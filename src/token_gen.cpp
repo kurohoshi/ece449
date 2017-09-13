@@ -13,8 +13,11 @@ char[8] SINGLE_CHAR = "()[]:;,";
 bool extract_tokens_from_line(std::string line, int line_no,
     std::vector<evl_token> &tokens) { // use reference to modify it
 
+    char SPACE_CHAR[] = " \t\r\n";
+    char SINGLE_CHAR[] = "()[]:;,";
+
     for (size_t i = 0; i < line.size();) {
-        if (line[i] == '/') { //comments
+        if (line[i] == '/') { //comments`
             ++i;
             if ((i == line.size()) || (line[i] == '/')) {
                 std::cerr << "LINE " << line_no
