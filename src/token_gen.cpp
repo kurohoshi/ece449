@@ -1,4 +1,7 @@
+#include <iostream>
+#include <fstream>
 #include <string>
+#include <vector>
 
 #include "evl_token.h"
 #include "token_gen.h"
