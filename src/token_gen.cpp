@@ -25,7 +25,7 @@ bool extract_tokens_from_line(std::string line, int line_no,
         } else if (strchr(SPACE_CHAR, line[i])) { //spaces
             ++i; // skip this space character
             continue;
-        } else if (strchr(SINGLE_CHAR, line[i]) { //SINGLES
+        } else if (strchr(SINGLE_CHAR, line[i])) { //SINGLES
             evl_token token;
             token.line_no = line_no;
             token.type = evl_token::SINGLE;
