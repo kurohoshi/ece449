@@ -7,8 +7,8 @@
 #include "evl_token.h"
 #include "token_gen.h"
 
-std::string SPACE_CHAR = " \t\r\n";
-std::string SINGLE_CHAR = "()[]:;,";
+char[8] SPACE_CHAR = " \t\r\n";
+char[8] SINGLE_CHAR = "()[]:;,";
 
 bool extract_tokens_from_line(std::string line, int line_no,
     std::vector<evl_token> &tokens) { // use reference to modify it
