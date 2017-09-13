@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <vector>
 
 #include "evl_token.h"
@@ -13,7 +14,7 @@ bool extract_tokens_from_line(std::string line, int line_no,
     std::vector<evl_token> &tokens) { // use reference to modify it
 
     for (size_t i = 0; i < line.size();) {
-        if (line[i] == "/")) { //comments
+        if (line[i] == '/') { //comments
             ++i;
             if ((i == line.size()) || (line[i] == '/')) {
                 std::cerr << "LINE " << line_no
