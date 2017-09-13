@@ -2,7 +2,8 @@
 #include <fstream>
 #include <string>
 
-#include "store_token.hpp"
+#include "evl_token.h"
+#include "store_token.h"
 
 void display_tokens(std::ostream &out, const std::vector<evl_token> &tokens) {
     for (size_t i = 0; i < tokens.size(); ++i) {

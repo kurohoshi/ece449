@@ -1,6 +1,7 @@
 #include <string>
 
-#include "token_gen.hpp"
+#include "evl_token.h"
+#include "token_gen.h"
 
 std::string SPACE_CHAR = " \t\r\n";
 std::string SINGLE_CHAR = "()[]:;,";

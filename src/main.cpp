@@ -2,10 +2,10 @@
 #include <fstream>
 #include <string>
 
-#include "evl_token.hpp"
+#include "evl_token.h"
 
-#include "token_gen.hpp"
-#include "store_token.hpp"
+#include "token_gen.h"
+#include "store_token.h"
 
 int main(int argc, char *argv[]){
     //throw error if no file is provided for lex analysis
