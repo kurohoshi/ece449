@@ -32,7 +32,7 @@ bool extract_tokens_from_line(std::string line, int line_no,
             token.str = std::string(1, line[i]);
             tokens.push_back(token);
             continue;
-        } else if (isalpha(line[i]) || (line[i] == ’_’)) {
+        } else if (isalpha(line[i]) || (line[i] == '_')) {
             size_t name_begin = i;
             for (++i; i < line.size(); ++i) {
                 if (!(isalpha(line[i]) || isdigit(line[i]) ||
