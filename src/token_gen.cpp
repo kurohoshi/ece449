@@ -31,9 +31,9 @@ bool extract_tokens_from_line(std::string line, int line_no,
     std::vector<evl_token> &tokens) { // use reference to modify it
 
     for (size_t i = 0; i < line.size();) {
-        if (char_check(line[i], "/")) { //comments
+        if (line[i] == "/")) { //comments
             ++i;
-            if ((i == line.size()) || char_check(line[i], "/")) {
+            if ((i == line.size()) || (line[i] == "/")) {
                 std::cerr << "LINE " << line_no
                     << ": a single / is not allowed" << std::endl;
                 return false;
