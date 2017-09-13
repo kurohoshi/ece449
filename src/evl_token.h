@@ -1,6 +1,8 @@
 #ifndef EVL_TOKEN
 #define EVL_TOKEN
 
+#include <string>
+
 struct evl_token{
     enum token_type {NAME, NUMBER, SINGLE};
 
