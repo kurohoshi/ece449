@@ -36,7 +36,7 @@ bool extract_tokens_from_line(std::string line, int line_no,
             size_t name_begin = i;
             for (++i; i < line.size(); ++i) {
                 if (!(isalpha(line[i]) || isdigit(line[i]) ||
-                    (line[i] == '_') || (line[i] == '$')) {
+                    (line[i] == '_') || (line[i] == '$'))) {
                     break; // [name_begin, i) is the range for the token
                 }
             }
