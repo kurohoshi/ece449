@@ -23,7 +23,7 @@ bool store_tokens_to_file(std::string file_name,
     std::ofstream output_file(file_name.c_str());
 
     if (!output_file){
-        std::cerr << "I can't write " << argv[1] << ".tokens ." << std::endl;
+        std::cerr << "I can't write " << file_name << ".tokens ." << std::endl;
         return -1;
     }
 
