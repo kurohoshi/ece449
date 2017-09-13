@@ -49,7 +49,7 @@ bool extract_tokens_from_line(std::string line, int line_no,
         } else if(isdigit(line[i])) { //NUMBER
             size_t num_begin = i;
             for(++i; i < line.size(); ++i) {
-                if(strchr(SPACE_CHAR+SINGLE_CHAR, line[i])){
+                if(strchr(std::string(SPACE_CHAR) + std::string(SINGLE_CHAR), line[i])){
                     break; //break if whitespace/single token type encountered
                 }
                 if(!(isdigit(line[i]))) {
