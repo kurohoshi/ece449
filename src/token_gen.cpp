@@ -15,7 +15,7 @@ bool extract_tokens_from_line(std::string line, int line_no,
     for (size_t i = 0; i < line.size();) {
         if (line[i] == "/")) { //comments
             ++i;
-            if ((i == line.size()) || (line[i] == "/")) {
+            if ((i == line.size()) || (line[i] == '/')) {
                 std::cerr << "LINE " << line_no
                     << ": a single / is not allowed" << std::endl;
                 return false;
@@ -35,7 +35,7 @@ bool extract_tokens_from_line(std::string line, int line_no,
             size_t name_begin = i;
             for (++i; i < line.size(); ++i) {
                 if (!(isalpha(line[i]) || isdigit(line[i]) ||
-                    (line[i] == "_") || (line[i] == "$")) {
+                    (line[i] == '_') || (line[i] == '$')) {
                     break; // [name_begin, i) is the range for the token
                 }
             }
