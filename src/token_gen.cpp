@@ -16,7 +16,7 @@ bool extract_tokens_from_line(std::string line, int line_no,
     for (size_t i = 0; i < line.size();) {
         if (line[i] == '/') { //comments`
             ++i;
-            if ((i == line.size()) || (line[i] == '/')) {
+            if ((i == line.size()) || (line[i] != '/')) {
                 std::cerr << "LINE " << line_no
                     << ": a single / is not allowed" << std::endl;
                 return false;
@@ -31,6 +31,7 @@ bool extract_tokens_from_line(std::string line, int line_no,
             token.type = evl_token::SINGLE;
             token.str = std::string(1, line[i]);
             tokens.push_back(token);
+            ++i;
             continue;
         } else if (isalpha(line[i]) || (line[i] == '_')) {
             size_t name_begin = i;
