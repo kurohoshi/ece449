@@ -5,7 +5,7 @@
 
 #include "evl_token.h"
 
-#include "token_gen.h"
+#include "lex.h"
 #include "store_token.h"
 
 int main(int argc, char *argv[]){

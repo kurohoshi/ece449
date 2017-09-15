@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "evl_token.h"
-#include "token_gen.h"
+#include "lex.h"
 
 bool extract_tokens_from_line(std::string line, int line_no,
     std::vector<evl_token> &tokens) { // use reference to modify it
