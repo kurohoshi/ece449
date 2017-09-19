@@ -1,0 +1,12 @@
+// a test case checking for wires with no names
+module top;
+
+   wire ;
+
+   evl_clock(clk);
+
+   evl_dff(s0, s1, clk);
+
+   not(s1, s0);
+
+endmodule
