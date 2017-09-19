@@ -1,5 +1,5 @@
-#ifndef TOKEN_GEN
-#define TOKEN_GEN
+#ifndef LEX
+#define LEX
 
 #include <string>
 #include <vector>
