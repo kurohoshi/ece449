@@ -1,7 +1,9 @@
 #include <string>
 #include <vector>
 
-void syntax() {
+#include "syn.h"
+
+void token_syntax() {
     //check module, then wires/components, then endmodule
     //check module and endmodule first, then wires/components
     //if(/*check if module and endmodule exists*/){
@@ -31,10 +33,10 @@ void syntax() {
     */
 }
 
-void comp_syntax() {
+void get_Wires() {
 
 }
 
-void wire_syntax() {
+void get_Name() {
 
 }

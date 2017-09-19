@@ -1,0 +1,49 @@
+syntax_Checking
+
+bool
+syntax_Checking()
+> If NAME == module
+    > If NAME
+        > If SINGLE == ";"
+            > continue
+        > else
+            > "Syntax Error: expecting ";""
+    > else
+        > "Syntax Error: No defined module name"
+
+    > For(next_token;token->str != "endmodule" && !(end_of_vector);next_token)
+        > If NAME == "wire" // DO WIRE THINGS
+            > get_Wires()
+        > else If NAME != endmodule
+            > get_Components()
+        > else
+            > "Syntax Error: no wires or components detected"
+
+    > If token->str == endmodule
+        > return true
+    > else
+        > "Syntax Error: expecting endmodule"
+> else
+    > "Syntax Error: No module defined"
+
+bool
+get_Wires()
+    > set wire.width = 1
+
+    > If SINGLE == "["
+        > set wire.width (NUMBER, SINGLE, NUMBER, SINGLE)
+
+    > If NAME
+        > return get_Name()
+    > else
+        > "Syntax Error: No defined wire name"
+
+bool
+get_Name()
+    > set wire.name
+    > If SINGLE == ","
+        > get_Name()
+    > else If SINGLE == ";"
+        > return true
+    > else
+        > "Syntax Error: Illegal syntax"
