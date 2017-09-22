@@ -1,11 +1,11 @@
 #ifndef SYN
 #define SYN
 
-#include
-#include
+#include "structs.h"
 
-#include "evl_token.h"
-
-bool check_syntax_of_tokens();
+bool group_tokens_into_statements(
+    evl_statements &statements,
+    evl_tokens &tokens
+);
 
 #endif

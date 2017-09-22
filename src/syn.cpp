@@ -1,7 +1,14 @@
 #include <string>
-#include <vector>
+#include <list>
 
-void syntax() {
+#include "structs.h"
+#include "syn.h"
+
+bool check_syntax_of_tokens(
+    evl_statements &statements,
+    evl_tokens &tokens) {
+
+    return true;
     //check module, then wires/components, then endmodule
     //check module and endmodule first, then wires/components
     //if(/*check if module and endmodule exists*/){
@@ -31,10 +38,10 @@ void syntax() {
     */
 }
 
-void comp_syntax() {
-
+bool get_Wires() {
+    return true;
 }
 
-void wire_syntax() {
-
+bool get_Name() {
+    return true;
 }
