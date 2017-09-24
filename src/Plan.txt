@@ -46,4 +46,8 @@ get_Name()
     > else If SINGLE == ";"
         > return true
     > else
+<<<<<<< HEAD
         > "Syntax Error: Illegal syntax"
+=======
+        > "Syntax Error: Illegal syntax"
+>>>>>>> 619598614f2c689aa08fbbece8f188d02dce4a2f

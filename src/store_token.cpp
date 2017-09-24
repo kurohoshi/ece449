@@ -2,25 +2,36 @@
 #include <fstream>
 #include <string>
 #include <cstring>
-#include <vector>
+#include <list>
 
-#include "evl_token.h"
+#include "structs.h"
 #include "store_token.h"
 
-void display_tokens(std::ostream &out, const std::vector<evl_token> &tokens) {
-    for (size_t i = 0; i < tokens.size(); ++i) {
-        if (tokens[i].type == evl_token::SINGLE) {
-            out << "SINGLE " << tokens[i].str << std::endl;
-        } else if (tokens[i].type == evl_token::NAME) {
-            out << "NAME " << tokens[i].str << std::endl;
+void display_tokens(
+    std::ostream &out,
+    const evl_tokens &tokens) {
+
+    for (evl_tokens::iterator i = tokens.begin(); i != tokens.end(); ++i) {
+        if (*i == evl_token::SINGLE) {
+            out << "SINGLE " << *i << std::endl;
+        } else if (*i.type == evl_token::NAME) {
+            out << "NAME " << *i << std::endl;
         } else { // must be NUMBER
-            out << "NUMBER " << tokens[i].str << std::endl;
+            out << "NUMBER " << *i << std::endl;
         }
     }
 }
 
-bool store_tokens_to_file(std::string file_name,
-    const std::vector<evl_token> &tokens) {
+void display_statements(
+    std::ostream &out,
+    const evl_statements &statements) {
+
+}
+
+bool store_tokens_to_file(
+    std::string file_name,
+    const evl_tokens &tokens) {
+
     std::ofstream output_file(file_name.c_str());
 
     if (!output_file){

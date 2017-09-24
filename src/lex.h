@@ -2,11 +2,13 @@
 #define LEX
 
 #include <string>
-#include <vector>
+#include <list>
 
-#include "evl_token.h"
+#include "structs.h"
 
-bool extract_tokens_from_file(std::string file_name,
-    std::vector<evl_token> &tokens);
+bool extract_tokens_from_file(
+    std::string file_name,
+    evl_tokens &tokens
+);
 
 #endif

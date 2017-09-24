@@ -1,9 +1,20 @@
 #include <string>
-#include <vector>
+#include <list>
 
+<<<<<<< HEAD
 #include "syn.h"
 
 void token_syntax() {
+=======
+#include "structs.h"
+#include "syn.h"
+
+bool check_syntax_of_tokens(
+    evl_statements &statements,
+    evl_tokens &tokens) {
+
+    return true;
+>>>>>>> 619598614f2c689aa08fbbece8f188d02dce4a2f
     //check module, then wires/components, then endmodule
     //check module and endmodule first, then wires/components
     //if(/*check if module and endmodule exists*/){
@@ -33,10 +44,19 @@ void token_syntax() {
     */
 }
 
+<<<<<<< HEAD
 void get_Wires() {
 
 }
 
 void get_Name() {
 
+=======
+bool get_Wires() {
+    return true;
+}
+
+bool get_Name() {
+    return true;
+>>>>>>> 619598614f2c689aa08fbbece8f188d02dce4a2f
 }

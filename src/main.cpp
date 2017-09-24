@@ -1,28 +1,36 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
+#include <list>
 
-#include "evl_token.h"
+#include "structs.h"
 
 #include "lex.h"
+#include "syn.h"
 #include "store_token.h"
 
 int main(int argc, char *argv[]){
     //throw error if no file is provided for lex analysis
-    if (argc < 2){
+    if (argc < 2) {
         std::cerr << "You should provide a file name." << std::endl;
         return -1;
     }
 
     std::string evl_file = argv[1];
-    std::vector<evl_token> tokens;
+    evl_tokens tokens;
     if (!extract_tokens_from_file(evl_file, tokens)) {
         return -1;
     }
-    display_tokens(std::cout, tokens); // why we need it?
+    display_tokens(std::cout, tokens); //look at the output of the tokens
     if (!store_tokens_to_file(evl_file+".tokens", tokens)) {
         return -1;
     }
+
+    evl_statements statements;
+    if(!group_tokens_into_statements(statements, tokens)) {
+        return -1;
+    }
+    display_statements(std::cout, statements);
+
     return 0;
 }

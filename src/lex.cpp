@@ -2,13 +2,13 @@
 #include <fstream>
 #include <string>
 #include <cstring>
-#include <vector>
+#include <list>
 
-#include "evl_token.h"
+#include "structs.h"
 #include "lex.h"
 
 bool extract_tokens_from_line(std::string line, int line_no,
-    std::vector<evl_token> &tokens) { // use reference to modify it
+    evl_tokens &tokens) { // use reference to modify it
 
     char SPACE_CHAR[] = " \t\r\n";
     char SINGLE_CHAR[] = "()[]:;,";
@@ -77,7 +77,7 @@ bool extract_tokens_from_line(std::string line, int line_no,
 }
 
 bool extract_tokens_from_file(std::string file_name,
-    std::vector<evl_token> &tokens) { // use reference to modify it
+    evl_tokens &tokens) { // use reference to modify it
 
     std::ifstream input_file(file_name);
     if (!input_file) {

@@ -3,14 +3,20 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
+#include <list>
 
-#include "evl_token.h"
+#include "structs.h"
 
-void display_tokens(std::ostream &out,
-    const std::vector<evl_token> &tokens);
-    
-bool store_tokens_to_file(std::string file_name,
-    const std::vector<evl_token> &tokens);
+void display_tokens(
+    std::ostream &out,
+    const evl_tokens &tokens);
+
+void display_statements(
+    std::ostream &out,
+    const evl_statements &statements);
+
+bool store_tokens_to_file(
+    std::string file_name,
+    const evl_tokens &tokens);
 
 #endif
