@@ -84,6 +84,52 @@ bool get_statement(
     return true;
 }
 
+bool analyze_statement(
+    evl_statements &statements
+    evl_modules &modules) {
+
+    assert(modules.empty());
+    bool flag = false;
+    for(; statements.empty(); statements.pop_front()) {
+        evl_statement statement = statements.front();
+        switch(statement->type) {
+            case MODULE: {
+                evl_module module;
+                get_module_name(module.name, statement);
+                flag = true;
+            }
+            case WIRE: {
+                assert(flag);
+                get_wires(module.wires, statement);
+                break;
+            }
+            case COMPONENT: {
+                assert(flag);
+                get_component(module.components, statement);
+            }
+            case ENDMODULE: {
+                modules.push_back(module);
+                flag = false;
+                break;
+            }
+            default: {
+                std::cout << "Something went wrong..." << std::endl;
+            }
+    //iterate thru statements
+    //if module, make module?
+    // if not module, then throw error
+    //if wire, check for module, then get wires
+    //if get components
+    //if end the module
+        }
+    }
+
+    if(flag) {
+        std::cout << "ENDMODULE not found" << std::endl;
+        return false;
+    }
+}
+
 bool get_wires(
     evl_wires &wires,
     evl_statement &s) {
@@ -105,6 +151,7 @@ bool get_wires(
                         << "' on line " << t.line_no << std::endl;
                     return false;
                 }
+                break;
             case WIRE:
                 if(t.type == evl_token::NAME) {
                     evl_wire wire;
@@ -119,6 +166,7 @@ bool get_wires(
                         << "' on line " << t.line_no << std::endl;
                     return false;
                 }
+                break;
             case WIRES:
                 if(t.type == evl_token::NAME) {
                     evl_wire wire;
@@ -130,6 +178,7 @@ bool get_wires(
                     std::cerr << "Need NAME but found '" << t.str
                         << "' on line " << t.line_no << std::endl;
                 }
+                break;
             case NAME:
                 if(t.str == ",") {
                     state = WIRES;
@@ -140,6 +189,7 @@ bool get_wires(
                         << "' on line " << t.line_no << std::endl;
                     return false;
                 }
+                break;
             case BUS_BEGIN:
                 if(t.type == evl_token::NUMBER) {
                     wire_width = atoi(t.str.c_str()) + 1;
@@ -147,6 +197,7 @@ bool get_wires(
                     std::cerr << "LINE " << t.line_no << ": Number expected" << std::endl;
                     return false;
                 }
+                break;
             case MSB:
                 if(t.str == ":") {
                     state = COLON;
@@ -154,6 +205,7 @@ bool get_wires(
                     std::cerr << "LINE " << t.line_no << ": ':' expected" << std::endl;
                     return false;
                 }
+                break;
             case COLON:
                 if(t.str == "0") {
                     state = LSB;
@@ -161,13 +213,14 @@ bool get_wires(
                     std::cerr << "LINE " << t.line_no << ": Zero expected" << std::endl;
                     return false;
                 }
+                break;
             case LSB:
                 if(t.str == "]") {
                     state = BUS_DONE;
                 } else {
                     std::cerr << "LINE " << t.line_no << ": ']' expected" << std::endl;
                 }
-
+                break;
             case BUS_DONE:
                 if(t.type == evl_token::NAME) {
                     evl_wire wire;
@@ -179,6 +232,7 @@ bool get_wires(
                     std::cerr << "Need NAME but found '" << t.str
                         << "' on line " << t.line_no << std::endl;
                 }
+                break;
             default:
                 std::cerr << "Invalid State in WIRES" << std::endl;
         }
@@ -190,4 +244,60 @@ bool get_wires(
     }
 
     return true;
+}
+
+get_component(
+    evl_components &components,
+    evl_statement &s) {
+
+    enum state_type
+        {INIT, TYPE, NAME, PINS, PIN_NAME, BUS, MSB, LSB, COLON, BUS_DONE, PINS_DONE, DONE};
+
+    state_type state = INIT;
+    evl_component component;
+    for(; !s.tokens.empty() && (state != DONE); s.tokens.pop_front()) {
+        evl_token t = s.tokens.front();
+        switch(state) {
+            case INIT: {
+                if(t.type == evl_token::NAME) {
+                    component.type = t.str;
+                    component.name = "";
+                    state = TYPE;
+                } else {
+                    std::cerr << "Need name but found '" << t.str
+                        << "' on line " << t.line_no << std::endl;
+                }
+            }
+            case TYPE: {
+
+            }
+            case NAME: {
+
+            }
+            case PINS: {
+
+            }
+            case PIN_NAME: {
+
+            }
+            case BUS: {
+
+            }
+            case MSB: {
+
+            }
+            case COLON: {
+
+            }
+            case BUS_DONE: {
+
+            }
+            case PINS_DONE: {
+
+            }
+            case DONE: {
+
+            }
+        }
+    }
 }

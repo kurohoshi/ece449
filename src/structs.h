@@ -58,6 +58,7 @@ typedef std::list<evl_component> evl_components;
 
 class evl_module {
 public:
+    std::string name;
     evl_wires wires;
     evl_components components;
 }; // a module class
