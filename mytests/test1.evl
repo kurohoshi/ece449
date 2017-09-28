@@ -1,4 +1,5 @@
 // a comment
+// MODULE, WIRE, COMPONENT, COMPONENT, COMPONENT, ENDMODULE
 module top;
 
    wire s0, s1, clk;

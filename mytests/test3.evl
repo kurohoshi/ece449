@@ -1,5 +1,4 @@
-[   ]   [ [ ] )
-module ( )    )
-dff , ; ; : 23 
-123, 987
-
+// a module checking wires of width > 1
+module wire_bus;
+    wire [7:0] s0, s1;
+endmodule

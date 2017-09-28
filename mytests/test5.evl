@@ -1,6 +1,14 @@
-DEFINE PARENTHESIS  ()
-DEFINE BRACKETS     []
-DEFINE COLON        :
-DEFINE SEMICOLON    ;
-DEFINE COMMA        ,
+module top;
+    wire a, b, c;
+    wire s0, c0, c1, c2;
+    wire s, c;
 
+    xor(s0, a, b);
+    xor(s, s0, c);
+
+    and(c0, a, b);
+    and(c1, b, c);
+    and(c2, a, c);
+
+    or(c, c0, c1, c2);
+endmodule

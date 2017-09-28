@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
     if (!extract_tokens_from_file(evl_file, tokens)) {
         return -1;
     }
-    display_tokens(std::cout, tokens); //look at the output of the tokens
+    display_tokens(std::cout, tokens); //look at the output of tokens
     if (!store_tokens_to_file(evl_file+".tokens", tokens)) {
         return -1;
     }
@@ -30,7 +30,10 @@ int main(int argc, char *argv[]){
     if(!group_tokens_into_statements(statements, tokens)) {
         return -1;
     }
-    display_statements(std::cout, statements);
+    display_statements(std::cout, statements); //look at the output of statements
+    //if (!store_statements_to_file(evl_file+".syntax", statements)) {
+    //    return -1;
+    //}
 
     return 0;
 }
