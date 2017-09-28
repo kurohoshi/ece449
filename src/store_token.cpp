@@ -12,7 +12,7 @@ void display_tokens(
     const evl_tokens &tokens) {
 
     for (evl_tokens::iterator i = tokens.begin(); i != tokens.end(); ++i) {
-        if (*i == evl_token::SINGLE) {
+        if (*i.type == evl_token::SINGLE) {
             out << "SINGLE " << *i << std::endl;
         } else if (*i.type == evl_token::NAME) {
             out << "NAME " << *i << std::endl;
