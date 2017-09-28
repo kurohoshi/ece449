@@ -19,4 +19,7 @@ bool store_tokens_to_file(
     std::string file_name,
     const evl_tokens &tokens);
 
+bool store_statements_to_file(
+    std::string file_name,
+    const evl_statements &statements);
 #endif

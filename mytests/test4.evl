@@ -1,4 +1,4 @@
-for(i;j;k)  
-
-
-a,b
+module top;
+    wire s0, s1, s2, s3;
+    wire[3:0] b0, b1, b2;
+endmodule
