@@ -32,6 +32,21 @@ void display_tokens(
     }
 }
 
+void display_statements(
+    std::ostream &out,
+    const evl_statements &statements) {
+
+    for(evl_statements::const_iterator statement = statements.begin();
+        statement != statements.end(); ++statement) {
+        out << statement->type << " ";
+        for_each(statement->tokens.begin(), statement->tokens.end(),
+            [&](evl_token t) {
+                out << t.str << " ";
+        });
+        out << std::endl;
+    }
+}
+
 void display_modules(
     std::ostream &out,
     const evl_modules &modules) {

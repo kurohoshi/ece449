@@ -11,6 +11,10 @@ void display_tokens(
     std::ostream &out,
     const evl_tokens &tokens);
 
+void display_statements(
+    std::ostream &out,
+    const evl_statements &statements);
+
 void display_modules(
     std::ostream &out,
     const evl_modules &modules);

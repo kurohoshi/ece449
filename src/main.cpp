@@ -37,6 +37,8 @@ int main(int argc, char *argv[]){
         return -1;
     }
     std::cout << "Grouping Complete..." << std::endl;
+    std::cout << "Displaying Statements..." << std::endl;
+    display_statements(std::cout, statements);
 
     std::cout << "Oganizing Statements into Modules..." << std::endl;
     evl_modules modules;
