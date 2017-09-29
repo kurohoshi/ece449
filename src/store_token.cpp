@@ -38,7 +38,7 @@ void display_statements(
 
     for(evl_statements::const_iterator statement = statements.begin();
         statement != statements.end(); ++statement) {
-        out << statement->type << " ";
+        //out << statement->type << " ";
         for_each(statement->tokens.begin(), statement->tokens.end(),
             [&](evl_token t) {
                 out << t.str << " ";

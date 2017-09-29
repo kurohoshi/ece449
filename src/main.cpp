@@ -23,8 +23,8 @@ int main(int argc, char *argv[]){
         return -1;
     }
     //std::cout << "Tokenizing Complete..." << std::endl;
-    std::cout << "Displaying Tokens..." << std::endl;
-    display_tokens(std::cout, tokens); //look at the output of tokens
+    //std::cout << "Displaying Tokens..." << std::endl;
+    //display_tokens(std::cout, tokens); //look at the output of tokens
     //std::cout << "Storing Tokens into File..." << std::endl;
     if (!store_tokens_to_file(evl_file+".tokens", tokens)) {
         return -1;
@@ -37,22 +37,22 @@ int main(int argc, char *argv[]){
         return -1;
     }
     //std::cout << "Grouping Complete..." << std::endl;
-    std::cout << "Displaying Statements..." << std::endl;
-    display_statements(std::cout, statements);
+    //std::cout << "Displaying Statements..." << std::endl;
+    //display_statements(std::cout, statements);
 
-    std::cout << "Oganizing Statements into Modules..." << std::endl;
+    //std::cout << "Oganizing Statements into Modules..." << std::endl;
     evl_modules modules;
     if(!analyze_statements(statements, modules)) {
         return -1;
     }
-    std::cout << "Organizing Complete..." << std::endl;
-    std::cout << "Displaying Modules..." << std::endl;
+    //std::cout << "Organizing Complete..." << std::endl;
+    //std::cout << "Displaying Modules..." << std::endl;
     display_modules(std::cout, modules); //look at the output of modules
-    std::cout << "Storing Modules into File..." << std::endl;
+    //std::cout << "Storing Modules into File..." << std::endl;
     if(!store_modules_to_file(evl_file+".syntax", modules)) {
         return -1;
     }
-    std::cout << "Storing Complete" << std::endl;
+    //std::cout << "Storing Complete" << std::endl;
 
     return 0;
 }

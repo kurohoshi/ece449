@@ -324,14 +324,14 @@ bool get_component(
     enum state_type
         {INIT, TYPE, NAME, PINS, PIN_NAME, BUS, MSB, LSB, COLON, BUS_DONE, PINS_DONE, DONE};
 
-    std::cout << "getting component..." << std::endl;
+    //std::cout << "getting component..." << std::endl;
 
     state_type state = INIT;
     evl_component component;
     evl_pin pin;
     for(; !s.tokens.empty() && (state != DONE); s.tokens.pop_front()) {
         evl_token t = s.tokens.front();
-        std::cout << t.str << std::endl;
+        //std::cout << t.str << std::endl;
         switch(state) {
             case INIT: {
                 if(t.type == evl_token::NAME) {
