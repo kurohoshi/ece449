@@ -177,6 +177,7 @@ bool get_wires(
                 } else {
                     std::cerr << "Need NAME but found '" << t.str
                         << "' on line " << t.line_no << std::endl;
+                    return false;
                 }
                 break;
             case NAME:
@@ -219,6 +220,7 @@ bool get_wires(
                     state = BUS_DONE;
                 } else {
                     std::cerr << "LINE " << t.line_no << ": ']' expected" << std::endl;
+                    return false;
                 }
                 break;
             case BUS_DONE:
@@ -231,10 +233,12 @@ bool get_wires(
                 } else {
                     std::cerr << "Need NAME but found '" << t.str
                         << "' on line " << t.line_no << std::endl;
+                    return false;
                 }
                 break;
             default:
                 std::cerr << "Invalid State in WIRES" << std::endl;
+                return false;
         }
     }
 
@@ -255,6 +259,7 @@ get_component(
 
     state_type state = INIT;
     evl_component component;
+    evl_pin pin;
     for(; !s.tokens.empty() && (state != DONE); s.tokens.pop_front()) {
         evl_token t = s.tokens.front();
         switch(state) {
@@ -266,28 +271,79 @@ get_component(
                 } else {
                     std::cerr << "Need name but found '" << t.str
                         << "' on line " << t.line_no << std::endl;
+                    return false;
                 }
+                break;
             }
             case TYPE: {
-
+                if(t.type == evl_token::NAME) {
+                    component.name = t.str;
+                    state = NAME;
+                } else if(t.str == "("){
+                    state = PINS;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": NAME or '(' expected" << std::endl;
+                    return false;
+                }
+                break;
             }
             case NAME: {
-
+                if(t.str == "(") {
+                    state = PINS;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": '(' expected" << std::endl;
+                    return false;
+                }
             }
             case PINS: {
-
+                if(t.type == evl_token::NAME) {
+                    pin.name = t.str;
+                    pin.bus_msb = -1;
+                    pin.bus_lsb = -1;
+                    state = PIN_NAME;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": NAME expected" << std::endl;
+                    return false;
+                }
             }
             case PIN_NAME: {
-
+                if(t.str == "[") {
+                    state = BUS;
+                } else if(t.str == ")") {
+                    component.pins.push_back(pin);
+                    state = PINS_DONE;
+                } else if(t.str == ",") {
+                    component.pins.push_back(pin);
+                    state = PINS;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": '[' or ')' or ',' expected" << std::endl;
+                    return false;
+                }
             }
             case BUS: {
-
+                if(t.type == evl_token::NUMBER) {
+                    pin.bus_msb = atoi(t.str.c_str());
+                    state = BUS_MSB;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": NUMBER expected" << std::endl;
+                    return false;
+                }
             }
             case MSB: {
-
+                if(t.str == "]") {
+                    state = BUS_DONE;
+                } else if(t.str == ":") {
+                    state = BUS_COLON;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": ']' or ':' expected" << std::endl;
+                    return false;
+                }
             }
             case COLON: {
-
+                if(t.type == evl_token::NUMBER) {
+                    state = BUS_DONE;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": NUMBER expected" << std::endl;
             }
             case BUS_DONE: {
 
