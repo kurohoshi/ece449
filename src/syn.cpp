@@ -23,7 +23,7 @@ bool group_tokens_into_statements(
         }
 
         if(token.str == "module") {
-            std::cout << "grouping module statement" << std::endl;
+            //std::cout << "grouping module statement" << std::endl;
             evl_statement module;
             module.type = evl_statement::MODULE;
 
@@ -36,7 +36,7 @@ bool group_tokens_into_statements(
                 std::cerr << "LINE " << token.line_no
                     << ": module no declared" << std::endl;
             }
-            std::cout << "grouping endmodule statement" << std::endl;
+            //std::cout << "grouping endmodule statement" << std::endl;
 
             evl_statement endmodule;
 
@@ -50,7 +50,7 @@ bool group_tokens_into_statements(
                 std::cerr << "LINE " << token.line_no
                     << ": module not declared" << std::endl;
             }
-            std::cout << "grouping wire statement" << std::endl;
+            //std::cout << "grouping wire statement" << std::endl;
                 
             evl_statement wire;
             wire.type = evl_statement::WIRE;
@@ -64,7 +64,7 @@ bool group_tokens_into_statements(
                 std::cerr << "LINE " << token.line_no
                     << ": module not declared" << std::endl;
             }
-            std::cout << "grouping component statement" << std::endl;
+            //std::cout << "grouping component statement" << std::endl;
 
             evl_statement component;
             component.type = evl_statement::COMPONENT;
@@ -179,7 +179,7 @@ bool get_module_name(
     std::string &name,
     evl_statement &s) {
 
-    std::cout << "getting module name..." << std::endl;
+    //std::cout << "getting module name..." << std::endl;
 
     if (s.tokens.front().str == "module" && s.tokens.back().str == ";") {
         s.tokens.pop_front(); s.tokens.pop_back();
@@ -197,7 +197,7 @@ bool get_wires(
     evl_wires &wires,
     evl_statement &s) {
 
-    std::cout << "getting wires..." << std::endl;
+    //std::cout << "getting wires..." << std::endl;
 
     enum state_type 
         {INIT, WIRE, DONE, WIRES, NAME, BUS_BEGIN, MSB, COLON, LSB, BUS_DONE};
@@ -257,8 +257,6 @@ bool get_wires(
                 }
                 break;
             case BUS_BEGIN:
-                std::cout << evl_token::NUMBER << std::endl;
-                std::cout << t.type << std::endl;
                 if(t.type == evl_token::NUMBER) {
                     wire_width = atoi(t.str.c_str()) + 1;
                     state = MSB;
@@ -333,6 +331,7 @@ bool get_component(
     evl_pin pin;
     for(; !s.tokens.empty() && (state != DONE); s.tokens.pop_front()) {
         evl_token t = s.tokens.front();
+        std::cout << t.str << std::endl;
         switch(state) {
             case INIT: {
                 if(t.type == evl_token::NAME) {
@@ -418,9 +417,18 @@ bool get_component(
             case COLON: {
                 if(t.type == evl_token::NUMBER) {
                     pin.bus_lsb = atoi(t.str.c_str());
-                    state = BUS_DONE;
+                    state = LSB;
                 } else {
                     std::cerr << "LINE " << t.line_no << ": NUMBER expected" << std::endl;
+                    return false;
+                }
+                break;
+            }
+            case LSB: {
+                if(t.str == "]") {
+                    state = BUS_DONE;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": ']' expected" << std::endl;
                     return false;
                 }
                 break;

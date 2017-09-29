@@ -16,27 +16,27 @@ int main(int argc, char *argv[]){
         return -1;
     }
 
-    std::cout << "Tokenizing File..." << std::endl;
+    //std::cout << "Tokenizing File..." << std::endl;
     std::string evl_file = argv[1];
     evl_tokens tokens;
     if (!extract_tokens_from_file(evl_file, tokens)) {
         return -1;
     }
-    std::cout << "Tokenizing Complete..." << std::endl;
+    //std::cout << "Tokenizing Complete..." << std::endl;
     std::cout << "Displaying Tokens..." << std::endl;
     display_tokens(std::cout, tokens); //look at the output of tokens
-    std::cout << "Storing Tokens into File..." << std::endl;
+    //std::cout << "Storing Tokens into File..." << std::endl;
     if (!store_tokens_to_file(evl_file+".tokens", tokens)) {
         return -1;
     }
-    std::cout << "Storing Complete..." << std::endl;
+    //std::cout << "Storing Complete..." << std::endl;
 
-    std::cout << "Grouping Tokens into Statements..." << std::endl;
+    //std::cout << "Grouping Tokens into Statements..." << std::endl;
     evl_statements statements;
     if(!group_tokens_into_statements(statements, tokens)) {
         return -1;
     }
-    std::cout << "Grouping Complete..." << std::endl;
+    //std::cout << "Grouping Complete..." << std::endl;
     std::cout << "Displaying Statements..." << std::endl;
     display_statements(std::cout, statements);
 
