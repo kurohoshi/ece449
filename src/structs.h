@@ -41,6 +41,7 @@ public:
 typedef std::list<evl_wire> evl_wires;
 
 class evl_pin {
+public:
     std::string name;
     int bus_msb;
     int bus_lsb;

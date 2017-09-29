@@ -84,30 +84,42 @@ bool get_statement(
     return true;
 }
 
+bool get_module_name(
+    std::string &name,
+    evl_statement &s);
+
+bool get_wires(
+    evl_wires &wires,
+    evl_statement &s);
+
+bool get_component(
+    evl_components &components,
+    evl_statement &s);
+
 bool analyze_statement(
-    evl_statements &statements
+    evl_statements &statements,
     evl_modules &modules) {
 
     assert(modules.empty());
+    evl_module module;
     bool flag = false;
     for(; statements.empty(); statements.pop_front()) {
         evl_statement statement = statements.front();
-        switch(statement->type) {
-            case MODULE: {
-                evl_module module;
+        switch(statement.type) {
+            case evl_statement::MODULE: {
                 get_module_name(module.name, statement);
                 flag = true;
             }
-            case WIRE: {
+            case evl_statement::WIRE: {
                 assert(flag);
                 get_wires(module.wires, statement);
                 break;
             }
-            case COMPONENT: {
+            case evl_statement::COMPONENT: {
                 assert(flag);
                 get_component(module.components, statement);
             }
-            case ENDMODULE: {
+            case evl_statement::ENDMODULE: {
                 modules.push_back(module);
                 flag = false;
                 break;
@@ -115,12 +127,6 @@ bool analyze_statement(
             default: {
                 std::cout << "Something went wrong..." << std::endl;
             }
-    //iterate thru statements
-    //if module, make module?
-    // if not module, then throw error
-    //if wire, check for module, then get wires
-    //if get components
-    //if end the module
         }
     }
 
@@ -128,6 +134,24 @@ bool analyze_statement(
         std::cout << "ENDMODULE not found" << std::endl;
         return false;
     }
+
+    return true;
+}
+
+bool get_module_name(
+    std::string &name,
+    evl_statement &s) {
+
+    if (s.tokens.front().str == "module" && s.tokens.back().str == ";") {
+        s.tokens.pop_front(); s.tokens.pop_back();
+        name = s.tokens.front().str;
+        s.tokens.pop_front();
+    }
+    if (!s.tokens.empty()) {
+        std::cerr << "Invalid module declaration" << std::endl;
+    }
+
+    return true;
 }
 
 bool get_wires(
@@ -250,7 +274,7 @@ bool get_wires(
     return true;
 }
 
-get_component(
+bool get_component(
     evl_components &components,
     evl_statement &s) {
 
@@ -294,6 +318,7 @@ get_component(
                     std::cerr << "LINE " << t.line_no << ": '(' expected" << std::endl;
                     return false;
                 }
+                break;
             }
             case PINS: {
                 if(t.type == evl_token::NAME) {
@@ -305,6 +330,7 @@ get_component(
                     std::cerr << "LINE " << t.line_no << ": NAME expected" << std::endl;
                     return false;
                 }
+                break;
             }
             case PIN_NAME: {
                 if(t.str == "[") {
@@ -319,41 +345,71 @@ get_component(
                     std::cerr << "LINE " << t.line_no << ": '[' or ')' or ',' expected" << std::endl;
                     return false;
                 }
+                break;
             }
             case BUS: {
                 if(t.type == evl_token::NUMBER) {
                     pin.bus_msb = atoi(t.str.c_str());
-                    state = BUS_MSB;
+                    state = MSB;
                 } else {
                     std::cerr << "LINE " << t.line_no << ": NUMBER expected" << std::endl;
                     return false;
                 }
+                break;
             }
             case MSB: {
                 if(t.str == "]") {
                     state = BUS_DONE;
                 } else if(t.str == ":") {
-                    state = BUS_COLON;
+                    state = COLON;
                 } else {
                     std::cerr << "LINE " << t.line_no << ": ']' or ':' expected" << std::endl;
                     return false;
                 }
+                break;
             }
             case COLON: {
                 if(t.type == evl_token::NUMBER) {
+                    pin.bus_lsb = atoi(t.str.c_str());
                     state = BUS_DONE;
                 } else {
                     std::cerr << "LINE " << t.line_no << ": NUMBER expected" << std::endl;
+                    return false;
+                }
+                break;
             }
             case BUS_DONE: {
-
+                if(t.str == ",") {
+                    component.pins.push_back(pin);
+                    state = PINS;
+                } else if(t.str == ")") {
+                    component.pins.push_back(pin);
+                    state = PINS_DONE;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": ',' or ')' expected" << std::endl;
+                    return false;
+                }
+                break;
             }
             case PINS_DONE: {
-
+                if(t.str == ";") {
+                    state = DONE;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": ';' expected" << std::endl;
+                    return false;
+                }
             }
-            case DONE: {
-
+            default: {
+                std::cerr << "Invalid state in components" << std::endl;
+                return false;
             }
         }
     }
+
+    if(!s.tokens.empty() || (state != DONE)) {
+        std::cerr << "Something went wrong..." << std::endl;
+        return false;
+    }
+
+    return true;
 }
