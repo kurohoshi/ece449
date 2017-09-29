@@ -40,18 +40,20 @@ public:
 
 typedef std::list<evl_wire> evl_wires;
 
+class evl_pin {
+public:
+    std::string name;
+    int bus_msb;
+    int bus_lsb;
+}; // pin class
+
+typedef std::list<evl_pin> evl_pins;
+
 class evl_component {
 public:
     std::string type;
     std::string name;
-private:
-    class evl_pin {
-        std::string name;
-        int bus_msb;
-        int bus_lsb;
-    }; // pin class
-public:
-    evl_pin pin;
+    evl_pins pins;
 }; // component class
 
 typedef std::list<evl_component> evl_components;
