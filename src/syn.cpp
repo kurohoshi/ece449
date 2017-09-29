@@ -458,6 +458,7 @@ bool get_component(
         std::cerr << "[COMP] Something went wrong..." << std::endl;
         return false;
     }
+    components.push_back(component);
 
     return true;
 }
