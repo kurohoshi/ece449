@@ -162,7 +162,7 @@ bool get_wires(
         {INIT, WIRE, DONE, WIRES, NAME, BUS_BEGIN, MSB, COLON, LSB, BUS_DONE};
 
     state_type state = INIT;
-    int wire_width;
+    int wire_width = 1;
     for(; !s.tokens.empty() && (state != DONE); s.tokens.pop_front()) {
         evl_token t = s.tokens.front();
         switch(state) {
