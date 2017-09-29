@@ -23,6 +23,7 @@ bool group_tokens_into_statements(
         }
 
         if(token.str == "module") {
+            std::cout << "grouping module statement" << std::endl;
             evl_statement module;
             module.type = evl_statement::MODULE;
 
@@ -35,6 +36,7 @@ bool group_tokens_into_statements(
                 std::cerr << "LINE " << token.line_no
                     << ": module no declared" << std::endl;
             }
+            std::cout << "grouping endmodule statement" << std::endl;
 
             evl_statement endmodule;
 
@@ -48,15 +50,27 @@ bool group_tokens_into_statements(
                 std::cerr << "LINE " << token.line_no
                     << ": module not declared" << std::endl;
             }
+            std::cout << "grouping wire statement" << std::endl;
                 
             evl_statement wire;
+            wire.type = evl_statement::WIRE;
 
             if(!get_statement(wire.tokens, tokens))
                 return false;
 
             statements.push_back(wire);
         } else {
-            continue;
+            if(statements.empty()) {
+                std::cerr << "LINE " << token.line_no
+                    << ": module not declared" << std::endl;
+            }
+            evl_statement component;
+            component.type = evl_statement::COMPONENT;
+
+            if(!get_statement(component.tokens, tokens))
+                return false;
+
+            statements.push_back(component);
         }
     }
 
@@ -96,43 +110,59 @@ bool get_component(
     evl_components &components,
     evl_statement &s);
 
-bool analyze_statement(
+bool analyze_statements(
     evl_statements &statements,
     evl_modules &modules) {
 
     assert(modules.empty());
-    evl_module module;
-    bool flag = false;
+
     for(; statements.empty(); statements.pop_front()) {
         evl_statement statement = statements.front();
-        switch(statement.type) {
-            case evl_statement::MODULE: {
-                get_module_name(module.name, statement);
-                flag = true;
+
+        evl_module module;
+
+        if(statement.type == evl_statement::MODULE) {
+            get_module_name(module.name, statement);
+            statements.pop_front();
+            if(statements.empty()) {
+                std::cerr << "Expected something but got nothing" << std::endl;
             }
-            case evl_statement::WIRE: {
-                assert(flag);
-                get_wires(module.wires, statement);
-                break;
-            }
-            case evl_statement::COMPONENT: {
-                assert(flag);
-                get_component(module.components, statement);
-            }
-            case evl_statement::ENDMODULE: {
-                modules.push_back(module);
-                flag = false;
-                break;
-            }
-            default: {
-                std::cout << "Something went wrong..." << std::endl;
+            statement = statements.front();
+        } else {
+            std::cerr << "Expecting MODULE" << std::endl;
+            return false;
+        }
+
+        for(; statements.empty() && (statement.type != evl_statement::ENDMODULE);
+            statements.pop_front()) {
+
+            statement = statements.front();
+            switch(statement.type) {
+                case evl_statement::WIRE: {
+                    get_wires(module.wires, statement);
+                    break;
+                }
+                case evl_statement::COMPONENT: {
+                    get_component(module.components, statement);
+                    break;
+                }
+                case evl_statement::ENDMODULE: {
+                    modules.push_back(module);
+                    break;
+                }
+                default: {
+                    std::cout << "Something went wrong..." << std::endl;
+                    return false;
+                }
             }
         }
-    }
 
-    if(flag) {
-        std::cout << "ENDMODULE not found" << std::endl;
-        return false;
+        if((!statements.empty() && statement.type == evl_statement::ENDMODULE)) {
+            modules.push_back(module);
+        } else {
+            std::cerr << "ENDMODULE expected" << std::endl;
+            return false;
+        }
     }
 
     return true;
