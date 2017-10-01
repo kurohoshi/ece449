@@ -1,7 +1,6 @@
-module top;
-    wire a, b, c;
+module adder;
+    wire a, b, s, c;
     wire s0, c0, c1, c2;
-    wire s, c;
 
     xor(s0, a, b);
     xor(s, s0, c);
