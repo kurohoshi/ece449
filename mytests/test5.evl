@@ -1,13 +1,11 @@
 module adder;
-    wire a, b, s, c;
-    wire s0, c0, c1, c2;
+    wire[1:0] a, b, s;
+    wire cin, cout;
 
-    xor(s0, a, b);
-    xor(s, s0, c);
+    wire c1;
 
-    and(c0, a, b);
-    and(c1, b, c);
-    and(c2, a, c);
+    adder a0(s[0], c1, a[0], b[0], cin);
+    adder a1(s[1], cout, a[1], b[1], c1);
 
-    or(c, c0, c1, c2);
+    adder2 b0(s[1:0], cout, a[1:0], b[1:0], cin);
 endmodule
