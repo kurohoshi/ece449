@@ -15,11 +15,15 @@ void display_statements(
     std::ostream &out,
     const evl_statements &statements);
 
+void display_modules(
+    std::ostream &out,
+    const evl_modules &modules);
+
 bool store_tokens_to_file(
     std::string file_name,
     const evl_tokens &tokens);
 
-bool store_statements_to_file(
+bool store_modules_to_file(
     std::string file_name,
-    const evl_statements &statements);
+    const evl_modules &modules);
 #endif

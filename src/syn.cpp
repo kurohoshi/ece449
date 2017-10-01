@@ -23,6 +23,7 @@ bool group_tokens_into_statements(
         }
 
         if(token.str == "module") {
+            //std::cout << "grouping module statement" << std::endl;
             evl_statement module;
             module.type = evl_statement::MODULE;
 
@@ -35,6 +36,7 @@ bool group_tokens_into_statements(
                 std::cerr << "LINE " << token.line_no
                     << ": module no declared" << std::endl;
             }
+            //std::cout << "grouping endmodule statement" << std::endl;
 
             evl_statement endmodule;
 
@@ -48,15 +50,29 @@ bool group_tokens_into_statements(
                 std::cerr << "LINE " << token.line_no
                     << ": module not declared" << std::endl;
             }
+            //std::cout << "grouping wire statement" << std::endl;
 
             evl_statement wire;
+            wire.type = evl_statement::WIRE;
 
             if(!get_statement(wire.tokens, tokens))
                 return false;
 
             statements.push_back(wire);
         } else {
-            continue;
+            if(statements.empty()) {
+                std::cerr << "LINE " << token.line_no
+                    << ": module not declared" << std::endl;
+            }
+            //std::cout << "grouping component statement" << std::endl;
+
+            evl_statement component;
+            component.type = evl_statement::COMPONENT;
+
+            if(!get_statement(component.tokens, tokens))
+                return false;
+
+            statements.push_back(component);
         }
     }
 
@@ -96,43 +112,64 @@ bool get_component(
     evl_components &components,
     evl_statement &s);
 
-bool analyze_statement(
+bool analyze_statements(
     evl_statements &statements,
     evl_modules &modules) {
 
     assert(modules.empty());
-    evl_module module;
-    bool flag = false;
-    for(; statements.empty(); statements.pop_front()) {
-        evl_statement statement = statements.front();
-        switch(statement.type) {
-            case evl_statement::MODULE: {
-                get_module_name(module.name, statement);
-                flag = true;
-            }
-            case evl_statement::WIRE: {
-                assert(flag);
-                get_wires(module.wires, statement);
-                break;
-            }
-            case evl_statement::COMPONENT: {
-                assert(flag);
-                get_component(module.components, statement);
-            }
-            case evl_statement::ENDMODULE: {
-                modules.push_back(module);
-                flag = false;
-                break;
-            }
-            default: {
-                std::cout << "Something went wrong..." << std::endl;
-            }
-        }
-    }
 
-    if(flag) {
-        std::cout << "ENDMODULE not found" << std::endl;
-        return false;
+    for(; !statements.empty(); statements.pop_front()) {
+        evl_statement statement = statements.front();
+
+        evl_module module;
+
+        if(statement.type == evl_statement::MODULE) {
+            if(!get_module_name(module.name, statement))
+                return false;
+            statements.pop_front();
+            if(statements.empty()) {
+                std::cerr << "Expected something but got nothing" << std::endl;
+            }
+            statement = statements.front();
+        } else {
+            std::cerr << "MODULE Expected" << std::endl;
+            return false;
+        }
+
+        for(; (!statements.empty()) && (statement.type != evl_statement::ENDMODULE);
+            /*statements.pop_front()*/) {
+
+            //statement = statements.front();
+
+            if(statement.type == evl_statement::ENDMODULE)
+                std::cout << evl_statement::MODULE  << std::endl;
+
+            switch(statement.type) {
+                case evl_statement::WIRE: {
+                    if(!get_wires(module.wires, statement))
+                        return false;
+                    break;
+                }
+                case evl_statement::COMPONENT: {
+                    if(!get_component(module.components, statement))
+                        return false;
+                    break;
+                }
+                default: {
+                    std::cout << "[EMOD] Something went wrong..." << std::endl;
+                    return false;
+                }
+            }
+            statements.pop_front();
+            statement = statements.front();
+        }
+
+        if((!statements.empty()) && (statement.type == evl_statement::ENDMODULE)) {
+            modules.push_back(module);
+        } else {
+            std::cerr << "ENDMODULE expected" << std::endl;
+            return false;
+        }
     }
 
     return true;
@@ -141,6 +178,8 @@ bool analyze_statement(
 bool get_module_name(
     std::string &name,
     evl_statement &s) {
+
+    //std::cout << "getting module name..." << std::endl;
 
     if (s.tokens.front().str == "module" && s.tokens.back().str == ";") {
         s.tokens.pop_front(); s.tokens.pop_back();
@@ -157,6 +196,8 @@ bool get_module_name(
 bool get_wires(
     evl_wires &wires,
     evl_statement &s) {
+
+    //std::cout << "getting wires..." << std::endl;
 
     enum state_type
         {INIT, WIRE, DONE, WIRES, NAME, BUS_BEGIN, MSB, COLON, LSB, BUS_DONE};
@@ -218,6 +259,7 @@ bool get_wires(
             case BUS_BEGIN:
                 if(t.type == evl_token::NUMBER) {
                     wire_width = atoi(t.str.c_str()) + 1;
+                    state = MSB;
                 } else {
                     std::cerr << "LINE " << t.line_no << ": Number expected" << std::endl;
                     return false;
@@ -260,19 +302,19 @@ bool get_wires(
                     return false;
                 }
                 break;
-            default:
+            default: {
                 std::cerr << "Invalid State in WIRES" << std::endl;
                 return false;
+            }
         }
     }
 
     if(!s.tokens.empty() || (state != DONE)) {
-        std::cerr << "something wrong with the statement" << std::endl;
+        std::cerr << "[WIRE] Something went wrong..." << std::endl;
         return false;
     }
 
     return true;
->>>>>>> 619598614f2c689aa08fbbece8f188d02dce4a2f
 }
 
 bool get_component(
@@ -282,11 +324,14 @@ bool get_component(
     enum state_type
         {INIT, TYPE, NAME, PINS, PIN_NAME, BUS, MSB, LSB, COLON, BUS_DONE, PINS_DONE, DONE};
 
+    //std::cout << "getting component..." << std::endl;
+
     state_type state = INIT;
     evl_component component;
     evl_pin pin;
     for(; !s.tokens.empty() && (state != DONE); s.tokens.pop_front()) {
         evl_token t = s.tokens.front();
+        //std::cout << t.str << std::endl;
         switch(state) {
             case INIT: {
                 if(t.type == evl_token::NAME) {
@@ -372,9 +417,18 @@ bool get_component(
             case COLON: {
                 if(t.type == evl_token::NUMBER) {
                     pin.bus_lsb = atoi(t.str.c_str());
-                    state = BUS_DONE;
+                    state = LSB;
                 } else {
                     std::cerr << "LINE " << t.line_no << ": NUMBER expected" << std::endl;
+                    return false;
+                }
+                break;
+            }
+            case LSB: {
+                if(t.str == "]") {
+                    state = BUS_DONE;
+                } else {
+                    std::cerr << "LINE " << t.line_no << ": ']' expected" << std::endl;
                     return false;
                 }
                 break;
@@ -399,6 +453,7 @@ bool get_component(
                     std::cerr << "LINE " << t.line_no << ": ';' expected" << std::endl;
                     return false;
                 }
+                break;
             }
             default: {
                 std::cerr << "Invalid state in components" << std::endl;
@@ -408,9 +463,10 @@ bool get_component(
     }
 
     if(!s.tokens.empty() || (state != DONE)) {
-        std::cerr << "Something went wrong..." << std::endl;
+        std::cerr << "[COMP] Something went wrong..." << std::endl;
         return false;
     }
+    components.push_back(component);
 
     return true;
 }
