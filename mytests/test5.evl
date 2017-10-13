@@ -1,8 +1,8 @@
 module adder;
-    wire[1:0] a, b, s;
-    wire cin, cout;
+    //wire[1:0] a, b, s;
+    //wire cin, cout;
 
-    wire c1;
+    //wire c1;
 
     adder a0(s[0], c1, a[0], b[0], cin);
     adder a1(s[1], cout, a[1], b[1], c1);
