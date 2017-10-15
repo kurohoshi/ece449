@@ -7,8 +7,9 @@
 #include "structs.h"
 #include "lex.h"
 
-bool extract_tokens_from_line(std::string line, int line_no,
-    evl_tokens &tokens) { // use reference to modify it
+bool tokens::extract_tokens_from_line(
+    std::string line,
+    int line_no) {
 
     char SPACE_CHAR[] = " \t\r\n";
     char SINGLE_CHAR[] = "()[]:;,";
@@ -76,8 +77,8 @@ bool extract_tokens_from_line(std::string line, int line_no,
     return true; // nothing left
 }
 
-bool extract_tokens_from_file(std::string file_name,
-    evl_tokens &tokens) { // use reference to modify it
+bool tokens::extract_tokens_from_file(
+    std::string file_name) {
 
     std::ifstream input_file(file_name);
     if (!input_file) {
