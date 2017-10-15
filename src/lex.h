@@ -21,10 +21,18 @@ class tokens {
     std::list<evl_token> evl_tokens;
 
 public:
-
     bool extract(
         std::string file_name
     );
+
+    void display(
+        std::ostream &out
+    ) const;
+
+    bool store(
+        std::string file_name
+    ) const;
+
 }; // evl_tokens class
 
 
