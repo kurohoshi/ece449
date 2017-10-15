@@ -19,14 +19,14 @@ int main(int argc, char *argv[]){
     //std::cout << "Tokenizing File..." << std::endl;
     std::string evl_file = argv[1];
     evl_tokens tokens;
-    if (!extract_tokens_from_file(evl_file, tokens)) {
+    if (!tokens.extract(evl_file)) {
         return -1;
     }
     //std::cout << "Tokenizing Complete..." << std::endl;
     //std::cout << "Displaying Tokens..." << std::endl;
     //display_tokens(std::cout, tokens); //look at the output of tokens
     //std::cout << "Storing Tokens into File..." << std::endl;
-    if (!store_tokens_to_file(evl_file+".tokens", tokens)) {
+    if (!tokens.save(evl_file+".tokens")) {
         return -1;
     }
     //std::cout << "Storing Complete..." << std::endl;
