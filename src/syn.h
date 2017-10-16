@@ -6,22 +6,31 @@
 
 #include "lex.h"
 
-class evl_wire {
+struct evl_wire {
 public:
     std::string name;
     int width;
 }; // evl_wire class
 
+typedef std::list<evl_wire> evl_wires;
+
+struct evl_pin {
+public:
+    std::string name;
+    int bus_msb;
+    int bus_lsb;
+}; // pin class
+
 typedef std::list<evl_pin> evl_pins;
 
-class evl_component {
+struct evl_component {
 public:
     std::string type;
     std::string name;
     evl_pins pins;
 }; // evl_component class
 
-typedef std::list<evl_component> evl_compoenents;
+typedef std::list<evl_component> evl_components;
 
 struct evl_module {
 public:
