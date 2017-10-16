@@ -3,6 +3,8 @@
 #include <vector>
 #include <list>
 #include <assert.h>
+#include <fstream>
+#include <cstring>
 
 #include "net.h"
 
