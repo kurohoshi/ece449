@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <fstream>
 #include <cstring>
+#include <sstream>
 
 #include "net.h"
 
