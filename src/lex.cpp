@@ -4,7 +4,6 @@
 #include <cstring>
 #include <list>
 
-#include "structs.h"
 #include "lex.h"
 
 bool tokens::extract_from_line(
