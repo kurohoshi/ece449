@@ -39,7 +39,7 @@ bool evl_modules::get_module_name(
 
 bool evl_modules::get_wires(
     evl_wires &wires,
-    evl_tokens::evl_tokens_ &t) {
+    evl_tokens &t) {
 
     //std::cout << "getting wires..." << std::endl;
 
@@ -163,7 +163,7 @@ bool evl_modules::get_wires(
 
 bool evl_modules::get_component(
     evl_components &components,
-    evl_tokens::evl_tokens_ &t) {
+    evl_tokens &t) {
 
     enum state_type {
         INIT, TYPE, NAME, PINS, PIN_NAME, BUS,
