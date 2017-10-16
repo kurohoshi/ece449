@@ -12,19 +12,19 @@
 
 bool evl_modules::get_module_name(
     std::string &name,
-    evl_tokens &t) {
+    evl_tokens::evl_tokens_ &t) {
 
-    if (t.tokens.front().str == "module") {
-        t.tokens.pop_front();
-        if(t.tokens.front().type == evl_token::NAME) {
-            name = t.tokens.front().str;
-            t.tokens.pop_front();
+    if (t.front().str == "module") {
+        t.pop_front();
+        if(t.front().type == evl_token::NAME) {
+            name = t.front().str;
+            t.pop_front();
         } else {
             std::cerr << "Invalid module declaration" << std::endl;
             return false;
         }
-        if (t.tokens.front().str == ";") {
-            t.tokens.pop_front();
+        if (t.front().str == ";") {
+            t.pop_front();
             return true;
         } else {
             std::cerr << "Invalid module declaration" << std::endl;
@@ -39,7 +39,7 @@ bool evl_modules::get_module_name(
 
 bool evl_modules::get_wires(
     evl_wires &wires,
-    evl_tokens &t) {
+    evl_tokens::evl_tokens_ &t) {
 
     //std::cout << "getting wires..." << std::endl;
 
@@ -48,8 +48,8 @@ bool evl_modules::get_wires(
 
     state_type state = INIT;
     int wire_width = 1;
-    for(; !t.tokens.empty() && (state != DONE); t.tokens.pop_front()) {
-        evl_token tok = t.tokens.front();
+    for(; !t.empty() && (state != DONE); t.pop_front()) {
+        evl_token tok = t.front();
         switch(state) {
             case INIT:
                 if(tok.str == "wire") {
@@ -57,7 +57,7 @@ bool evl_modules::get_wires(
                     state = WIRE;
                 } else {
                     std::cerr << "Need 'wire' but found '" << tok.str
-                        << "' on line " << t.line_no << std::endl;
+                        << "' on line " << tok.line_no << std::endl;
                     return false;
                 }
                 break;
@@ -163,7 +163,7 @@ bool evl_modules::get_wires(
 
 bool evl_modules::get_component(
     evl_components &components,
-    evl_tokens &t) {
+    evl_tokens::evl_tokens_ &t) {
 
     enum state_type {
         INIT, TYPE, NAME, PINS, PIN_NAME, BUS,
@@ -175,8 +175,8 @@ bool evl_modules::get_component(
     state_type state = INIT;
     evl_component component;
     evl_pin pin;
-    for(; !t.tokens.empty() && (state != DONE); t.tokens.pop_front()) {
-        evl_token tok = t.tokens.front();
+    for(; !t.empty() && (state != DONE); t.pop_front()) {
+        evl_token tok = t.front();
         //std::cout << t.str << std::endl;
         switch(state) {
             case INIT: {
