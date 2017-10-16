@@ -13,7 +13,7 @@ bool evl_modules::group(
 
     for(; !toks.tokens.empty();) {
         if(toks.tokens.front().type != evl_token::NAME) {
-            std::cerr << "Need a NAME token but found '" << token.str
+            std::cerr << "Need a NAME token but found '" << toks.tokens.front().str
                 << "' on line" << token.line_no << std::endl;
         }
 
@@ -52,6 +52,7 @@ bool evl_modules::group(
             return false;
         }
     }
+    return true;
 }
 
 bool evl_modules::get_module_name(
