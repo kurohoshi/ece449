@@ -1,6 +1,13 @@
 #ifndef EVL_NET
 #define EVL_NET
 
+#include <string>
+#include <list>
+#include <map>
+#include <iostream>
+
+#include "syn.h"
+
 // forward declarations
 class netlist;
 class net;
@@ -24,7 +31,7 @@ struct gate{
     std::string name_;
     std::string type_;
     std::vector<pin *> pins_;
-} // gate class
+}; // gate class
 
 class netlist{
     std::list<gate *> gates_;

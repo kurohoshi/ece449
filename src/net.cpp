@@ -46,6 +46,7 @@ bool netlist::create_gates(
     // for each component c in comps {
     //     create_gate(c, wires_table);
     // }
+    return true;
 }
 
 bool netlist::create_gate(

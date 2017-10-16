@@ -3,6 +3,7 @@
 
 #include <string>
 #include <list>
+#include <iostream>
 
 struct evl_token {
     enum token_type {NAME, NUMBER, SINGLE};
@@ -15,7 +16,7 @@ struct evl_token {
 class tokens {
     std::list<evl_token> evl_tokens;
 
-    bool tokens::extract_from_line(
+    bool extract_from_line(
         std::string line,
         int line_no
     );
