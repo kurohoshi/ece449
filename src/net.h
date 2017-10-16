@@ -9,7 +9,7 @@
 
 #include "syn.h"
 
-class evl_modules
+class evl_modules;
 
 // forward declarations
 class netlist;
@@ -17,20 +17,20 @@ class net;
 class pin;
 class gate;
 
-struct net{
+class net{
     std::string name_;
     char signal_;
     std::list<pin *> connections_;
 }; // net class
 
-struct pin{
+class pin{
     char dir_;
     gate *gate_;
     size_t index_;
     net *net_;
 }; // pin class
 
-struct gate{
+class gate{
     std::string name_;
     std::string type_;
     std::vector<pin *> pins_;
