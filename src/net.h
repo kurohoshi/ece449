@@ -7,6 +7,8 @@
 #include <map>
 #include <iostream>
 
+#include "syn.h"
+
 class evl_modules
 
 // forward declarations
