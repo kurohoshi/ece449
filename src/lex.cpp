@@ -6,7 +6,7 @@
 
 #include "lex.h"
 
-bool tokens::extract_from_line(
+bool evl_tokens::extract_from_line(
     std::string line,
     int line_no) {
 
@@ -76,7 +76,7 @@ bool tokens::extract_from_line(
     return true; // nothing left
 }
 
-bool tokens::extract_file(
+bool evl_tokens::extract_file(
     std::string file_name) {
 
     std::ifstream input_file(file_name);
@@ -87,17 +87,17 @@ bool tokens::extract_file(
     tokens.clear(); // be defensive, make it empty
     std::string line;
     for (int line_no = 1; std::getline(input_file, line); ++line_no) {
-        if (!extract_tokens_from_line(line, line_no)) {
+        if (!extract_from_line(line, line_no)) {
           return false;
         }
     }
     return true;
 }
 
-void tokens::display(
+void evl_tokens::display(
     std::ostream &out) {
 
-    for(evl_tokens::const_iterator token = tokens.begin();
+    for(evl_tokens_::const_iterator token = tokens.begin();
         token != tokens.end(); ++token) {
 
         switch(token->type) {
@@ -117,7 +117,7 @@ void tokens::display(
     }
 }
 
-bool tokens::store(
+bool evl_tokens::store(
     std::string file_name) {
 
     std::ofstream output_file(file_name.c_str());
@@ -127,6 +127,6 @@ bool tokens::store(
         return -1;
     }
 
-    display_tokens(output_file);
+    display(output_file);
     return true;
 }

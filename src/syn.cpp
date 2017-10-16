@@ -427,3 +427,19 @@ bool modules::store(
     display(output_file);
     return true;
 }
+
+bool make_wires_table(
+    const evl_wires &wires,
+    evl_wires_table &wires_table) {
+
+    for(auto &wire: wires) {
+        auto same_name = wires_table.find(wire.name);
+        if(same_name != wires_table.end()) {
+            std::cerr << "Wire '" << wire.name
+                << "' is already defined" << std::endl;
+            return false;
+        }
+        wires_table[wire.name] = wire.width;
+    }
+    return true;
+}

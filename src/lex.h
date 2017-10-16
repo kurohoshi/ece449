@@ -13,9 +13,10 @@ struct evl_token {
     int line_no;
 }; // evl_token class
 
-class tokens {
+class evl_tokens {
 public:
-    std::list<evl_token> evl_tokens;
+    typedef std::list<evl_token> evl_tokens_;
+    evl_tokens_ tokens;
 private:
     bool extract_from_line(
         std::string line,

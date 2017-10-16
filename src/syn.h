@@ -14,6 +14,13 @@ public:
 
 typedef std::list<evl_wire> evl_wires;
 
+typedef std::map<std::string, int> evl_wires_table;
+
+bool make_wires_table(
+    const evl_wires &wires,
+    evl_wires_table &wires_table
+);
+
 struct evl_pin {
 public:
     std::string name;
@@ -39,27 +46,28 @@ public:
     evl_components components;
 }; // evl_module class
 
-class modules{
+class evl_modules{
 public:
-    std::list<evl_module> evl_modules;
+    typedef std::list<evl_module> evl_modules_;
+    evl_modules_ modules;
 private:
     bool get_module_name(
         std::string &name,
-        tokens &t
+        evl_tokens &tokens
     );
 
     bool get_wires(
         evl_wires &wires,
-        tokens &t
+        evl_tokens &tokens
     );
 
     bool get_component(
         evl_components &components,
-        tokens &t
+        evl_tokens &tokens
     );
 public:
     bool group(
-        tokens &tokens
+        evl_tokens &tokens
     );
 
     void display(
