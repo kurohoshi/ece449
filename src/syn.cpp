@@ -8,18 +8,18 @@
 #include "lex.h"
 #include "syn.h"
 
-bool modules::group(
-    evl_tokens &tokens) {
+bool evl_modules::group(
+    evl_tokens &toks) {
 
-    for(; !tokens.empty();) {
-        if(tokens.front().type != evl_token::NAME) {
+    for(; !toks.tokens.empty();) {
+        if(toks.tokens.front().type != evl_token::NAME) {
             std::cerr << "Need a NAME token but found '" << token.str
                 << "' on line" << token.line_no << std::endl;
         }
 
         evl_module module;
-        if(token.str == "module") {
-            if(!get_module_name(module.name, tokens)) {
+        if(toks.tokens.front().str == "module") {
+            if(!get_module_name(module.name, toks.tokens)) {
                 return false;
             }
         } else {
@@ -27,25 +27,25 @@ bool modules::group(
             return false;
         }
 
-        for(; (!tokens.empty()) && (tokens.front().str != "endmodule");) {
-            if(tokens.front().type != evl_token::NAME) {
-                std::cerr << "Need a NAME token but found '" << token.str
-                    << "' on line" << token.line_no << std::endl;
+        for(; (!toks.tokens.empty()) && (toks.tokens.front().str != "endmodule");) {
+            if(toks.tokens.front().type != evl_token::NAME) {
+                std::cerr << "Need a NAME token but found '" << toks.tokens.front().str
+                    << "' on line" << toks.tokens.front().line_no << std::endl;
                 return false;
             }
 
-            if(token.str == "wire") {
-                if(!get_wires(module.wires, tokens))
+            if(toks.tokens.front().str == "wire") {
+                if(!get_wires(module.wires, toks.tokens))
                     return false;
                 continue;
             } else {
-                if(!get_component(module.components, tokens))
+                if(!get_component(module.components, toks.tokens))
                     return false;
                 continue;
             }
         }
 
-        if((!tokens.empty()) && (token.str == "endmodule")) {
+        if((!toks.tokens.empty()) && (toks.tokens.front().str == "endmodule")) {
             modules.push_back(module);
         } else {
             std::cerr << "ENDMODULE expected" << std::endl;
@@ -54,23 +54,23 @@ bool modules::group(
     }
 }
 
-bool modules::get_module_name(
+bool evl_modules::get_module_name(
     std::string &name,
     evl_tokens &t) {
 
     //std::cout << "getting module name..." << std::endl;
 
-    if (t.front().str == "module") {
-        t.pop_front();
-        if(t.front().type == evl_token::NAME) {
-            name = t.front().str;
-            t.pop_front();
+    if (t.tokens.front().str == "module") {
+        t.tokens.pop_front();
+        if(t.tokens.front().type == evl_token::NAME) {
+            name = t.tokens.front().str;
+            t.tokens.pop_front();
         } else {
             std::cerr << "Invalid module declaration" << std::endl;
             return false;
         }
-        if (t.front().str == ";") {
-            t.pop_front();
+        if (t.tokens.front().str == ";") {
+            t.tokens.pop_front();
             return true;
         } else {
             std::cerr << "Invalid module declaration" << std::endl;
@@ -80,9 +80,10 @@ bool modules::get_module_name(
         std::cerr << "Invalid module declaration" << std::endl;
         return false;
     }
+    return false;
 }
 
-bool modules::get_wires(
+bool evl_modules::get_wires(
     evl_wires &wires,
     evl_tokens &t) {
 
@@ -93,8 +94,8 @@ bool modules::get_wires(
 
     state_type state = INIT;
     int wire_width = 1;
-    for(; !t.empty() && (state != DONE); t.pop_front()) {
-        evl_token tok = t.front();
+    for(; !t.tokens.empty() && (state != DONE); t.tokens.pop_front()) {
+        evl_token tok = t.tokens.front();
         switch(state) {
             case INIT:
                 if(tok.str == "wire") {
@@ -206,7 +207,7 @@ bool modules::get_wires(
     return true;
 }
 
-bool modules::get_component(
+bool evl_modules::get_component(
     evl_components &components,
     evl_tokens &t) {
 
@@ -220,8 +221,8 @@ bool modules::get_component(
     state_type state = INIT;
     evl_component component;
     evl_pin pin;
-    for(; !t.empty() && (state != DONE); t.pop_front()) {
-        evl_token tok = t.front();
+    for(; !t.tokens.empty() && (state != DONE); t.tokens.pop_front()) {
+        evl_token tok = t.tokens.front();
         //std::cout << t.str << std::endl;
         switch(state) {
             case INIT: {
@@ -372,10 +373,10 @@ bool modules::get_component(
     return true;
 }
 
-void modules::display(
+void evl_modules::display(
     std::ostream &out) const {
 
-    for(evl_modules::const_iterator module = modules.begin();
+    for(evl_modules_::const_iterator module = modules.begin();
         module != modules.end(); ++module) {
 
         out << "module " << module->name << std::endl;
@@ -415,7 +416,7 @@ void modules::display(
     }
 }
 
-bool modules::store(
+bool evl_modules::store(
     std::string file_name) const {
 
     std::ofstream output_file(file_name.c_str());
