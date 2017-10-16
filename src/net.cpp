@@ -56,3 +56,23 @@ bool netlist::create_gate(
     gates_.push_back(g);
     return g->create(c, nets_table_, wires_table);
 }
+
+void netlist::display(
+    std::ostream &out) {
+
+    std::cout << "Display Not Implemented" << std::endl;
+}
+
+bool netlist::store(
+    std::string file_name) {
+
+    std::ofstream output_file(file_name.c_str());
+
+    if(!output_file) {
+        std::cerr << "I can't write " << file_name << std::endl;
+        return -1;
+    }
+
+    display(output_file);
+    return true;
+}

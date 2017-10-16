@@ -7,26 +7,23 @@ class net;
 class pin;
 class gate;
 
-class net{
+struct net{
     std::string name_;
     char signal_;
     std::list<pin *> connections_;
-public:
 }; // net class
 
-class pin{
+struct pin{
     char dir_;
     gate *gate_;
     size_t index_;
     net *net_;
-public:
 }; // pin class
 
-class gate{
+struct gate{
     std::string name_;
     std::string type_;
     std::vector<pin *> pins_;
-public:
 } // gate class
 
 class netlist{
@@ -37,7 +34,16 @@ public:
     bool create(
         const evl_wires &wires,
         const evl_components &comps,
-        const evl_wires_table &wires_table);
+        const evl_wires_table &wires_table
+    );
+
+    void display(
+        std::ostream &out
+    ) const;
+
+    bool store(
+        std::string file_name
+    ) const;
 }; // netlist class
 
 #endif

@@ -7,7 +7,7 @@
 #include "structs.h"
 #include "lex.h"
 
-bool tokens::extract_tokens_from_line(
+bool tokens::extract_from_line(
     std::string line,
     int line_no) {
 
@@ -77,7 +77,7 @@ bool tokens::extract_tokens_from_line(
     return true; // nothing left
 }
 
-bool tokens::extract_tokens_from_file(
+bool tokens::extract_file(
     std::string file_name) {
 
     std::ifstream input_file(file_name);
@@ -88,9 +88,46 @@ bool tokens::extract_tokens_from_file(
     tokens.clear(); // be defensive, make it empty
     std::string line;
     for (int line_no = 1; std::getline(input_file, line); ++line_no) {
-        if (!extract_tokens_from_line(line, line_no, tokens)) {
+        if (!extract_tokens_from_line(line, line_no)) {
           return false;
         }
     }
+    return true;
+}
+
+void tokens::display(
+    std::ostream &out) {
+
+    for(evl_tokens::const_iterator token = tokens.begin();
+        token != tokens.end(); ++token) {
+
+        switch(token->type) {
+            case evl_token::SINGLE:
+                out << "SINGLE " << token->str << std::endl;
+                break;
+            case evl_token::NAME:
+                out << "NAME " << token->str << std::endl;
+                break;
+            case evl_token::NUMBER:
+                out << "NUMBER " << token->str << std::endl;
+                break;
+            default:
+                std::cerr << "Something broke..." << std::endl;
+                break;
+        }
+    }
+}
+
+bool tokens::store(
+    std::string file_name) {
+
+    std::ofstream output_file(file_name.c_str());
+
+    if(!output_file) {
+        std::cerr << "I can't write " << file_name << std::endl;
+        return -1;
+    }
+
+    display_tokens(output_file);
     return true;
 }

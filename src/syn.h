@@ -6,26 +6,6 @@
 
 #include "lex.h"
 
-class statements {
-
-    class evl_statement {
-    public:
-        enum statement_type {MODULE, WIRE, COMPONENT, ENDMODULE};
-
-        statement_type type;
-        evl_tokens tokens;
-    }; // evl_statement class
-
-    std::list<evl_statement> evl_statements;
-
-public:
-    bool group_tokens_into_statements(
-        evl_statements &statements,
-        evl_tokens &tokens
-    );
-}; // evl_statement class
-
-
 class evl_wire {
 public:
     std::string name;
@@ -43,17 +23,42 @@ public:
 
 typedef std::list<evl_component> evl_compoenents;
 
-class evl_module {
+struct evl_module {
 public:
     std::string name;
     evl_wires wires;
     evl_components components;
-
-    bool analyze_statements(
-        evl_statements &statements,
-        evl_modules &modules);
 }; // evl_module class
 
-typedef std::list<evl_module> evl_modules;
+class modules{
+    std::list<evl_module> evl_modules;
+
+    bool get_module_name(
+        std::string &name,
+        evl_tokens &t
+    );
+
+    bool get_wires(
+        evl_wires &wires,
+        evl_tokens &t
+    );
+
+    bool get_component(
+        evl_components &components,
+        evl_tokens &t
+    );
+public:
+    bool group(
+        evl_statements &statements
+    );
+
+    void display(
+        std::ostream &out
+    ) const;
+
+    bool store(
+        std::string file_name
+    ) const;
+};
 
 #endif

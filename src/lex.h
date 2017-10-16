@@ -4,24 +4,23 @@
 #include <string>
 #include <list>
 
-#include "structs.h"
+struct evl_token {
+    enum token_type {NAME, NUMBER, SINGLE};
 
+    token_type type;
+    std::string str;
+    int line_no;
+}; // evl_token class
 
 class tokens {
-
-    class evl_token {
-    public:
-        enum token_type {NAME, NUMBER, SINGLE};
-
-        token_type type;
-        std::string str;
-        int line_no;
-    }; // evl_token class
-
     std::list<evl_token> evl_tokens;
 
+    bool tokens::extract_from_line(
+        std::string line,
+        int line_no
+    );
 public:
-    bool extract(
+    bool extract_file(
         std::string file_name
     );
 
@@ -32,8 +31,6 @@ public:
     bool store(
         std::string file_name
     ) const;
-
 }; // evl_tokens class
-
 
 #endif
