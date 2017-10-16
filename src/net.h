@@ -40,6 +40,23 @@ class netlist{
     std::list<gate *> gates_;
     std::list<net *> nets_;
     std::map<std::string, net *> nets_table_;
+
+    bool create_nets(
+        const evl_wires &wires);
+
+    bool create_net(
+        std::string net_name);
+
+    std::string make_net_name(
+        std::string wire_name, int i);
+
+    bool create_gates(
+        const evl_components &comps,
+        const evl_wires_table &wires_table);
+
+    bool create_gate(
+        const evl_component &c,
+        const evl_evl_wires_table &wires_table);
 public:
     bool create(
         const evl_wires &wires,

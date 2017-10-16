@@ -23,7 +23,7 @@ bool netlist::create_net(std::string net_name) {
     nets_.push_back(n);
 }
 
-std::string make_net_name(std::string wire_name, int i) {
+std::string netlist::make_net_name(std::string wire_name, int i) {
     assert(i>= 0);
     std::ostringstream oss;
     oss << wire_name << "[" << i << "]";
