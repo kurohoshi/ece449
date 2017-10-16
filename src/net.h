@@ -56,11 +56,8 @@ class netlist{
 
     bool create_gate(
         const evl_component &c,
-<<<<<<< HEAD
         const evl_wires_table &wires_table);
-=======
-        const evl_evl_wires_table &wires_table);
->>>>>>> a6e389cdfc88d47be4019f6a045454fdcf89d943
+
 public:
     bool create(
         const evl_wires &wires,
