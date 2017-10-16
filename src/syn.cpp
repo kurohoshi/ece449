@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <string>
 #include <list>
+#include <map>
 #include <iostream>
 #include <algorithm>
 
