@@ -12,71 +12,7 @@
 
 bool evl_modules::get_module_name(
     std::string &name,
-    evl_tokens &tokens
-);
-
-bool evl_modules::get_wires(
-    evl_wires &wires,
-    evl_tokens &tokens
-);
-
-bool evl_modules::get_component(
-    evl_components &components,
-    evl_tokens &tokens
-);
-
-bool evl_modules::group(
-    evl_tokens &toks) {
-
-    for(; !toks.tokens.empty();) {
-        if(toks.tokens.front().type != evl_token::NAME) {
-            std::cerr << "Need a NAME token but found '" << toks.tokens.front().str
-                << "' on line" << toks.tokens.front().line_no << std::endl;
-        }
-
-        evl_module module;
-        if(toks.tokens.front().str == "module") {
-            if(!get_module_name(module.name, toks.tokens)) {
-                return false;
-            }
-        } else {
-            std::cerr << "MODULE Expected" << std::endl;
-            return false;
-        }
-
-        for(; (!toks.tokens.empty()) && (toks.tokens.front().str != "endmodule");) {
-            if(toks.tokens.front().type != evl_token::NAME) {
-                std::cerr << "Need a NAME token but found '" << toks.tokens.front().str
-                    << "' on line" << toks.tokens.front().line_no << std::endl;
-                return false;
-            }
-
-            if(toks.tokens.front().str == "wire") {
-                if(!get_wires(module.wires, toks.tokens))
-                    return false;
-                continue;
-            } else {
-                if(!get_component(module.components, toks.tokens))
-                    return false;
-                continue;
-            }
-        }
-
-        if((!toks.tokens.empty()) && (toks.tokens.front().str == "endmodule")) {
-            modules.push_back(module);
-        } else {
-            std::cerr << "ENDMODULE expected" << std::endl;
-            return false;
-        }
-    }
-    return true;
-}
-
-bool evl_modules::get_module_name(
-    std::string &name,
     evl_tokens &t) {
-
-    //std::cout << "getting module name..." << std::endl;
 
     if (t.tokens.front().str == "module") {
         t.tokens.pop_front();
@@ -388,6 +324,53 @@ bool evl_modules::get_component(
     }
     components.push_back(component);
 
+    return true;
+}
+
+bool evl_modules::group(
+    evl_tokens &toks) {
+
+    for(; !toks.tokens.empty();) {
+        if(toks.tokens.front().type != evl_token::NAME) {
+            std::cerr << "Need a NAME token but found '" << toks.tokens.front().str
+                << "' on line" << toks.tokens.front().line_no << std::endl;
+        }
+
+        evl_module module;
+        if(toks.tokens.front().str == "module") {
+            if(!get_module_name(module.name, toks.tokens)) {
+                return false;
+            }
+        } else {
+            std::cerr << "MODULE Expected" << std::endl;
+            return false;
+        }
+
+        for(; (!toks.tokens.empty()) && (toks.tokens.front().str != "endmodule");) {
+            if(toks.tokens.front().type != evl_token::NAME) {
+                std::cerr << "Need a NAME token but found '" << toks.tokens.front().str
+                    << "' on line" << toks.tokens.front().line_no << std::endl;
+                return false;
+            }
+
+            if(toks.tokens.front().str == "wire") {
+                if(!get_wires(module.wires, toks.tokens))
+                    return false;
+                continue;
+            } else {
+                if(!get_component(module.components, toks.tokens))
+                    return false;
+                continue;
+            }
+        }
+
+        if((!toks.tokens.empty()) && (toks.tokens.front().str == "endmodule")) {
+            modules.push_back(module);
+        } else {
+            std::cerr << "ENDMODULE expected" << std::endl;
+            return false;
+        }
+    }
     return true;
 }
 
