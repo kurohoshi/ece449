@@ -95,7 +95,7 @@ bool evl_tokens::extract_file(
 }
 
 void evl_tokens::display(
-    std::ostream &out) {
+    std::ostream &out) const {
 
     for(evl_tokens_::const_iterator token = tokens.begin();
         token != tokens.end(); ++token) {
@@ -118,7 +118,7 @@ void evl_tokens::display(
 }
 
 bool evl_tokens::store(
-    std::string file_name) {
+    std::string file_name) const {
 
     std::ofstream output_file(file_name.c_str());
 

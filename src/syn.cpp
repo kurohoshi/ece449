@@ -373,7 +373,7 @@ bool modules::get_component(
 }
 
 void modules::display(
-    std::ostream &out) {
+    std::ostream &out) const {
 
     for(evl_modules::const_iterator module = modules.begin();
         module != modules.end(); ++module) {
@@ -416,7 +416,7 @@ void modules::display(
 }
 
 bool modules::store(
-    std::string file_name) {
+    std::string file_name) const {
 
     std::ofstream output_file(file_name.c_str());
 

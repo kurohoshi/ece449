@@ -1,11 +1,12 @@
 #ifndef SYN
 #define SYN
 
+#include <iostream>
 #include <string>
 #include <list>
 #include <map>
 
-#include "lex.h"
+class evl_tokens;
 
 struct evl_wire {
 public:
