@@ -10,13 +10,28 @@
 #include "lex.h"
 #include "syn.h"
 
+bool evl_modules::get_module_name(
+    std::string &name,
+    evl_tokens &tokens
+);
+
+bool evl_modules::get_wires(
+    evl_wires &wires,
+    evl_tokens &tokens
+);
+
+bool evl_modules::get_component(
+    evl_components &components,
+    evl_tokens &tokens
+);
+
 bool evl_modules::group(
     evl_tokens &toks) {
 
     for(; !toks.tokens.empty();) {
         if(toks.tokens.front().type != evl_token::NAME) {
             std::cerr << "Need a NAME token but found '" << toks.tokens.front().str
-                << "' on line" << token.line_no << std::endl;
+                << "' on line" << toks.tokens.front().line_no << std::endl;
         }
 
         evl_module module;
