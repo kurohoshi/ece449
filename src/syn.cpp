@@ -4,6 +4,8 @@
 #include <map>
 #include <iostream>
 #include <algorithm>
+#include <fstream>
+#include <cstring>
 
 #include "lex.h"
 #include "syn.h"

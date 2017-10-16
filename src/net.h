@@ -25,7 +25,7 @@ public:
     net(std::string net_name);
 }; // net class
 
-net::net(net_name) {
+net::net(std::string net_name) {
     name_ = net_name;
 }
 
