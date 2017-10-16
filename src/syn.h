@@ -40,25 +40,26 @@ public:
 }; // evl_module class
 
 class modules{
+public:
     std::list<evl_module> evl_modules;
-
+private:
     bool get_module_name(
         std::string &name,
-        evl_tokens &t
+        tokens &t
     );
 
     bool get_wires(
         evl_wires &wires,
-        evl_tokens &t
+        tokens &t
     );
 
     bool get_component(
         evl_components &components,
-        evl_tokens &t
+        tokens &t
     );
 public:
     bool group(
-        evl_statements &statements
+        tokens &tokens
     );
 
     void display(
