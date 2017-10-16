@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <assert.h>
 
 #include "net.h"
 
@@ -23,7 +24,7 @@ bool netlist::create_net(std::string net_name) {
     nets_.push_back(n);
 }
 
-std::string make_net_name(std::string wire_name, int i) {
+std::string netlist::make_net_name(std::string wire_name, int i) {
     assert(i>= 0);
     std::ostringstream oss;
     oss << wire_name << "[" << i << "]";
@@ -51,7 +52,7 @@ bool netlist::create(
 
 bool netlist::create_gate(
     const evl_component &c,
-    const evl_evl_wires_table &wires_table) {
+    const evl_wires_table &wires_table) {
 
     gate *g = new gate;
     gates_.push_back(g);
