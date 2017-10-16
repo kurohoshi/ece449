@@ -5,15 +5,6 @@
 
 #include "net.h"
 
-bool netlist::create(
-    const evl_wires &wires,
-    const evl_components &comps,
-    const evl_wires_table &wires_table) {
-
-    return create_nets()
-        && create_gates();
-}
-
 bool netlist::create_nets(const evl_wires &wires) {
     // for each wire w in wires {
     //     if(width of w == 1) {
@@ -47,6 +38,15 @@ bool netlist::create_gates(
     //     create_gate(c, wires_table);
     // }
     return true;
+}
+
+bool netlist::create(
+    const evl_wires &wires,
+    const evl_components &comps,
+    const evl_wires_table &wires_table) {
+
+    return create_nets()
+        && create_gates();
 }
 
 bool netlist::create_gate(
