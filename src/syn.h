@@ -55,17 +55,17 @@ public:
 private:
     bool get_module_name(
         std::string &name,
-        evl_tokens &tokens
+        evl_tokens::evl_tokens_ &t
     );
 
     bool get_wires(
         evl_wires &wires,
-        evl_tokens &tokens
+        evl_tokens::evl_tokens_ &t
     );
 
     bool get_component(
         evl_components &components,
-        evl_tokens &tokens
+        evl_tokens::evl_tokens_ &t
     );
 public:
     bool group(
