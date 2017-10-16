@@ -12,19 +12,19 @@
 
 bool evl_modules::get_module_name(
     std::string &name,
-    evl_tokens::evl_tokens_ &t) {
+    evl_tokens &t) {
 
-    if (t.front().str == "module") {
-        t.pop_front();
-        if(t.front().type == evl_token::NAME) {
-            name = t.front().str;
-            t.pop_front();
+    if (t.tokens.front().str == "module") {
+        t.tokens.pop_front();
+        if(t.tokens.front().type == evl_token::NAME) {
+            name = t.tokens.front().str;
+            t.tokens.pop_front();
         } else {
             std::cerr << "Invalid module declaration" << std::endl;
             return false;
         }
-        if (t.front().str == ";") {
-            t.pop_front();
+        if (t.tokens.front().str == ";") {
+            t.tokens.pop_front();
             return true;
         } else {
             std::cerr << "Invalid module declaration" << std::endl;
@@ -48,8 +48,8 @@ bool evl_modules::get_wires(
 
     state_type state = INIT;
     int wire_width = 1;
-    for(; !t.empty() && (state != DONE); t.pop_front()) {
-        evl_token tok = t.front();
+    for(; !t.tokens.empty() && (state != DONE); t.tokens.pop_front()) {
+        evl_token tok = t.tokens.front();
         switch(state) {
             case INIT:
                 if(tok.str == "wire") {
@@ -175,8 +175,8 @@ bool evl_modules::get_component(
     state_type state = INIT;
     evl_component component;
     evl_pin pin;
-    for(; !t.empty() && (state != DONE); t.pop_front()) {
-        evl_token tok = t.front();
+    for(; !t.tokens.empty() && (state != DONE); t.tokens.pop_front()) {
+        evl_token tok = t.tokens.front();
         //std::cout << t.str << std::endl;
         switch(state) {
             case INIT: {
@@ -338,7 +338,7 @@ bool evl_modules::group(
 
         evl_module module;
         if(toks.tokens.front().str == "module") {
-            if(!get_module_name(module.name, toks.tokens)) {
+            if(!get_module_name(module.name, toks)) {
                 return false;
             }
         } else {
@@ -354,11 +354,11 @@ bool evl_modules::group(
             }
 
             if(toks.tokens.front().str == "wire") {
-                if(!get_wires(module.wires, toks.tokens))
+                if(!get_wires(module.wires, toks))
                     return false;
                 continue;
             } else {
-                if(!get_component(module.components, toks.tokens))
+                if(!get_component(module.components, toks))
                     return false;
                 continue;
             }
