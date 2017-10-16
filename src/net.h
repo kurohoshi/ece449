@@ -23,10 +23,12 @@ class net{
     std::list<pin *> connections_;
 public:
     net(std::string net_name);
+
+    void append_pin(pin *p);
 }; // net class
 
-net::net(std::string net_name) {
-    name_ = net_name;
+net::net(std::string net_name)
+    : name_(net_name) {
 }
 
 class pin{
@@ -34,12 +36,31 @@ class pin{
     gate *gate_;
     size_t index_;
     net *net_;
+
+public:
+    bool create(
+        gate *g,
+        size_t index,
+        const evl_pin &p,
+        const std::map<std::string, net *> &nets_table);
 }; // pin class
 
 class gate{
     std::string name_;
     std::string type_;
     std::vector<pin *> pins_;
+
+    bool create_pin(
+        const evl_pin &ep,
+        size_t index,
+        const std::map<std::string, net *> &nets_table,
+        const evl_wires_table &wires_table);
+
+public:
+    bool create(
+        const evl_component &c,
+        const std::map<std::string, net *> &nets_table,
+        const evl_wires_table &wires_table);
 }; // gate class
 
 class netlist{
