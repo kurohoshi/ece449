@@ -86,13 +86,13 @@ bool netlist::create(
     const evl_wires_table &wires_table) {
 
     for(evl_wires::const_iterator wire = wires.begin(); wire != wires.end(); ++wire) {
-        if(wire.width == 1) {
-            if(create_net(wire.name))
+        if(wire->width == 1) {
+            if(create_net(wire->name))
                 return false;
         } else {
-            for(int i = 0; i < wire.width; ++i) {
+            for(int i = 0; i < wire->width; ++i) {
                 std::ostringstream oss;
-                oss << wire.name << "[" << i << "]";
+                oss << wire->name << "[" << i << "]";
                 if(!create_net(oss.str()))
                     return false;
             }
