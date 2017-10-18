@@ -87,14 +87,12 @@ bool netlist::create(
 
     for(evl_wires::const_iterator wire = wires.begin(); wire != wires.end(); ++wire) {
         if(wire->width == 1) {
-            if(create_net(wire->name))
-                return false;
+            create_net(wire->name);
         } else {
             for(int i = 0; i < wire->width; ++i) {
                 std::ostringstream oss;
                 oss << wire->name << "[" << i << "]";
-                if(!create_net(oss.str()))
-                    return false;
+                create_net(oss.str());
             }
         }
     }
@@ -102,7 +100,7 @@ bool netlist::create(
     for(evl_components::const_iterator c = comps.begin(); c != comps.end(); ++c) {
         gate *g = new gate;
         gates_.push_back(g);
-        if(!(g->create(c, nets_table_, wires_table)))
+        if(!(g->create(*c, nets_table_, wires_table)))
             return false;
     }
 

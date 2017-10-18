@@ -22,14 +22,11 @@ class net{
     char signal_;
     std::list<pin *> connections_;
 public:
-    net(std::string net_name);
+    net(std::string net_name)
+        : name_(net_name) {}
 
     void append_pin(pin *p);
 }; // net class
-
-net::net(std::string net_name)
-    : name_(net_name) {
-}
 
 class pin{
     char dir_;
