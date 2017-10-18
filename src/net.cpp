@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "net.h"
+#include "syn.h"
 
 //********************************************************
 //             Net Member Functions
