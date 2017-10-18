@@ -78,6 +78,13 @@ bool netlist::create_net(std::string net_name) {
     nets_.push_back(n);
 }
 
+std::string netlist::make_net_name(std::string wire_name, int i) {
+    assert(i>= 0);
+    std::ostringstream oss;
+    oss << wire_name << "[" << i << "]";
+    return oss.str();
+}
+
 bool netlist::create_nets(const evl_wires &wires) {
     for(evl_wires::const_iterator wire = wires.begin(); wire != wires.end(); ++wire) {
         if(wire.width == 1) {
@@ -89,13 +96,6 @@ bool netlist::create_nets(const evl_wires &wires) {
         }
     }
     return true;
-}
-
-std::string netlist::make_net_name(std::string wire_name, int i) {
-    assert(i>= 0);
-    std::ostringstream oss;
-    oss << wire_name << "[" << i << "]";
-    return oss.str();
 }
 
 bool netlist::create_gate(
@@ -127,13 +127,13 @@ bool netlist::create(
 }
 
 void netlist::display(
-    std::ostream &out) {
+    std::ostream &out) const {
 
     std::cout << "Display Not Implemented" << std::endl;
 }
 
 bool netlist::store(
-    std::string file_name) {
+    std::string file_name) const {
 
     std::ofstream output_file(file_name.c_str());
 
