@@ -28,7 +28,32 @@ bool pin::create(
     const evl_pin &p,
     const std::map<std::string, net *> &nets_table) {
 
-    //store g and index
+    gate_ = g;
+    index_ = index;
+    if(p->msb == -1) {
+        assert(p->lsb == -1);
+        net_ = nets_table.find(p->name);
+        if(net_ == nets_table.end()) {
+            std::cerr << "'" << p->name << "' was not found in nets_table"
+                << std::endl;
+            return false;
+        }
+        net_->append_pin(p);
+    } else if(p->msb >= 0) {
+        std::cout << "pin bus not implemented" << std::endl;
+        if(p->lsb == -1) {
+            // not implemented
+        } else if(p->lsb >= 0) {
+            // not implemented
+        } else {
+            std::cerr << "incorrect lsb pin assignment" << std::endl;
+            return false;
+        }
+    } else {
+        std::cerr << "incorrect msb pin assignment" << std::endl;
+        return false;
+    }
+
     //if(p.msb == -1) { //a 1-bit wire
     //  net_name = p.name;
     //  net_ = find net_name in nets_table
@@ -46,26 +71,20 @@ bool gate::create(
     const std::map<std::string, net *> &nets_table,
     const evl_wires_table &wires_table) {
 
-    //set gate type and name
-    //size_t index = 0;
-    //for each evl_pin ep in c {
-    //  create_pin(ep, index, nets_table, wires_table);
-    //  index++
-    //}
+    name_ = c.name;
+    type_ = c.type;
+
+    size_t index = 0;
+    for(evl_pins::const_iterator pin = c.pins.begin(); pin != c.pins.end(); ++pin) {
+        assert(wires_table.find(pin->name) != wires_table.end());
+        pin *p = new pin;
+        pins_.push_back(p);
+        if(!(p->create(this, index, pin, nets_table)))
+            return false;
+        index++;
+    }
+
     //return validate_structural_semantics()
-    return true;
-}
-
-bool gate::create_pin(
-    const evl_pin &ep,
-    size_t index,
-    const std::map<std::string, net *> &nets_table,
-    const evl_wires_table &wires_table) {
-
-    //resolve semantics of ep using wires_table
-    //pin *p = new pin;
-    //pins_.push_back(p);
-    //return p->create(this, index, ep, nets_table)
     return true;
 }
 
@@ -81,11 +100,12 @@ void netlist::create_net(std::string net_name) {
 }
 
 bool netlist::create(
-    const evl_wires &wires,
-    const evl_components &comps,
+    const evl_module &module,
     const evl_wires_table &wires_table) {
 
-    for(evl_wires::const_iterator wire = wires.begin(); wire != wires.end(); ++wire) {
+    name = module.name;
+
+    for(evl_wires::const_iterator wire = module.wires.begin(); wire != module.wires.end(); ++wire) {
         if(wire->width == 1) {
             create_net(wire->name);
         } else {
@@ -110,7 +130,29 @@ bool netlist::create(
 void netlist::display(
     std::ostream &out) const {
 
-    std::cout << "Display Not Implemented" << std::endl;
+    out << "module" << name << std::endl;
+    if(!nets_.empty()) {
+        out <<  "nets " << nets_.size() << std::endl;
+        for(std::list<net *>::const_iterator net = nets_.begin(); net != nets_.end(); ++net) {
+            out << "  net " << net->name << " " << net->connections_.size() << std::endl;
+            for_each(net->connections_.begin(), net->connections_.end(),
+                [&](pin *p) {
+                    out << p->gate->name_ << " " << p->gate->type_ << /* pin position << */std::endl;
+                }
+            );
+        }
+    }
+    if(!gates_.empty()) {
+        out << "components " << gates_.size() << std::endl;
+        for(std::list<gate *>::const_iterator gate = gates_.begin(); gate != gates_.end(); ++gate) {
+            out << "  component " << gate->name_ << " " << gate->pins_.size();
+            for_each(gate->pins_.begin(), gate->pins_.end(),
+                [&]() {
+                    // store each pin, pin width, net names
+                }
+            )
+        }
+    }
 }
 
 bool netlist::store(

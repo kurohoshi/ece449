@@ -61,6 +61,7 @@ public:
 }; // gate class
 
 class netlist{
+    std::string name_;
     std::list<gate *> gates_;
     std::list<net *> nets_;
     std::map<std::string, net *> nets_table_;
