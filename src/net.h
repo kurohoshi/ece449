@@ -97,7 +97,8 @@ class netlist{
     std::map<std::string, net *> nets_table_;
 
     void create_net(
-        std::string net_name);
+        std::string net_name,
+        int width);
 
 public:
     bool create(
