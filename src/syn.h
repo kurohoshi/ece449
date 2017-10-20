@@ -15,10 +15,10 @@ public:
     evl_wire(std::string n, int w)
         : name(n), width(w) {}
 
-    std::string get_name() { return name; }
+    std::string get_name() const { return name; }
     void set_name(std::string new_name) { name = new_name; }
 
-    int get_width() { return width; }
+    int get_width() const { return width; }
     void set_width(int new_width) { width = new_width; }
 
     ~evl_wire() {}
@@ -41,13 +41,13 @@ public:
     evl_pin(std::string n, int m, int l)
         : name(n), bus_msb(m), bus_lsb(l) {}
 
-    std::string get_name() { return name; }
+    std::string get_name() const { return name; }
     void set_name(std::string new_name) { name = new_name; }
 
-    int get_msb() { return bus_msb; }
+    int get_msb() const { return bus_msb; }
     void set_msb(int new_msb) { bus_msb = new_msb; }
 
-    int get_lsb() { return bus_lsb; }
+    int get_lsb() const { return bus_lsb; }
     void set_lsb(int new_lsb) { bus_lsb = new_lsb; }
 
     ~evl_pin() {}
@@ -63,10 +63,10 @@ public:
     evl_component(std::string t, std::string n)
         : type(t), name(n) {}
 
-    std::string get_name() { return name; }
+    std::string get_name() const { return name; }
     void set_name(std::string new_name) { name = new_name; }
 
-    std::string get_type() { return type; }
+    std::string get_type() const { return type; }
     void set_type(std::string new_type) { name = new_type; }
 
     void display(
@@ -85,7 +85,7 @@ struct evl_module {
 public:
     evl_module() {}
 
-    std::string get_name() { return name; }
+    std::string get_name() const { return name; }
     void set_name(std::string new_name) { name = new_name; }
 
     bool get_module_name(

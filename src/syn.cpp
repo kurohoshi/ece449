@@ -173,7 +173,7 @@ bool evl_module::get_wires(
     return true;
 }
 
-bool evl_modules::get_component(
+bool evl_module::get_component(
     evl_tokens &t) {
 
     enum state_type {
