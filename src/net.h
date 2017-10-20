@@ -106,7 +106,6 @@ class netlist{
 public:
     bool create(
         const evl_module &module,
-        const evl_wires_table &wires_table
     );
 
     void display(

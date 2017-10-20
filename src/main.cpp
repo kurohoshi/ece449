@@ -37,8 +37,6 @@ int main(int argc, char *argv[]){
         return -1;
     }
 
-    evl_wires_table wires_table;
-    make_wires_table(mods.front().get_wires_list(), wires_table);
     //std::cout << "Organizing Complete..." << std::endl;
     //std::cout << "Displaying Modules..." << std::endl;
     mods.display(CONSOLE); //look at the output of modules
@@ -49,7 +47,7 @@ int main(int argc, char *argv[]){
     //std::cout << "Storing Complete" << std::endl;
 
     netlist net;
-    net.create(mods.front(), wires_table);
+    net.create(mods.front());
 
     net.display(CONSOLE);
     net.store(evl_file+".netlist");

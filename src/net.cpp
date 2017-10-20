@@ -125,8 +125,7 @@ void netlist::create_net(std::string net_name) {
 }
 
 bool netlist::create(
-    const evl_module &module,
-    const evl_module::evl_wires_table &wires_table) {
+    const evl_module &module) {
 
     name_ = module.get_name();
 
@@ -149,7 +148,7 @@ bool netlist::create(
 
         gate *g = new gate;
         gates_.push_back(g);
-        if(!(g->create(*c, nets_table_, wires_table)))
+        if(!(g->create(*c, nets_table_, module.get_wires_table())))
             return false;
     }
 

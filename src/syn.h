@@ -102,6 +102,8 @@ public:
         { return components.begin(); }
     evl_components::const_iterator components_end() const
         { return components.end(); }
+        
+    evl_wires_table get_wires_table() const { return wires_table; }
 
     bool get_module_name(
         evl_tokens &t
