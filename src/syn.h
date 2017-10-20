@@ -6,6 +6,8 @@
 #include <list>
 #include <map>
 
+#include "syn.h"
+
 class evl_tokens;
 
 class evl_wire {
