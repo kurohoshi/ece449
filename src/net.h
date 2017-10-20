@@ -28,7 +28,7 @@ public:
 
     void append_pin(pin *p);
 
-    std:string get_name() { return name_; }
+    std::string get_name() { return name_; }
     void set_name(std::string new_name) { name_ = new_name; }
 
     char get_signal() { return signal_; }
