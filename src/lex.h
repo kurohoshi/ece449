@@ -16,13 +16,13 @@ public:
     evl_token(token_type t, std::string s, int l)
         : type(t), str(s), line_no(l) {}
 
-    token_type get_type() { return type; }
+    token_type get_type() const { return type; }
     void set_type(token_type new_type) { type = new_type; }
 
-    std::string get_str() { return str; }
+    std::string get_str() const { return str; }
     void set_str(std::string new_str) { str = new_str; }
 
-    int get_line() { return line_no; }
+    int get_line() const { return line_no; }
     void set_line(int new_line_no) { line_no = new_line_no; }
 
     ~evl_token() {}
