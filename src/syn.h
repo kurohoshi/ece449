@@ -90,6 +90,8 @@ public:
     std::string get_name() const { return name; }
     void set_name(std::string new_name) { name = new_name; }
 
+    evl_wires get_wires_list() const { return wires; }
+
     bool get_module_name(
         evl_tokens &t
     );
@@ -113,6 +115,10 @@ class evl_modules{
     typedef std::list<evl_module> evl_modules_;
     evl_modules_ modules;
 public:
+    evl_modules() {}
+
+    evl_module front() { return modules.front(); }
+
     bool group(
         evl_tokens &tokens
     );
