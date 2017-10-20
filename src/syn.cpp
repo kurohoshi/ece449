@@ -184,7 +184,7 @@ bool evl_module::get_component(
     //std::cout << "getting component..." << std::endl;
 
     state_type state = INIT;
-    evl_component component;
+    evl_component component = new evl_component("", "");
     evl_pin pin;
     for(; !t.empty() && (state != DONE); t.pop_front()) {
         evl_token tok = t.front();
