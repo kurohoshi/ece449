@@ -84,7 +84,7 @@ bool evl_module::get_wires(
                     evl_wire *wire = new evl_wire(
                         tok.get_str(),
                         wire_width);
-                    wires.push_back(wire);
+                    wires.push_back(*wire);
 
                     state = NAME;
                 } else {
@@ -148,7 +148,7 @@ bool evl_module::get_wires(
                     evl_wire *wire = new evl_wire(
                         tok.get_str(),
                         wire_width);
-                    wires.push_back(wire);
+                    wires.push_back(*wire);
 
                     state = NAME;
                 } else {
