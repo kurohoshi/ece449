@@ -83,7 +83,7 @@ bool gate::create(
 
             pin *p = new pin;
             pins_.push_back(p);
-            if(!(p->create(this, index, pin_, nets_table))) {
+            if(!(p->create(this, index, *pin_, nets_table))) {
                 return false;
             }
             index++;
