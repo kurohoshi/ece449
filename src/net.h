@@ -34,6 +34,16 @@ public:
     char get_signal() const { return signal_; }
     void set_signal(char new_signal) { signal_ = new_signal; }
 
+    int connections_size() const { return connections_.size(); }
+    std::list<pin *>::const_iterator connections_begin()
+        { return connections_.begin(); }
+    std::list<pin *>::const_iterator connections_end()
+        { return connections_.end(); }
+
+    void display(
+        std::ostream &out
+    ) const;
+
     // how to access pins_ vector
 }; // net class
 
@@ -60,7 +70,9 @@ public:
     std::string get_type() const { return type_; }
     void set_type(std::string new_type) { type_ = new_type; }
 
-    // how to access pins_ vector
+    void display(
+        std::ostream &out
+    ) const;
 }; // gate class
 
 class pin{

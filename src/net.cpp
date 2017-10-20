@@ -138,17 +138,29 @@ bool netlist::create(
     return true;
 }
 
-void netlist::display(
+void net::display(
     std::ostream &out) const {
 
-    out << "module" << name << std::endl;
+
+}
+
+void gate::display(
+    std::ostream &out) const {
+
+
+}
+
+void netlist::display(
+    std::ostream &out) const {
+/*
+    out << "module" << name_ << std::endl;
     if(!nets_.empty()) {
         out <<  "nets " << nets_.size() << std::endl;
         for(std::list<net *>::const_iterator net = nets_.begin(); net != nets_.end(); ++net) {
-            out << "  net " << net->name << " " << net->connections_.size() << std::endl;
-            for_each(net->connections_.begin(), net->connections_.end(),
+            out << "  net " << *net->get_name() << " " << *net->connections_size() << std::endl;
+            for_each(net->connections_begin(), net->connections_end(),
                 [&](pin *p) {
-                    out << p->gate->name_ << " " << p->gate->type_ << /* pin position << */std::endl;
+                    out << p->gate->name_ << " " << p->gate->type_ << pin position << std::endl;
                 }
             );
         }
@@ -164,6 +176,7 @@ void netlist::display(
             )
         }
     }
+*/
 }
 
 bool netlist::store(
