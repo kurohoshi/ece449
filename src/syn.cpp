@@ -184,7 +184,7 @@ bool evl_module::get_component(
     //std::cout << "getting component..." << std::endl;
 
     state_type state = INIT;
-    evl_component component = new evl_component("", "");
+    evl_component *component = new evl_component("", "");
     evl_pin pin;
     for(; !t.empty() && (state != DONE); t.pop_front()) {
         evl_token tok = t.front();
@@ -192,8 +192,7 @@ bool evl_module::get_component(
         switch(state) {
             case INIT: {
                 if(tok.get_type() == evl_token::NAME) {
-                    component.set_type(tok.get_str());
-                    component.set_name("");
+                    component->set_type(tok.get_str());
                     state = TYPE;
                 } else {
                     std::cerr << "Need name but found '"
@@ -205,7 +204,7 @@ bool evl_module::get_component(
             }
             case TYPE: {
                 if(tok.get_type() == evl_token::NAME) {
-                    component.set_name(tok.get_str());
+                    component->set_name(tok.get_str());
                     state = NAME;
                 } else if(tok.get_str() == "("){
                     state = PINS;
@@ -243,10 +242,10 @@ bool evl_module::get_component(
                 if(tok.get_str() == "[") {
                     state = BUS;
                 } else if(tok.get_str() == ")") {
-                    component.add_pin(pin);
+                    component->add_pin(pin);
                     state = PINS_DONE;
                 } else if(tok.get_str() == ",") {
-                    component.add_pin(pin);
+                    component->add_pin(pin);
                     state = PINS;
                 } else {
                     std::cerr << "LINE " << tok.get_line()
@@ -301,10 +300,10 @@ bool evl_module::get_component(
             }
             case BUS_DONE: {
                 if(tok.get_str() == ",") {
-                    component.add_pin(pin);
+                    component->add_pin(pin);
                     state = PINS;
                 } else if(tok.get_str() == ")") {
-                    component.add_pin(pin);
+                    component->add_pin(pin);
                     state = PINS_DONE;
                 } else {
                     std::cerr << "LINE " << tok.get_line()
@@ -334,7 +333,7 @@ bool evl_module::get_component(
         std::cerr << "[COMP] Something went wrong..." << std::endl;
         return false;
     }
-    components.push_back(component);
+    components.push_back(*component);
 
     return true;
 }
