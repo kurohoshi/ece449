@@ -96,11 +96,15 @@ public:
 
     evl_wires get_wires_list() const { return wires; }
 
-    evl_wires::const_iterator wires_begin() { return wires.begin(); }
-    evl_wires::const_iterator wires_end() { return wires.end(); }
+    evl_wires::const_iterator wires_begin() const
+        { return wires.begin(); }
+    evl_wires::const_iterator wires_end() const
+        { return wires.end(); }
 
-    evl_components::const_iterator components_begin() { return components.begin(); }
-    evl_components::const_iterator components_end() { return components.end(); }
+    evl_components::const_iterator components_begin() const
+        { return components.begin(); }
+    evl_components::const_iterator components_end() const
+        { return components.end(); }
 
     bool get_module_name(
         evl_tokens &t
