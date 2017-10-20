@@ -37,32 +37,6 @@ public:
     // how to access pins_ vector
 }; // net class
 
-class pin{
-    char dir_;
-    gate *gate_;
-    size_t index_;
-    net *net_;
-
-public:
-    bool create(
-        gate *g,
-        size_t index,
-        const evl_pin &p,
-        const std::map<std::string, net *> &nets_table);
-
-    char get_dir() const { return dir_; }
-    void set_dir(char new_dir) { dir_ = new_dir; }
-
-    gate get_gate() const { return gate_; }
-    void set_get(gate *new_gate) { gate_ = new_gate; }
-
-    size_t get_index() const { return index_; }
-    void set_index(size_t new_index) { index_ = new_index; }
-
-    net get_net() const { return net_; }
-    void set_net(net &new_net) { net_ = new_net; }
-}; // pin class
-
 class gate{
     std::string name_;
     std::string type_;
@@ -88,6 +62,32 @@ public:
 
     // how to access pins_ vector
 }; // gate class
+
+class pin{
+    char dir_;
+    gate *gate_;
+    size_t index_;
+    net *net_;
+
+public:
+    bool create(
+        gate *g,
+        size_t index,
+        const evl_pin &p,
+        const std::map<std::string, net *> &nets_table);
+
+    char get_dir() const { return dir_; }
+    void set_dir(char new_dir) { dir_ = new_dir; }
+
+    gate get_gate() const { return gate_; }
+    void set_get(gate *new_gate) { gate_ = new_gate; }
+
+    size_t get_index() const { return index_; }
+    void set_index(size_t new_index) { index_ = new_index; }
+
+    net get_net() const { return net_; }
+    void set_net(net &new_net) { net_ = new_net; }
+}; // pin class
 
 class netlist{
     std::string name_;
