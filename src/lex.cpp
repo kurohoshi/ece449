@@ -26,11 +26,11 @@ bool evl_tokens::extract_from_line(
             ++i; // skip this space character
             continue;
         } else if (strchr(SINGLE_CHAR, line[i])) { //SINGLES
-            evl_token token;
-            token.line_no = line_no;
-            token.type = evl_token::SINGLE;
-            token.str = std::string(1, line[i]);
-            tokens.push_back(token);
+            evl_token *token = new evl_token(
+                evl_token::SINGLE,
+                std::string(1, line[i]),
+                line_no);
+            tokens.push_back(*token);
             ++i;
             continue;
         } else if (isalpha(line[i]) || (line[i] == '_')) {
@@ -41,11 +41,11 @@ bool evl_tokens::extract_from_line(
                     break; // [name_begin, i) is the range for the token
                 }
             }
-            evl_token token;
-            token.line_no = line_no;
-            token.type = evl_token::NAME;
-            token.str = line.substr(name_begin, i-name_begin);
-            tokens.push_back(token);
+            evl_token *token = new token(
+                evl_token::NAME,
+                line.substr(name_begin, i-name_begin),
+                line_no);
+            tokens.push_back(*token);
             continue;
         } else if(isdigit(line[i])) { //NUMBER
             size_t num_begin = i;
@@ -61,11 +61,11 @@ bool evl_tokens::extract_from_line(
                 }
                 continue; //continue to check next character in number string
             }
-            evl_token token;
-            token.line_no = line_no;
-            token.type = evl_token::NUMBER;
-            token.str = line.substr(num_begin, i-num_begin);
-            tokens.push_back(token);
+            evl_token *token = new evl_token(
+                evl_token::NUMBER,
+                line.substr(num_begin, i-num_begin),
+                line_no);
+            tokens.push_back(*token);
             continue;
         } else { //INVALID TOKEN
             std::cerr << "LINE " << line_no
@@ -100,15 +100,15 @@ void evl_tokens::display(
     for(evl_tokens_::const_iterator token = tokens.begin();
         token != tokens.end(); ++token) {
 
-        switch(token->type) {
+        switch(token->get_type()) {
             case evl_token::SINGLE:
-                out << "SINGLE " << token->str << std::endl;
+                out << "SINGLE " << token->get_str() << std::endl;
                 break;
             case evl_token::NAME:
-                out << "NAME " << token->str << std::endl;
+                out << "NAME " << token->get_str() << std::endl;
                 break;
             case evl_token::NUMBER:
-                out << "NUMBER " << token->str << std::endl;
+                out << "NUMBER " << token->get_str() << std::endl;
                 break;
             default:
                 std::cerr << "Something broke..." << std::endl;

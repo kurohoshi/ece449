@@ -8,10 +8,20 @@
 
 class evl_tokens;
 
-struct evl_wire {
-public:
+class evl_wire {
     std::string name;
     int width;
+public:
+    evl_wire(std::string n, int w)
+        : name(n), width(w) {}
+
+    std::string get_name() { return name; }
+    void set_name(std::string new_name) { name = new_name; }
+
+    int get_width() { return width; }
+    void set_width(int new_width) { width = new_width; }
+
+    ~evl_wire() {}
 }; // evl_wire class
 
 typedef std::list<evl_wire> evl_wires;
@@ -23,50 +33,83 @@ bool make_wires_table(
     evl_wires_table &wires_table
 );
 
-struct evl_pin {
-public:
+class evl_pin {
     std::string name;
     int bus_msb;
     int bus_lsb;
+public:
+    evl_pin(std::string n, int m, int l)
+        : name(n), bus_msb(m), bus_lsb(l) {}
+
+    std::string get_name() { return name; }
+    void set_name(std::string new_name) { name = new_name; }
+
+    int get_msb() { return bus_msb; }
+    void set_msb(int new_msb) { bus_msb = new_msb; }
+
+    int get_lsb() { return bus_lsb; }
+    void set_lsb(int new_lsb) { bus_lsb = new_lsb; }
+
+    ~evl_pin() {}
 }; // pin class
 
 typedef std::list<evl_pin> evl_pins;
 
-struct evl_component {
-public:
+class evl_component {
     std::string type;
     std::string name;
     evl_pins pins;
+public:
+    evl_component(std::string t, std::string n)
+        : type(t), name(n) {}
+
+    std::string get_name() { return name; }
+    void set_name(std::string new_name) { name = new_name; }
+
+    std::string get_type() { return type; }
+    void set_type(std::string new_type) { name = new_type; }
+
+    void display(
+        std::ostream &out
+    ) const;
+
+    ~evl_component() {}
 }; // evl_component class
 
 typedef std::list<evl_component> evl_components;
 
 struct evl_module {
-public:
     std::string name;
     evl_wires wires;
     evl_components components;
-}; // evl_module class
-
-class evl_modules{
 public:
-    typedef std::list<evl_module> evl_modules_;
-    evl_modules_ modules;
-private:
+    evl_module() {}
+
+    std::string get_name() { return name; }
+    void set_name(std::string new_name) { name = new_name; }
+
     bool get_module_name(
-        std::string &name,
         evl_tokens &t
     );
 
     bool get_wires(
-        evl_wires &wires,
         evl_tokens &t
     );
 
     bool get_component(
-        evl_components &components,
         evl_tokens &t
     );
+
+    void display(
+        std::ostream &out
+    ) const;
+
+    ~evl_module() {}
+}; // evl_module class
+
+class evl_modules{
+    typedef std::list<evl_module> evl_modules_;
+    evl_modules_ modules;
 public:
     bool group(
         evl_tokens &tokens
@@ -79,6 +122,8 @@ public:
     bool store(
         std::string file_name
     ) const;
+
+    ~evl_modules() {}
 };
 
 #endif

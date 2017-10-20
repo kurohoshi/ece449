@@ -31,11 +31,14 @@ bool pin::create(
     gate_ = g;
     index_ = index;
     if(p->msb == -1) {
-        assert(p->lsb == -1);
-        net_ = nets_table.find(p->name);
-        if(net_ == nets_table.end()) {
-            std::cerr << "'" << p->name << "' was not found in nets_table"
-                << std::endl;
+        if(p->lsb == -1) {
+            if(nets_table.find(p->name) == nets_table.end()) {
+                std::cerr << "'" << p->name << "' was not found in nets_table"
+                    << std::endl;
+                return false;
+            }
+        } else {
+            std::cerr << "something went wrong ..." << std::endl;
             return false;
         }
         net_->append_pin(p);
@@ -43,7 +46,7 @@ bool pin::create(
         std::cout << "pin bus not implemented" << std::endl;
         if(p->lsb == -1) {
             // not implemented
-        } else if(p->lsb >= 0) {
+        } else if(p->lsb >= 0 && p->lsb <= p->msb) {
             // not implemented
         } else {
             std::cerr << "incorrect lsb pin assignment" << std::endl;
@@ -75,13 +78,16 @@ bool gate::create(
     type_ = c.type;
 
     size_t index = 0;
-    for(evl_pins::const_iterator pin = c.pins.begin(); pin != c.pins.end(); ++pin) {
-        assert(wires_table.find(pin->name) != wires_table.end());
-        pin *p = new pin;
-        pins_.push_back(p);
-        if(!(p->create(this, index, pin, nets_table)))
-            return false;
-        index++;
+    for(evl_pins::const_iterator pin_ = c.pins.begin(); pin_ != c.pins.end(); ++pin_) {
+        if(wires_table.find(pin_->name) != wires_table.end())) {
+
+            pin *p = new pin;
+            pins_.push_back(p);
+            if(!(p->create(this, index, pin_, nets_table))) {
+                return false;
+            }
+            index++;
+        }
     }
 
     //return validate_structural_semantics()
@@ -92,9 +98,9 @@ bool gate::create(
 //             Netlist Member Functions
 //********************************************************
 
-void netlist::create_net(std::string net_name) {
+void netlist::create_net(std::string net_name, int width) {
     assert(nets_table_.find(net_name) == nets_table_.end());
-    net *n = new net(net_name);
+    net *n = new net(net_name, width);
     nets_table_[net_name] = n;
     nets_.push_back(n);
 }
@@ -107,7 +113,7 @@ bool netlist::create(
 
     for(evl_wires::const_iterator wire = module.wires.begin(); wire != module.wires.end(); ++wire) {
         if(wire->width == 1) {
-            create_net(wire->name);
+            create_net(wire->name, wire->width);
         } else {
             for(int i = 0; i < wire->width; ++i) {
                 std::ostringstream oss;

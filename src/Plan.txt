@@ -1,53 +1,55 @@
-syntax_Checking
+Current Project:
 
-bool
-syntax_Checking()
-> If NAME == module
-    > If NAME
-        > If SINGLE == ";"
-            > continue
-        > else
-            > "Syntax Error: expecting ";""
-    > else
-        > "Syntax Error: No defined module name"
+Computer Sim
 
-    > For(next_token;token->str != "endmodule" && !(end_of_vector);next_token)
-        > If NAME == "wire" // DO WIRE THINGS
-            > get_Wires()
-        > else If NAME != endmodule
-            > get_Components()
-        > else
-            > "Syntax Error: no wires or components detected"
-
-    > If token->str == endmodule
-        > return true
-    > else
-        > "Syntax Error: expecting endmodule"
-> else
-    > "Syntax Error: No module defined"
-
-bool
-get_Wires()
-    > set wire.width = 1
-
-    > If SINGLE == "["
-        > set wire.width (NUMBER, SINGLE, NUMBER, SINGLE)
-
-    > If NAME
-        > return get_Name()
-    > else
-        > "Syntax Error: No defined wire name"
-
-bool
-get_Name()
-    > set wire.name
-    > If SINGLE == ","
-        > get_Name()
-    > else If SINGLE == ";"
-        > return true
-    > else
-<<<<<<< HEAD
-        > "Syntax Error: Illegal syntax"
-=======
-        > "Syntax Error: Illegal syntax"
->>>>>>> 619598614f2c689aa08fbbece8f188d02dce4a2f
+main.cpp
+|
++->lex.cpp
+|  |
+|  +->extract_from_file
+|  |  |
+|  |  +->extract_from_line
+|  |
+|  +->store_tokens
+|     |
+|     +->display_tokens
+|
++->syn.cpp
+|  |
+|  +->group_modules
+|  |  |
+|  |  +->group_module
+|  |     |
+|  |     +->store_module_name
+|  |     |
+|  |     +->store_wires
+|  |     |
+|  |     +->store_components
+|  |
+|  +->store_modules
+|     |
+|     +->display_modules
+|        |
+|        +->display_module
+|
++->net.cpp
+|  |
+|  +->create_netlist
+|  |  |
+|  |  +->create_nets
+|  |  |
+|  |  +->create_gates
+|  |     |
+|  |     +->create_pins
+|  |        |
+|  |        +->add_connection_to_net
+|  |
+|  +->store_netlist
+|     |
+|     +->display_netlist
+|        |
+|        +->display_nets
+|        |
+|        +->display_gates
+|
++->sim.cpp

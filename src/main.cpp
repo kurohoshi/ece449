@@ -49,8 +49,7 @@ int main(int argc, char *argv[]){
     //std::cout << "Storing Complete" << std::endl;
 
     netlist net;
-    net.create(mods.modules.front().wires,
-        mods.modules.front().components,
+    net.create(mods.get_mods());
         wires_table);
 
     net.display(CONSOLE);

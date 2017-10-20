@@ -10,21 +10,20 @@
 #include "lex.h"
 #include "syn.h"
 
-bool evl_modules::get_module_name(
-    std::string &name,
+bool evl_module::get_module_name(
     evl_tokens &t) {
 
-    if (t.tokens.front().str == "module") {
-        t.tokens.pop_front();
-        if(t.tokens.front().type == evl_token::NAME) {
-            name = t.tokens.front().str;
-            t.tokens.pop_front();
+    if (t.front().get_str() == "module") {
+        t.pop_front();
+        if(t.front().get_type() == evl_token::NAME) {
+            name = t.front().get_str();
+            t.pop_front();
         } else {
             std::cerr << "Invalid module declaration" << std::endl;
             return false;
         }
-        if (t.tokens.front().str == ";") {
-            t.tokens.pop_front();
+        if (t.front().get_str() == ";") {
+            t.pop_front();
             return true;
         } else {
             std::cerr << "Invalid module declaration" << std::endl;
@@ -32,117 +31,130 @@ bool evl_modules::get_module_name(
         }
     } else {
         std::cerr << "Invalid module declaration" << std::endl;
-        return false;
+        return true;
     }
     return false;
 }
 
-bool evl_modules::get_wires(
-    evl_wires &wires,
+bool evl_module::get_wires(
     evl_tokens &t) {
 
     //std::cout << "getting wires..." << std::endl;
 
-    enum state_type
-        {INIT, WIRE, DONE, WIRES, NAME, BUS_BEGIN, MSB, COLON, LSB, BUS_DONE};
+    enum state_type {
+        INIT, WIRE, DONE, WIRES, NAME, BUS_BEGIN,
+        MSB, COLON, LSB, BUS_DONE
+    };
 
     state_type state = INIT;
     int wire_width = 1;
-    for(; !t.tokens.empty() && (state != DONE); t.tokens.pop_front()) {
-        evl_token tok = t.tokens.front();
+    for(; !t.empty() && (state != DONE); t.pop_front()) {
+        evl_token tok = t.front();
         switch(state) {
             case INIT:
-                if(tok.str == "wire") {
+                if(tok.get_str() == "wire") {
                     wire_width = 1;
                     state = WIRE;
                 } else {
-                    std::cerr << "Need 'wire' but found '" << tok.str
-                        << "' on line " << tok.line_no << std::endl;
+                    std::cerr << "Need 'wire' but found '"
+                        << tok.get_str() << "' on line "
+                        << tok.get_line() << std::endl;
                     return false;
                 }
                 break;
             case WIRE:
-                if(tok.type == evl_token::NAME) {
-                    evl_wire wire;
-                    wire.name = tok.str; wire.width = wire_width;
-                    wires.push_back(wire);
+                if(tok.get_type() == evl_token::NAME) {
+                    evl_wire *wire = new evl_wire(
+                        tok.get_str(),
+                        wire_width);
+                    wires.push_back(*wire);
 
                     state = NAME;
-                } else if(tok.str == "[") {
+                } else if(tok.get_str() == "[") {
                     state = BUS_BEGIN;
                 } else {
-                    std::cerr << "Need NAME or '[' but found '" << tok.str
-                        << "' on line " << tok.line_no << std::endl;
+                    std::cerr << "Need NAME or '[' but found '"
+                        << tok.get_str() << "' on line "
+                        << tok.get_line() << std::endl;
                     return false;
                 }
                 break;
             case WIRES:
-                if(tok.type == evl_token::NAME) {
-                    evl_wire wire;
-                    wire.name = tok.str; wire.width = wire_width;
+                if(tok.get_type() == evl_token::NAME) {
+                    evl_wire *wire = new evl_wire(
+                        tok.get_str(),
+                        wire_width);
                     wires.push_back(wire);
 
                     state = NAME;
                 } else {
-                    std::cerr << "Need NAME but found '" << tok.str
-                        << "' on line " << tok.line_no << std::endl;
+                    std::cerr << "Need NAME but found '"
+                        << tok.get_str() << "' on line "
+                        << tok.get_line() << std::endl;
                     return false;
                 }
                 break;
             case NAME:
-                if(tok.str == ",") {
+                if(tok.get_str() == ",") {
                     state = WIRES;
-                } else if(tok.str == ";") {
+                } else if(tok.get_str() == ";") {
                     state = DONE;
                 } else {
-                    std::cerr << "Need ',' or ';' but found '" << tok.str
-                        << "' on line " << tok.line_no << std::endl;
+                    std::cerr << "Need ',' or ';' but found '"
+                        << tok.get_str() << "' on line "
+                        << tok.get_line() << std::endl;
                     return false;
                 }
                 break;
             case BUS_BEGIN:
-                if(tok.type == evl_token::NUMBER) {
-                    wire_width = atoi(tok.str.c_str()) + 1;
+                if(tok.get_type() == evl_token::NUMBER) {
+                    wire_width = atoi(tok.get_str().c_str()) + 1;
                     state = MSB;
                 } else {
-                    std::cerr << "LINE " << tok.line_no << ": Number expected" << std::endl;
+                    std::cerr << "LINE " << tok.get_line()
+                        << ": Number expected" << std::endl;
                     return false;
                 }
                 break;
             case MSB:
-                if(tok.str == ":") {
+                if(tok.get_str() == ":") {
                     state = COLON;
                 } else {
-                    std::cerr << "LINE " << tok.line_no << ": ':' expected" << std::endl;
+                    std::cerr << "LINE " << tok.get_line()
+                        << ": ':' expected" << std::endl;
                     return false;
                 }
                 break;
             case COLON:
-                if(tok.str == "0") {
+                if(tok.get_str() == "0") {
                     state = LSB;
                 } else {
-                    std::cerr << "LINE " << tok.line_no << ": Zero expected" << std::endl;
+                    std::cerr << "LINE " << tok.get_line()
+                        << ": Zero expected" << std::endl;
                     return false;
                 }
                 break;
             case LSB:
-                if(tok.str == "]") {
+                if(tok.get_str() == "]") {
                     state = BUS_DONE;
                 } else {
-                    std::cerr << "LINE " << tok.line_no << ": ']' expected" << std::endl;
+                    std::cerr << "LINE " << tok.get_line()
+                        << ": ']' expected" << std::endl;
                     return false;
                 }
                 break;
             case BUS_DONE:
-                if(tok.type == evl_token::NAME) {
-                    evl_wire wire;
-                    wire.name = tok.str; wire.width = wire_width;
+                if(tok.get_type() == evl_token::NAME) {
+                    evl_wire *wire = new evl_wire(
+                        tok.get_str(),
+                        wire_width);
                     wires.push_back(wire);
 
                     state = NAME;
                 } else {
-                    std::cerr << "Need NAME but found '" << tok.str
-                        << "' on line " << tok.line_no << std::endl;
+                    std::cerr << "Need NAME but found '"
+                        << tok.get_str() << "' on line "
+                        << tok.get_line() << std::endl;
                     return false;
                 }
                 break;
@@ -162,7 +174,6 @@ bool evl_modules::get_wires(
 }
 
 bool evl_modules::get_component(
-    evl_components &components,
     evl_tokens &t) {
 
     enum state_type {
@@ -175,137 +186,138 @@ bool evl_modules::get_component(
     state_type state = INIT;
     evl_component component;
     evl_pin pin;
-    for(; !t.tokens.empty() && (state != DONE); t.tokens.pop_front()) {
-        evl_token tok = t.tokens.front();
+    for(; !t.empty() && (state != DONE); t.pop_front()) {
+        evl_token tok = t.front();
         //std::cout << t.str << std::endl;
         switch(state) {
             case INIT: {
-                if(tok.type == evl_token::NAME) {
-                    component.type = tok.str;
-                    component.name = "";
+                if(tok.get_type() == evl_token::NAME) {
+                    component.set_type(tok.get_str());
+                    component.set_name("");
                     state = TYPE;
                 } else {
-                    std::cerr << "Need name but found '" << tok.str
-                        << "' on line " << tok.line_no << std::endl;
+                    std::cerr << "Need name but found '"
+                        << tok.get_str() << "' on line "
+                        << tok.get_line() << std::endl;
                     return false;
                 }
                 break;
             }
             case TYPE: {
-                if(tok.type == evl_token::NAME) {
-                    component.name = tok.str;
+                if(tok.get_type() == evl_token::NAME) {
+                    component.set_name(tok.get_str());
                     state = NAME;
-                } else if(tok.str == "("){
+                } else if(tok.get_str() == "("){
                     state = PINS;
                 } else {
-                    std::cerr << "LINE " << tok.line_no
+                    std::cerr << "LINE " << tok.get_line()
                         << ": NAME or '(' expected" << std::endl;
                     return false;
                 }
                 break;
             }
             case NAME: {
-                if(tok.str == "(") {
+                if(tok.get_str() == "(") {
                     state = PINS;
                 } else {
-                    std::cerr << "LINE " << tok.line_no
+                    std::cerr << "LINE " << tok.get_line()
                         << ": '(' expected" << std::endl;
                     return false;
                 }
                 break;
             }
             case PINS: {
-                if(tok.type == evl_token::NAME) {
-                    pin.name = tok.str;
-                    pin.bus_msb = -1;
-                    pin.bus_lsb = -1;
+                if(tok.get_type() == evl_token::NAME) {
+                    pin.set_name(tok.get_str());
+                    pin.set_msb(-1);
+                    pin.set_lsb(-1);
                     state = PIN_NAME;
                 } else {
-                    std::cerr << "LINE " << tok.line_no
+                    std::cerr << "LINE " << tok.get_line()
                         << ": NAME expected" << std::endl;
                     return false;
                 }
                 break;
             }
             case PIN_NAME: {
-                if(tok.str == "[") {
+                if(tok.get_str() == "[") {
                     state = BUS;
-                } else if(tok.str == ")") {
-                    component.pins.push_back(pin);
+                } else if(tok.get_str() == ")") {
+                    component.add_pin(pin);
                     state = PINS_DONE;
-                } else if(tok.str == ",") {
-                    component.pins.push_back(pin);
+                } else if(tok.get_str() == ",") {
+                    component.add_pin(pin);
                     state = PINS;
                 } else {
-                    std::cerr << "LINE " << tok.line_no
+                    std::cerr << "LINE " << tok.get_line()
                         << ": '[' or ')' or ',' expected" << std::endl;
                     return false;
                 }
                 break;
             }
             case BUS: {
-                if(tok.type == evl_token::NUMBER) {
-                    pin.bus_msb = atoi(tok.str.c_str());
+                if(tok.get_type() == evl_token::NUMBER) {
+                    pin.set_msb(atoi(tok.get_str().c_str()));
                     state = MSB;
                 } else {
-                    std::cerr << "LINE " << tok.line_no
+                    std::cerr << "LINE " << tok.get_line()
                         << ": NUMBER expected" << std::endl;
                     return false;
                 }
                 break;
             }
             case MSB: {
-                if(tok.str == "]") {
+                if(tok.get_str() == "]") {
                     state = BUS_DONE;
-                } else if(tok.str == ":") {
+                } else if(tok.get_str() == ":") {
                     state = COLON;
                 } else {
-                    std::cerr << "LINE " << tok.line_no
+                    std::cerr << "LINE " << tok.get_line()
                         << ": ']' or ':' expected" << std::endl;
                     return false;
                 }
                 break;
             }
             case COLON: {
-                if(tok.type == evl_token::NUMBER) {
-                    pin.bus_lsb = atoi(tok.str.c_str());
+                if(tok.get_type() == evl_token::NUMBER) {
+                    pin.set_lsb(atoi(tok.get_str().c_str()));
                     state = LSB;
                 } else {
-                    std::cerr << "LINE " << tok.line_no
+                    std::cerr << "LINE " << tok.get_line()
                         << ": NUMBER expected" << std::endl;
                     return false;
                 }
                 break;
             }
             case LSB: {
-                if(tok.str == "]") {
+                if(tok.get_str() == "]") {
                     state = BUS_DONE;
                 } else {
-                    std::cerr << "LINE " << tok.line_no
+                    std::cerr << "LINE " << tok.get_line()
                         << ": ']' expected" << std::endl;
                     return false;
                 }
                 break;
             }
             case BUS_DONE: {
-                if(tok.str == ",") {
-                    component.pins.push_back(pin);
+                if(tok.get_str() == ",") {
+                    component.add_pin(pin);
                     state = PINS;
-                } else if(tok.str == ")") {
-                    component.pins.push_back(pin);
+                } else if(tok.get_str() == ")") {
+                    component.add_pin(pin);
                     state = PINS_DONE;
                 } else {
-                    std::cerr << "LINE " << tok.line_no
+                    std::cerr << "LINE " << tok.get_line()
                         << ": ',' or ')' expected" << std::endl;
                     return false;
                 }
                 break;
             }
             case PINS_DONE: {
-                if(tok.str == ";") {
+                if(tok.get_str() == ";") {
                     state = DONE;
                 } else {
-                    std::cerr << "LINE " << tok.line_no
+                    std::cerr << "LINE " << tok.get_line()
                         << ": ';' expected" << std::endl;
                     return false;
                 }
@@ -330,15 +342,16 @@ bool evl_modules::get_component(
 bool evl_modules::group(
     evl_tokens &toks) {
 
-    for(; !toks.tokens.empty();) {
-        if(toks.tokens.front().type != evl_token::NAME) {
-            std::cerr << "Need a NAME token but found '" << toks.tokens.front().str
-                << "' on line" << toks.tokens.front().line_no << std::endl;
+    for(; !toks.empty();) {
+        if(toks.front().get_type() != evl_token::NAME) {
+            std::cerr << "Need a NAME token but found '"
+            << toks.front().get_str() << "' on line"
+            << toks.front().get_line() << std::endl;
         }
 
         evl_module module;
-        if(toks.tokens.front().str == "module") {
-            if(!get_module_name(module.name, toks)) {
+        if(toks.front().get_str() == "module") {
+            if(!module.get_module_name(toks)) {
                 return false;
             }
         } else {
@@ -346,25 +359,27 @@ bool evl_modules::group(
             return false;
         }
 
-        for(; (!toks.tokens.empty()) && (toks.tokens.front().str != "endmodule");) {
-            if(toks.tokens.front().type != evl_token::NAME) {
-                std::cerr << "Need a NAME token but found '" << toks.tokens.front().str
-                    << "' on line" << toks.tokens.front().line_no << std::endl;
+        for(; (!toks.empty()) && (toks.front().get_str() != "endmodule");) {
+            if(toks.front().get_type() != evl_token::NAME) {
+                std::cerr << "Need a NAME token but found '"
+                    << toks.front().get_str() << "' on line"
+                    << toks.front().get_line() << std::endl;
                 return false;
             }
 
-            if(toks.tokens.front().str == "wire") {
-                if(!get_wires(module.wires, toks))
+            if(toks.front().get_str() == "wire") {
+                if(!module.get_wires(toks))
                     return false;
                 continue;
             } else {
-                if(!get_component(module.components, toks))
+                if(!module.get_component(toks))
                     return false;
                 continue;
             }
         }
 
-        if((!toks.tokens.empty()) && (toks.tokens.front().str == "endmodule")) {
+        if((!toks.empty()) && (toks.front().get_str() == "endmodule")) {
+            toks.pop_front();
             modules.push_back(module);
         } else {
             std::cerr << "ENDMODULE expected" << std::endl;
@@ -374,46 +389,57 @@ bool evl_modules::group(
     return true;
 }
 
+void evl_component::display(
+    std::ostream &out) const {
+
+    out << "  component " << type << " ";
+    if(name != "") {
+        out << name << " ";
+    }
+    out << pins.size() << std::endl;
+    for(evl_pins::const_iterator pin = pins.begin();
+        pin != pins.end(); ++pin) {
+            out << "    pin " << pin->get_name();
+        if(pin->get_msb() != -1) {
+            out << " " << pin->get_msb();
+        }
+        if(pin->get_lsb() != -1) {
+            out << " " << pin->get_lsb();
+        }
+            out << std::endl;
+        }
+}
+
+void evl_module::display(
+    std::ostream &out) const {
+
+    out << "module " << name << std::endl;
+    if(!wires.empty()) {
+        out << "wires " << wires.size() << std::endl;
+        for_each(wires.begin(), wires.end(),
+            [&](evl_wire w) {
+                out << "  wire " << w.get_name() << " "
+                    << w.get_width() << std::endl;
+            }
+        );
+    }
+    if(!components.empty()) {
+        out << "components " << components.size() << std::endl;
+        for(evl_components::const_iterator component = components.begin();
+            component != components.end(); ++component) {
+
+            component.display(out);
+        }
+    }
+}
+
 void evl_modules::display(
     std::ostream &out) const {
 
-    for(evl_modules_::const_iterator module = modules.begin();
+    for(evl_modules::const_iterator module = modules.begin();
         module != modules.end(); ++module) {
 
-        out << "module " << module->name << std::endl;
-        if(!module->wires.empty()) {
-            out << "wires " << module->wires.size() << std::endl;
-            for_each(module->wires.begin(), module->wires.end(),
-                [&](evl_wire w) {
-                    out << "  wire " << w.name << " " << w.width << std::endl;
-                }
-            );
-        }
-        if(!module->components.empty()) {
-            out << "components " << module->components.size() << std::endl;
-            for(evl_components::const_iterator component = module->components.begin();
-                component != (module->components.end()); ++component) {
-
-                out << "  component " << component->type << " ";
-                if(component->name != "") {
-                    out << component->name << " ";
-                }
-                out << component->pins.size() << std::endl;
-
-                for(evl_pins::const_iterator pin = component->pins.begin();
-                    pin != (component->pins.end()); ++pin) {
-
-                    out << "    pin " << pin->name;
-                    if(pin->bus_msb != -1) {
-                        out << " " << pin->bus_msb;
-                    }
-                    if(pin->bus_lsb != -1) {
-                        out << " " << pin->bus_lsb;
-                    }
-                    out << std::endl;
-                }
-            }
-        }
+        module.display(out);
     }
 }
 
@@ -436,13 +462,13 @@ bool make_wires_table(
     evl_wires_table &wires_table) {
 
     for(auto &wire: wires) {
-        auto same_name = wires_table.find(wire.name);
+        auto same_name = wires_table.find(wire.get_name());
         if(same_name != wires_table.end()) {
-            std::cerr << "Wire '" << wire.name
+            std::cerr << "Wire '" << wire.get_name()
                 << "' is already defined" << std::endl;
             return false;
         }
-        wires_table[wire.name] = wire.width;
+        wires_table[wire.get_name()] = wire.get_width();
     }
     return true;
 }
