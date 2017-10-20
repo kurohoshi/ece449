@@ -6,11 +6,14 @@
 #include <iostream>
 
 class evl_token {
+public:
+    enum token_type {NAME, NUMBER, SINGLE};
+private:
     token_type type;
     std::string str;
     int line_no;
 public:
-    enum token_type {NAME, NUMBER, SINGLE};
+
 
     evl_token(token_type t, std::string s, int l)
         : type(t), str(s), line_no(l) {}
