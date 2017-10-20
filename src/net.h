@@ -68,8 +68,9 @@ class pin{
     gate *gate_;
     size_t index_;
     net *net_;
-
 public:
+    pin() {}
+
     bool create(
         gate *g,
         size_t index,

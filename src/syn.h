@@ -73,6 +73,8 @@ public:
         std::ostream &out
     ) const;
 
+    evl_pins::const_iterator pin_begin() const { return pins.begin(); }
+    evl_pins::const_iterator pin_end() const { return pins.end(); }
     void add_pin(evl_pin pin) { pins.push_back(pin); }
 
     ~evl_component() {}

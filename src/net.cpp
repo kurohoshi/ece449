@@ -30,23 +30,23 @@ bool pin::create(
 
     gate_ = g;
     index_ = index;
-    if(p->msb == -1) {
-        if(p->lsb == -1) {
-            if(nets_table.find(p->name) == nets_table.end()) {
-                std::cerr << "'" << p->name << "' was not found in nets_table"
-                    << std::endl;
+    if(p.get_msb() == -1) {
+        if(p.get_lsb() == -1) {
+            if(nets_table.find(p.get_name()) == nets_table.end()) {
+                std::cerr << "'" << p.get_name()
+                    << "' was not found in nets_table" << std::endl;
                 return false;
             }
         } else {
             std::cerr << "something went wrong ..." << std::endl;
             return false;
         }
-        net_->append_pin(p);
-    } else if(p->msb >= 0) {
+        //net_->append_pin(p);
+    } else if(p.get_msb() >= 0) {
         std::cout << "pin bus not implemented" << std::endl;
-        if(p->lsb == -1) {
+        if(p.get_lsb() == -1) {
             // not implemented
-        } else if(p->lsb >= 0 && p->lsb <= p->msb) {
+        } else if(p.get_lsb() >= 0 && p.get_lsb() <= p.get_msb()) {
             // not implemented
         } else {
             std::cerr << "incorrect lsb pin assignment" << std::endl;
@@ -74,12 +74,12 @@ bool gate::create(
     const std::map<std::string, net *> &nets_table,
     const evl_wires_table &wires_table) {
 
-    name_ = c.name;
-    type_ = c.type;
+    name_ = c.get_name();
+    type_ = c.get_type();
 
     size_t index = 0;
-    for(evl_pins::const_iterator pin_ = c.pins.begin(); pin_ != c.pins.end(); ++pin_) {
-        if(wires_table.find(pin_->name) != wires_table.end())) {
+    for(evl_pins::const_iterator pin_ = c.pins_begin(); pin_ != c.pins_end(); ++pin_) {
+        if(wires_table.find(pin_->get_name()) != wires_table.end())) {
 
             pin *p = new pin;
             pins_.push_back(p);
