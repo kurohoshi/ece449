@@ -112,9 +112,9 @@ bool netlist::create(
     const evl_module &module,
     const evl_wires_table &wires_table) {
 
-    name = module.name;
+    name_ = module.get_name();
 
-    for(evl_wires::const_iterator wire = module.wires.begin(); wire != module.wires.end(); ++wire) {
+    for(evl_wires::const_iterator wire = module.wires_begin(); wire != module.wires_end(); ++wire) {
         if(wire->width == 1) {
             create_net(wire->name, wire->width);
         } else {
@@ -126,7 +126,9 @@ bool netlist::create(
         }
     }
 
-    for(evl_components::const_iterator c = comps.begin(); c != comps.end(); ++c) {
+    for(evl_components::const_iterator c = module.components_begin();
+        c != module.components_end(); ++c) {
+
         gate *g = new gate;
         gates_.push_back(g);
         if(!(g->create(*c, nets_table_, wires_table)))
