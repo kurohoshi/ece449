@@ -115,12 +115,12 @@ bool netlist::create(
     name_ = module.get_name();
 
     for(evl_wires::const_iterator wire = module.wires_begin(); wire != module.wires_end(); ++wire) {
-        if(wire->width == 1) {
-            create_net(wire->name, wire->width);
+        if(wire->get_width() == 1) {
+            create_net(wire->get_name(), wire->get_width());
         } else {
-            for(int i = 0; i < wire->width; ++i) {
+            for(int i = 0; i < wire->get_width(); ++i) {
                 std::ostringstream oss;
-                oss << wire->name << "[" << i << "]";
+                oss << wire->get_name() << "[" << i << "]";
                 create_net(oss.str());
             }
         }
