@@ -92,7 +92,7 @@ bool pin::create(
 bool gate::create(
     const evl_component &c,
     const std::map<std::string, net *> &nets_table,
-    const evl_wires_table &wires_table) {
+    const evl_module::evl_wires_table &wires_table) {
 
     name_ = c.get_name();
     type_ = c.get_type();
@@ -126,7 +126,7 @@ void netlist::create_net(std::string net_name) {
 
 bool netlist::create(
     const evl_module &module,
-    const evl_wires_table &wires_table) {
+    const evl_module::evl_wires_table &wires_table) {
 
     name_ = module.get_name();
 

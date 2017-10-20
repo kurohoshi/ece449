@@ -50,18 +50,11 @@ class gate{
     std::string name_;
     std::string type_;
     std::vector<pin *> pins_;
-
-    bool create_pin(
-        const evl_pin &ep,
-        size_t index,
-        const std::map<std::string, net *> &nets_table,
-        const evl_wires_table &wires_table);
-
 public:
     bool create(
         const evl_component &c,
         const std::map<std::string, net *> &nets_table,
-        const evl_wires_table &wires_table);
+        const evl_module::evl_wires_table &wires_table);
 
     std::string get_name() const { return name_; }
     void set_name(std::string new_name) { name_ = new_name; }
