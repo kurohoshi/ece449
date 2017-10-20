@@ -427,7 +427,7 @@ void evl_module::display(
         for(evl_components::const_iterator component = components.begin();
             component != components.end(); ++component) {
 
-            component.display(out);
+            component->display(out);
         }
     }
 }
@@ -438,7 +438,7 @@ void evl_modules::display(
     for(evl_modules::const_iterator module = modules.begin();
         module != modules.end(); ++module) {
 
-        module.display(out);
+        module->display(out);
     }
 }
 
