@@ -28,17 +28,13 @@ public:
 
     void append_pin(pin *p);
 
-    std::string get_name() { return name_; }
+    std::string get_name() const { return name_; }
     void set_name(std::string new_name) { name_ = new_name; }
 
-    char get_signal() { return signal_; }
+    char get_signal() const { return signal_; }
     void set_signal(char new_signal) { signal_ = new_signal; }
 
-    std::list<pin *> get_connections() { return connections_; }
-    void add_connection(pin *new_pin) { connections_.push_back(new_pin); }
-    void del_connection() { connections_.pop_back(); }
-
-
+    // how to access pins_ vector
 }; // net class
 
 class pin{
@@ -54,16 +50,16 @@ public:
         const evl_pin &p,
         const std::map<std::string, net *> &nets_table);
 
-    char get_dir() { return dir_; }
+    char get_dir() const { return dir_; }
     void set_dir(char new_dir) { dir_ = dir; }
 
-    gate get_gate() { return gate_; }
+    gate get_gate() const { return gate_; }
     void set_get(gate *new_gate) { gate_ = new_gate; }
 
-    size_t get_index() { return index_; }
+    size_t get_index() const { return index_; }
     void set_index(size_t new_index) { index_ = new_index; }
 
-    net get_net() { return net_; }
+    net get_net() const { return net_; }
     void set_net(net *new_net) { net_ = new_net; }
 }; // pin class
 
@@ -84,15 +80,13 @@ public:
         const std::map<std::string, net *> &nets_table,
         const evl_wires_table &wires_table);
 
-    std::string get_name() { return name_; }
+    std::string get_name() const { return name_; }
     void set_name(std::string new_name) { name_ = new_name; }
 
-    std::string get_type() { return type_; }
+    std::string get_type() const { return type_; }
     void set_type(std::string new_type) { type_ = new_type; }
 
-    std::vector<pin *> get_pin() { return pins_; }
-    void add_pin(pin *new_pin) { pins_.push_back(new_pin); }
-    void pop_pin() { pins_.pop_back(); }
+    // how to access pins_ vector
 }; // gate class
 
 class netlist{
