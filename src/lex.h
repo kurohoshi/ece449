@@ -13,8 +13,6 @@ private:
     std::string str;
     int line_no;
 public:
-
-
     evl_token(token_type t, std::string s, int l)
         : type(t), str(s), line_no(l) {}
 
@@ -43,8 +41,8 @@ public:
 
     evl_token front() { return tokens.front(); }
     evl_token back() { return tokens.back(); }
-    evl_token* begin() { return tokens.begin(); }
-    evl_token* end() { return tokens.end(); }
+    evl_tokens_::iterator begin() { return tokens.begin(); }
+    evl_tokens_::iterator end() { return tokens.end(); }
     void pop_back() { tokens.pop_back(); }
     void pop_front() { tokens.pop_front(); }
     bool empty() { return tokens.empty(); }
