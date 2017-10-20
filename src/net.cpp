@@ -79,7 +79,7 @@ bool gate::create(
 
     size_t index = 0;
     for(evl_pins::const_iterator pin_ = c.pins_begin(); pin_ != c.pins_end(); ++pin_) {
-        if(wires_table.find(pin_->get_name()) != wires_table.end())) {
+        if(wires_table.find(pin_->get_name()) != wires_table.end()) {
 
             pin *p = new pin;
             pins_.push_back(p);
@@ -87,6 +87,9 @@ bool gate::create(
                 return false;
             }
             index++;
+        } else{
+            std::cerr << "wire '" << pin_->get_name()
+                << "' already exists'" << std::endl;
         }
     }
 
