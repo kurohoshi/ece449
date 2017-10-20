@@ -21,10 +21,9 @@ class net{
     std::string name_;
     char signal_;
     std::list<pin *> connections_;
-    int max_width_;
 public:
-    net(std::string net_name, int bus)
-        : name_(net_name),max_width_(bus)  {}
+    net(std::string net_name)
+        : name_(net_name)  {}
 
     void append_pin(pin *p);
 
@@ -79,7 +78,7 @@ class pin{
     char dir_;
     gate *gate_;
     size_t index_;
-    net *net_;
+    std::list<net *> nets_;
 public:
     pin() {}
 
@@ -98,8 +97,7 @@ public:
     size_t get_index() const { return index_; }
     void set_index(size_t new_index) { index_ = new_index; }
 
-    net* get_net() const { return net_; }
-    void set_net(net *new_net) { net_ = new_net; }
+    int get_pin_width() const { return nets_.size(); }
 }; // pin class
 
 class netlist{

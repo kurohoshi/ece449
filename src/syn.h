@@ -28,13 +28,6 @@ public:
 
 typedef std::list<evl_wire> evl_wires;
 
-typedef std::map<std::string, int> evl_wires_table;
-
-bool make_wires_table(
-    const evl_wires &wires,
-    evl_wires_table &wires_table
-);
-
 class evl_pin {
     std::string name;
     int bus_msb;
@@ -85,9 +78,13 @@ public:
 typedef std::list<evl_component> evl_components;
 
 struct evl_module {
+    typedef std::map<std::string, int> evl_wires_table;
     std::string name;
     evl_wires wires;
     evl_components components;
+    evl_wires_table wires_table;
+
+    bool add_wire_to_table(evl_wire &w);
 public:
     evl_module() {}
 

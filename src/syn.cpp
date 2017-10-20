@@ -36,8 +36,21 @@ bool evl_module::get_module_name(
     return false;
 }
 
+bool evl_module::add_wire_to_table(
+    const evl_wire &w) {
+
+    if(wires_table.find(w.get_name()) != wires_table.end()) {
+        std::cerr << "Wire '" << wire.get_name()
+            << "' is already defined" << std::endl;
+        return false;
+    }
+    wires_table[wire.get_name()] = wire.get_width();
+    return true;
+}
+
 bool evl_module::get_wires(
-    evl_tokens &t) {
+    evl_tokens &t,
+    evl_wires_table) {
 
     //std::cout << "getting wires..." << std::endl;
 
@@ -68,6 +81,7 @@ bool evl_module::get_wires(
                         tok.get_str(),
                         wire_width);
                     wires.push_back(*wire);
+                    add_wire_to_table(*wire);
 
                     state = NAME;
                 } else if(tok.get_str() == "[") {
@@ -85,6 +99,7 @@ bool evl_module::get_wires(
                         tok.get_str(),
                         wire_width);
                     wires.push_back(*wire);
+                    add_wire_to_table(*wire);
 
                     state = NAME;
                 } else {
@@ -149,6 +164,7 @@ bool evl_module::get_wires(
                         tok.get_str(),
                         wire_width);
                     wires.push_back(*wire);
+                    add_wire_to_table(*wire);
 
                     state = NAME;
                 } else {
@@ -195,7 +211,7 @@ bool evl_module::get_component(
                     component->set_type(tok.get_str());
                     state = TYPE;
                 } else {
-                    std::cerr << "Need name but found '"
+                    std::cerr << "Need type but found '"
                         << tok.get_str() << "' on line "
                         << tok.get_line() << std::endl;
                     return false;
@@ -227,9 +243,15 @@ bool evl_module::get_component(
             }
             case PINS: {
                 if(tok.get_type() == evl_token::NAME) {
-                    pin->set_name(tok.get_str());
-                    pin->set_msb(-1);
-                    pin->set_lsb(-1);
+                    if(wires_table.find(tok.get_str()) != wires_table.end()) {
+                        pin->set_name(tok.get_str());
+                        pin->set_msb(-1);
+                        pin->set_lsb(-1);
+                    } else {
+                        std::cerr << "Pin '" << wire.get_name()
+                            << "' is not declared" << std::endl;
+                        return false;
+                    }
                     state = PIN_NAME;
                 } else {
                     std::cerr << "LINE " << tok.get_line()
@@ -453,21 +475,5 @@ bool evl_modules::store(
     }
 
     display(output_file);
-    return true;
-}
-
-bool make_wires_table(
-    const evl_wires &wires,
-    evl_wires_table &wires_table) {
-
-    for(auto &wire: wires) {
-        auto same_name = wires_table.find(wire.get_name());
-        if(same_name != wires_table.end()) {
-            std::cerr << "Wire '" << wire.get_name()
-                << "' is already defined" << std::endl;
-            return false;
-        }
-        wires_table[wire.get_name()] = wire.get_width();
-    }
     return true;
 }
