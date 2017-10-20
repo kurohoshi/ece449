@@ -185,7 +185,7 @@ bool evl_module::get_component(
 
     state_type state = INIT;
     evl_component *component = new evl_component("", "");
-    evl_pin pin;
+    evl_pin *pin = new evl_pin("", -1, -1);
     for(; !t.empty() && (state != DONE); t.pop_front()) {
         evl_token tok = t.front();
         //std::cout << t.str << std::endl;
@@ -227,9 +227,9 @@ bool evl_module::get_component(
             }
             case PINS: {
                 if(tok.get_type() == evl_token::NAME) {
-                    pin.set_name(tok.get_str());
-                    pin.set_msb(-1);
-                    pin.set_lsb(-1);
+                    pin->set_name(tok.get_str());
+                    pin->set_msb(-1);
+                    pin->set_lsb(-1);
                     state = PIN_NAME;
                 } else {
                     std::cerr << "LINE " << tok.get_line()
@@ -242,10 +242,10 @@ bool evl_module::get_component(
                 if(tok.get_str() == "[") {
                     state = BUS;
                 } else if(tok.get_str() == ")") {
-                    component->add_pin(pin);
+                    component->add_pin(*pin);
                     state = PINS_DONE;
                 } else if(tok.get_str() == ",") {
-                    component->add_pin(pin);
+                    component->add_pin(*pin);
                     state = PINS;
                 } else {
                     std::cerr << "LINE " << tok.get_line()
@@ -256,7 +256,7 @@ bool evl_module::get_component(
             }
             case BUS: {
                 if(tok.get_type() == evl_token::NUMBER) {
-                    pin.set_msb(atoi(tok.get_str().c_str()));
+                    pin->set_msb(atoi(tok.get_str().c_str()));
                     state = MSB;
                 } else {
                     std::cerr << "LINE " << tok.get_line()
@@ -279,7 +279,7 @@ bool evl_module::get_component(
             }
             case COLON: {
                 if(tok.get_type() == evl_token::NUMBER) {
-                    pin.set_lsb(atoi(tok.get_str().c_str()));
+                    pin->set_lsb(atoi(tok.get_str().c_str()));
                     state = LSB;
                 } else {
                     std::cerr << "LINE " << tok.get_line()
@@ -300,10 +300,10 @@ bool evl_module::get_component(
             }
             case BUS_DONE: {
                 if(tok.get_str() == ",") {
-                    component->add_pin(pin);
+                    component->add_pin(*pin);
                     state = PINS;
                 } else if(tok.get_str() == ")") {
-                    component->add_pin(pin);
+                    component->add_pin(*pin);
                     state = PINS_DONE;
                 } else {
                     std::cerr << "LINE " << tok.get_line()
