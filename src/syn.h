@@ -73,7 +73,7 @@ public:
         std::ostream &out
     ) const;
 
-    void add_pin(evl_pin pin) {pins.push_back(pin)}
+    void add_pin(evl_pin pin) { pins.push_back(pin); }
 
     ~evl_component() {}
 }; // evl_component class

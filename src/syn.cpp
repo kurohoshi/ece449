@@ -435,7 +435,7 @@ void evl_module::display(
 void evl_modules::display(
     std::ostream &out) const {
 
-    for(evl_modules::const_iterator module = modules.begin();
+    for(evl_modules_::const_iterator module = modules.begin();
         module != modules.end(); ++module) {
 
         module->display(out);
