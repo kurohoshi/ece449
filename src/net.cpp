@@ -32,9 +32,9 @@ bool pin::create(
     index_ = index;
     if(p.get_msb() == -1) {
         if(p.get_lsb() == -1) {
-            std::map<std::String, net *>::const_iterator single_net
+            std::map<std::string, net *>::const_iterator single_net
                 = nets_table.find(p.get_name());
-            std::map<std::String, net *>::const_iterator bus_net
+            std::map<std::string, net *>::const_iterator bus_net
                 = nets_table.find(p.get_name() + "[0]");
 
             if(single_net != nets_table.end()) {
