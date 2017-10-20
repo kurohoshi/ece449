@@ -86,7 +86,7 @@ public:
     void set_index(size_t new_index) { index_ = new_index; }
 
     net* get_net() const { return net_; }
-    void set_net(net &new_net) { net_ = new_net; }
+    void set_net(net *new_net) { net_ = new_net; }
 }; // pin class
 
 class netlist{
