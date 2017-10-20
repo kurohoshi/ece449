@@ -51,7 +51,7 @@ public:
         const std::map<std::string, net *> &nets_table);
 
     char get_dir() const { return dir_; }
-    void set_dir(char new_dir) { dir_ = dir; }
+    void set_dir(char new_dir) { dir_ = new_dir; }
 
     gate get_gate() const { return gate_; }
     void set_get(gate *new_gate) { gate_ = new_gate; }
@@ -60,7 +60,7 @@ public:
     void set_index(size_t new_index) { index_ = new_index; }
 
     net get_net() const { return net_; }
-    void set_net(net *new_net) { net_ = new_net; }
+    void set_net(net &new_net) { net_ = new_net; }
 }; // pin class
 
 class gate{
