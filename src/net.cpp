@@ -38,14 +38,14 @@ bool pin::create(
                 = nets_table.find(p.get_name() + "[0]");
 
             if(single_net != nets_table.end()) {
-                single_net->append_pin(this);
+                *single_net->append_pin(this);
                 nets_.push_back(single_net);
             } else if(bus_net != nets_table.end()) {
                 size_t i = 0;
                 for(; nets_table.find(p.get_name() + "[" + i +"]") != nets_table.end();) {
                     std::ostringstream oss;
                     oss << p.get_name() << "[" << i << "]";
-                    nets_table.find(oss.str())->append_pin(this);
+                    *nets_table.find(oss.str())->append_pin(this);
                     nets_.push_back(nets_table.find(oss.str()));
                     ++i;
                 }
@@ -62,13 +62,13 @@ bool pin::create(
         if(p.get_lsb() == -1) {
             std::ostringstream oss;
             oss << p.get_name() << "[" << p.get_msb() << "]";
-            nets_table.find(oss.str())->append_pin(this);
+            *nets_table.find(oss.str())->append_pin(this);
             nets_.push_back(nets_table.find(oss.str()));
         } else if((p.get_lsb() >= 0) && (p.get_lsb() <= p.get_msb())) {
             for(int i = p.get_lsb(); i >= p.get_msb(); ++i) {
                 std::ostringstream oss;
                 oss << p.get_name() << "[" << i << "]";
-                nets_table.find(oss.str())->append_pin(this);
+                *nets_table.find(oss.str())->append_pin(this);
                 nets_.push_back(nets_table.find(oss.str()));
             }
         } else {
