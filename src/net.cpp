@@ -121,7 +121,7 @@ bool netlist::create(
             for(int i = 0; i < wire->get_width(); ++i) {
                 std::ostringstream oss;
                 oss << wire->get_name() << "[" << i << "]";
-                create_net(oss.str());
+                create_net(oss.str(), wire->get_width());
             }
         }
     }
