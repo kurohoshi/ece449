@@ -41,7 +41,7 @@ bool evl_tokens::extract_from_line(
                     break; // [name_begin, i) is the range for the token
                 }
             }
-            evl_token *token = new token(
+            evl_token *token = new evl_token(
                 evl_token::NAME,
                 line.substr(name_begin, i-name_begin),
                 line_no);
