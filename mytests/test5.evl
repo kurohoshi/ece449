@@ -7,5 +7,5 @@ module adder2;
     adder a0(s[0], c1, a[0], b[0], cin);
     adder a1(s[1], cout, a[1], b[1], c1);
 
-    adder2 b0(s[1:0], cout, a[1:0], b[1:0], cin);
+    adder2 b0(s, cout, a[1:0], b[1:0], cin);
 endmodule

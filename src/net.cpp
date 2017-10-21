@@ -29,26 +29,34 @@ bool pin::create(
     const evl_pin &p,
     const std::map<std::string, net *> &nets_table) {
 
-    std::cout << "Creating " << evl_pin.get_name() << " pin" << std::endl;
+    std::cout << "Creating " << p.get_name() << " pin" << std::endl;
     gate_ = g;
     index_ = index;
     if(p.get_msb() == -1) {
+        std::cout << "in msb = -1" << std::endl;
         if(p.get_lsb() == -1) {
+            std::cout << "  in lsb = -1" << std::endl;
             if(nets_table.find(p.get_name()) != nets_table.end()) {
+                std::cout << "  is a single wire" << std::endl;
                 net *net_ptr = nets_table.find(p.get_name())->second;
                 net_ptr->append_pin(this);
                 nets_.push_back(net_ptr);
             } else if(nets_table.find(p.get_name() + "[0]") != nets_table.end()) {
+                std::cout << "  is a bus" << std::endl;
                 size_t i = 0;
                 std::ostringstream temp;
                 temp << p.get_name() << "[" << i << "]";
                 for(; nets_table.find(temp.str()) != nets_table.end();) {
+                    std::cout << "connecting index " << i << std::endl;
                     std::ostringstream oss;
                     oss << p.get_name() << "[" << i << "]";
                     net *net_ptr = nets_table.find(oss.str())->second;
                     net_ptr->append_pin(this);
                     nets_.push_back(net_ptr);
+                    std::cout << "index " << i << " connected" << std::endl;
                     ++i;
+                    temp.str("");
+                    temp << p.get_name() << "[" << i << "]";
                 }
             } else {
                 std::cerr << "'" << p.get_name()
@@ -60,13 +68,16 @@ bool pin::create(
             return false;
         }
     } else if(p.get_msb() >= 0) {
+        std::cout << "in msb != -1" << std::endl;
         if(p.get_lsb() == -1) {
+            std::cout << "  in lsb = -1" << std::endl;
             std::ostringstream oss;
             oss << p.get_name() << "[" << p.get_msb() << "]";
             net *net_ptr = nets_table.find(oss.str())->second;
             net_ptr->append_pin(this);
             nets_.push_back(net_ptr);
         } else if((p.get_lsb() >= 0) && (p.get_lsb() <= p.get_msb())) {
+            std::cout << "in lsb != -1" << std::endl;
             for(int i = p.get_lsb(); i >= p.get_msb(); ++i) {
                 std::ostringstream oss;
                 oss << p.get_name() << "[" << i << "]";
@@ -88,6 +99,7 @@ bool pin::create(
     //  net_ = find net_name in nets_table
     //  net_->append_pin(pin);
     //}
+    std::cout << "Pin created" << std::endl;
     return true;
 }
 
