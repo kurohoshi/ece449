@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cstring>
 #include <sstream>
+#include <algorithm>
 
 #include "net.h"
 #include "syn.h"
