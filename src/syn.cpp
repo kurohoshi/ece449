@@ -40,11 +40,11 @@ bool evl_module::add_wire_to_table(
     const evl_wire &w) {
 
     if(wires_table.find(w.get_name()) != wires_table.end()) {
-        std::cerr << "Wire '" << wire.get_name()
+        std::cerr << "Wire '" << w.get_name()
             << "' is already defined" << std::endl;
         return false;
     }
-    wires_table[wire.get_name()] = wire.get_width();
+    wires_table[w.get_name()] = w.get_width();
     return true;
 }
 
