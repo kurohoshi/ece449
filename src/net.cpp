@@ -78,7 +78,7 @@ bool pin::create(
             nets_.push_back(net_ptr);
         } else if((p.get_lsb() >= 0) && (p.get_lsb() <= p.get_msb())) {
             std::cout << "in lsb != -1" << std::endl;
-            for(int i = p.get_lsb(); i >= p.get_msb(); ++i) {
+            for(int i = p.get_lsb(); i <= p.get_msb(); ++i) {
                 std::ostringstream oss;
                 oss << p.get_name() << "[" << i << "]";
                 net *net_ptr = nets_table.find(oss.str())->second;
