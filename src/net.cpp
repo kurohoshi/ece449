@@ -162,46 +162,49 @@ bool netlist::create(
 void net::display(
     std::ostream &out) const {
 
-    assert(!connections_.empty());
-    out << "  net " << name_ << " " << connections_.size() << std::endl;
-    for_each(connections_.begin(), connections_.end(),
-        [&] (pin *p) {
-            out << "    " << p->get_gate()->get_type();
-            if(p->get_gate()->get_name() != "") {
-                out << " "  << p->get_gate()->get_name();
+    if(!connections_.empty()) {
+        out << "  net " << name_ << " " << connections_.size() << std::endl;
+        for_each(connections_.begin(), connections_.end(),
+            [&] (pin *p) {
+                out << "    " << p->get_gate()->get_type();
+                if(p->get_gate()->get_name() != "") {
+                    out << " "  << p->get_gate()->get_name();
+                }
+                out << " " << p->get_index() << std::endl;
             }
-            out << " " << p->get_index() << std::endl;
-        }
-    );
+        );
+    }
 }
 
 void gate::display(
     std::ostream &out) const {
 
-    assert(!pins_.empty());
-    out << "  component " << type_;
-    if(name_ != "") {
-        out << " " << name_;
-    }
-    out << " " << pins_.size() << std::endl;
-    for_each(pins_.begin(), pins_.end(),
-        [&] (pin *p) {
-            p->display(out);
+    if(!pins_.empty()) {
+        out << "  component " << type_;
+        if(name_ != "") {
+            out << " " << name_;
         }
-    );
+        out << " " << pins_.size() << std::endl;
+        for_each(pins_.begin(), pins_.end(),
+            [&] (pin *p) {
+                p->display(out);
+            }
+        );
+    }
 }
 
 void pin::display(
     std::ostream &out) const {
 
-    assert(!nets_.empty());
-    out << "    pin " << nets_.size();
-    for_each(nets_.begin(), nets_.end(),
-        [&] (net *n) {
-            out << " " << n->get_name();
-        }
-    );
-    out << std::endl;
+    if(!nets_.empty()) {
+        out << "    pin " << nets_.size();
+        for_each(nets_.begin(), nets_.end(),
+            [&] (net *n) {
+                out << " " << n->get_name();
+            }
+        );
+        out << std::endl;
+    }
 }
 
 void netlist::display(
