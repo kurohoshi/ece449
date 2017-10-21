@@ -191,7 +191,7 @@ void pin::display(
     out << "    pin " << nets_.size();
     for_each(nets_.begin(), nets_.end(),
         [&] (net *n) {
-            out << " " << *n->get_name();
+            out << " " << n->get_name();
         }
     );
     out << std::endl;
