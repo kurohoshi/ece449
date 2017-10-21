@@ -62,7 +62,7 @@ public:
     void set_name(std::string new_name) { name = new_name; }
 
     std::string get_type() const { return type; }
-    void set_type(std::string new_type) { name = new_type; }
+    void set_type(std::string new_type) { type = new_type; }
 
     void display(
         std::ostream &out

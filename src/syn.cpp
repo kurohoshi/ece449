@@ -416,7 +416,7 @@ void evl_component::display(
     if(name != "") {
         out << name << " ";
     }
-    out << pins.size() << std::endl;
+    out << pins.size()  << std::endl;
     for(evl_pins::const_iterator pin = pins.begin();
         pin != pins.end(); ++pin) {
             out << "    pin " << pin->get_name();

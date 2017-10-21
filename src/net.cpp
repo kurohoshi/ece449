@@ -166,8 +166,11 @@ void net::display(
     out << "  net " << name_ << " " << connections_.size() << std::endl;
     for_each(connections_.begin(), connections_.end(),
         [&] (pin *p) {
-            out << "    " << p->get_gate()->get_name() << " "
-                << p->get_index() << std::endl;
+            out << "    " << p->get_gate()->get_type();
+            if(p->get_gate()->get_name() != "") {
+                out << " "  << p->get_gate()->get_name();
+            }
+            out << " " << p->get_index() << std::endl;
         }
     );
 }
@@ -200,7 +203,7 @@ void pin::display(
 void netlist::display(
     std::ostream &out) const {
 
-    out << "module" << name_ << std::endl;
+    out << "module " << name_ << std::endl;
     if(!nets_.empty()) {
         out <<  "nets " << nets_.size() << std::endl;
         for_each(nets_.begin(), nets_.end(),
