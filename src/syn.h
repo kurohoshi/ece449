@@ -84,7 +84,7 @@ struct evl_module {
     evl_components components;
     evl_wires_table wires_table;
 
-    bool add_wire_to_table(evl_wire &w);
+    bool add_wire_to_table(const evl_wire &w);
 public:
     evl_module() {}
 
@@ -102,7 +102,7 @@ public:
         { return components.begin(); }
     evl_components::const_iterator components_end() const
         { return components.end(); }
-        
+
     evl_wires_table get_wires_table() const { return wires_table; }
 
     bool get_module_name(

@@ -205,7 +205,7 @@ void netlist::display(
         out <<  "nets " << nets_.size() << std::endl;
         for_each(nets_.begin(), nets_.end(),
             [&] (net *n) {
-                n->display(out)
+                n->display(out);
             }
         );
     }
