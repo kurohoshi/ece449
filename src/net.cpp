@@ -161,19 +161,16 @@ bool netlist::create(
 
 void net::display(
     std::ostream &out) const {
-
-    if(!connections_.empty()) {
-        out << "  net " << name_ << " " << connections_.size() << std::endl;
-        for_each(connections_.begin(), connections_.end(),
-            [&] (pin *p) {
-                out << "    " << p->get_gate()->get_type();
-                if(p->get_gate()->get_name() != "") {
-                    out << " "  << p->get_gate()->get_name();
-                }
-                out << " " << p->get_index() << std::endl;
+    out << "  net " << name_ << " " << connections_.size() << std::endl;
+    for_each(connections_.begin(), connections_.end(),
+        [&] (pin *p) {
+            out << "    " << p->get_gate()->get_type();
+            if(p->get_gate()->get_name() != "") {
+                out << " "  << p->get_gate()->get_name();
             }
-        );
-    }
+            out << " " << p->get_index() << std::endl;
+        }
+    );
 }
 
 void gate::display(
