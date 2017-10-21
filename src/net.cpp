@@ -33,15 +33,17 @@ bool pin::create(
     if(p.get_msb() == -1) {
         if(p.get_lsb() == -1) {
             if(nets_table.find(p.get_name()) != nets_table.end()) {
-                nets_table[p.get_name()]->append_pin(this);
-                nets_.push_back(single_net);
+                net *net_ptr = nets_table[p.get_name()];
+                net_ptr->append_pin(this);
+                nets_.push_back(net_ptr);
             } else if(nets_table.find(p.get_name() + "[0]") != nets_table.end()) {
                 size_t i = 0;
                 for(; nets_table.find(p.get_name() + "[" + i +"]") != nets_table.end();) {
                     std::ostringstream oss;
                     oss << p.get_name() << "[" << i << "]";
-                    nets_table[oss.str()]->append_pin(this);
-                    nets_.push_back(nets_table[oss.str()]);
+                    net *net_ptr = nets_table[oss.str()];
+                    net_ptr->append_pin(this);
+                    nets_.push_back(net_ptr);
                     ++i;
                 }
             } else {
@@ -57,14 +59,16 @@ bool pin::create(
         if(p.get_lsb() == -1) {
             std::ostringstream oss;
             oss << p.get_name() << "[" << p.get_msb() << "]";
-            *nets_table.find(oss.str())->append_pin(this);
-            nets_.push_back(nets_table.find(oss.str()));
+            net *net_ptr = nets_table[oss.str()];
+            net_ptr->append_pin(this);
+            nets_.push_back(net_ptr);
         } else if((p.get_lsb() >= 0) && (p.get_lsb() <= p.get_msb())) {
             for(int i = p.get_lsb(); i >= p.get_msb(); ++i) {
                 std::ostringstream oss;
                 oss << p.get_name() << "[" << i << "]";
-                *nets_table.find(oss.str())->append_pin(this);
-                nets_.push_back(nets_table.find(oss.str()));
+                net *net_ptr = nets_table[oss.str()];
+                net_ptr->append_pin(this);
+                nets_.push_back(net_ptr);
             }
         } else {
             std::cerr << "incorrect lsb pin assignment" << std::endl;
