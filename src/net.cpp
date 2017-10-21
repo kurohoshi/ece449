@@ -33,7 +33,7 @@ bool pin::create(
     if(p.get_msb() == -1) {
         if(p.get_lsb() == -1) {
             if(nets_table.find(p.get_name()) != nets_table.end()) {
-                net *net_ptr = nets_table[p.get_name()].second;
+                net *net_ptr = nets_table[p.get_name()]->second;
                 net_ptr->append_pin(this);
                 nets_.push_back(net_ptr);
             } else if(nets_table.find(p.get_name() + "[0]") != nets_table.end()) {
@@ -41,7 +41,7 @@ bool pin::create(
                 for(; nets_table.find(p.get_name() + "[" + i +"]") != nets_table.end();) {
                     std::ostringstream oss;
                     oss << p.get_name() << "[" << i << "]";
-                    net *net_ptr = nets_table[oss.str()].second;
+                    net *net_ptr = nets_table[oss.str()]->second;
                     net_ptr->append_pin(this);
                     nets_.push_back(net_ptr);
                     ++i;
@@ -59,14 +59,14 @@ bool pin::create(
         if(p.get_lsb() == -1) {
             std::ostringstream oss;
             oss << p.get_name() << "[" << p.get_msb() << "]";
-            net *net_ptr = nets_table[oss.str()].second;
+            net *net_ptr = nets_table[oss.str()]->second;
             net_ptr->append_pin(this);
             nets_.push_back(net_ptr);
         } else if((p.get_lsb() >= 0) && (p.get_lsb() <= p.get_msb())) {
             for(int i = p.get_lsb(); i >= p.get_msb(); ++i) {
                 std::ostringstream oss;
                 oss << p.get_name() << "[" << i << "]";
-                net *net_ptr = nets_table[oss.str()].second;
+                net *net_ptr = nets_table[oss.str()]->second;
                 net_ptr->append_pin(this);
                 nets_.push_back(net_ptr);
             }
