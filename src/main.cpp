@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
 
     //std::cout << "Organizing Complete..." << std::endl;
     //std::cout << "Displaying Modules..." << std::endl;
-    mods.display(CONSOLE); //look at the output of modules
+    //mods.display(CONSOLE); //look at the output of modules
     //std::cout << "Storing Modules into File..." << std::endl;
     if(!mods.store(evl_file+".syntax")) {
         return -1;
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
     netlist net;
     net.create(mods.front());
 
-    net.display(CONSOLE);
+    //net.display(CONSOLE);
     net.store(evl_file+".netlist");
     return 0;
 }
