@@ -33,20 +33,20 @@ bool pin::create(
     if(p.get_msb() == -1) {
         if(p.get_lsb() == -1) {
             std::map<std::string, net *>::const_iterator single_net
-                = nets_table.find(p.get_name());
+                = ;
             std::map<std::string, net *>::const_iterator bus_net
-                = nets_table.find(p.get_name() + "[0]");
+                = ;
 
-            if(single_net != nets_table.end()) {
-                *single_net->append_pin(this);
+            if(nets_table.find(p.get_name()) != nets_table.end()) {
+                nets_table[p.get_name()]->append_pin(this);
                 nets_.push_back(single_net);
-            } else if(bus_net != nets_table.end()) {
+            } else if(nets_table.find(p.get_name() + "[0]") != nets_table.end()) {
                 size_t i = 0;
                 for(; nets_table.find(p.get_name() + "[" + i +"]") != nets_table.end();) {
                     std::ostringstream oss;
                     oss << p.get_name() << "[" << i << "]";
-                    *nets_table.find(oss.str())->append_pin(this);
-                    nets_.push_back(nets_table.find(oss.str()));
+                    nets_table[oss.str()]->append_pin(this);
+                    nets_.push_back(nets_table[oss.str()]);
                     ++i;
                 }
             } else {
