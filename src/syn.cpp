@@ -49,8 +49,7 @@ bool evl_module::add_wire_to_table(
 }
 
 bool evl_module::get_wires(
-    evl_tokens &t,
-    evl_wires_table) {
+    evl_tokens &t) {
 
     //std::cout << "getting wires..." << std::endl;
 
@@ -248,7 +247,7 @@ bool evl_module::get_component(
                         pin->set_msb(-1);
                         pin->set_lsb(-1);
                     } else {
-                        std::cerr << "Pin '" << wire.get_name()
+                        std::cerr << "Pin '" << tok.get_str()
                             << "' is not declared" << std::endl;
                         return false;
                     }
