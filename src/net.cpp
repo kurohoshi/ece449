@@ -29,6 +29,7 @@ bool pin::create(
     const evl_pin &p,
     const std::map<std::string, net *> &nets_table) {
 
+    std::cout << "Creating " << evl_pin.get_name() << " pin" << std::endl;
     gate_ = g;
     index_ = index;
     if(p.get_msb() == -1) {
