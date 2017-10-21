@@ -91,6 +91,10 @@ public:
     void set_index(size_t new_index) { index_ = new_index; }
 
     int get_pin_width() const { return nets_.size(); }
+
+    void display(
+        std::ostream &out
+    ) const;
 }; // pin class
 
 class netlist{
