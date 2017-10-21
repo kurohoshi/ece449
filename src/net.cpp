@@ -91,7 +91,6 @@ bool pin::create(
 
 //********************************************************
 //             Gate Member Functions
-//********************************************************
 
 bool gate::create(
     const evl_component &c,
