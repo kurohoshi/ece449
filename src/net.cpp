@@ -38,7 +38,8 @@ bool pin::create(
                 nets_.push_back(net_ptr);
             } else if(nets_table.find(p.get_name() + "[0]") != nets_table.end()) {
                 size_t i = 0;
-                for(; nets_table.find(p.get_name() + "[" + i +"]") != nets_table.end();) {
+                std::string str_name = p.get_name() + "[" + i +"]";
+                for(; nets_table.find(str_name) != nets_table.end();) {
                     std::ostringstream oss;
                     oss << p.get_name() << "[" << i << "]";
                     net *net_ptr = nets_table.find(oss.str())->second;
