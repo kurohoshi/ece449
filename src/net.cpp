@@ -203,7 +203,7 @@ void netlist::display(
     out << "module" << name_ << std::endl;
     if(!nets_.empty()) {
         out <<  "nets " << nets_.size() << std::endl;
-        for_each(nets_,begin(), nets_.end(),
+        for_each(nets_.begin(), nets_.end(),
             [&] (net *n) {
                 *n->display(out)
             }
