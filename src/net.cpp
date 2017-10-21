@@ -179,7 +179,11 @@ void gate::display(
     std::ostream &out) const {
 
     assert(!pins_.empty());
-    out << "  component " << name_ << " " << pins_.size() << std::endl;
+    out << "  component " << type_;
+    if(name_ != "") {
+        out << " " << name_;
+    }
+    out << " " << pins_.size() << std::endl;
     for_each(pins_.begin(), pins_.end(),
         [&] (pin *p) {
             p->display(out);
