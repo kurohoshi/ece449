@@ -19,6 +19,20 @@ void net::append_pin(pin *p) {
     connections_.push_back(p);
 }
 
+void net::display(
+    std::ostream &out) const {
+    out << "  net " << name_ << " " << connections_.size() << std::endl;
+    for_each(connections_.begin(), connections_.end(),
+        [&] (pin *p) {
+            out << "    " << p->get_gate()->get_type();
+            if(p->get_gate()->get_name() != "") {
+                out << " "  << p->get_gate()->get_name();
+            }
+            out << " " << p->get_index() << std::endl;
+        }
+    );
+}
+
 //********************************************************
 //             Pin Member Functions
 //********************************************************
@@ -29,31 +43,31 @@ bool pin::create(
     const evl_pin &p,
     const std::map<std::string, net *> &nets_table) {
 
-    std::cout << "Creating " << p.get_name() << " pin" << std::endl;
+    //std::cout << "Creating " << p.get_name() << " pin" << std::endl;
     gate_ = g;
     index_ = index;
     if(p.get_msb() == -1) {
-        std::cout << "in msb = -1" << std::endl;
+        //std::cout << "in msb = -1" << std::endl;
         if(p.get_lsb() == -1) {
-            std::cout << "  in lsb = -1" << std::endl;
+            //std::cout << "  in lsb = -1" << std::endl;
             if(nets_table.find(p.get_name()) != nets_table.end()) {
-                std::cout << "  is a single wire" << std::endl;
+                //std::cout << "  is a single wire" << std::endl;
                 net *net_ptr = nets_table.find(p.get_name())->second;
                 net_ptr->append_pin(this);
                 nets_.push_back(net_ptr);
             } else if(nets_table.find(p.get_name() + "[0]") != nets_table.end()) {
-                std::cout << "  is a bus" << std::endl;
+                //std::cout << "  is a bus" << std::endl;
                 size_t i = 0;
                 std::ostringstream temp;
                 temp << p.get_name() << "[" << i << "]";
                 for(; nets_table.find(temp.str()) != nets_table.end();) {
-                    std::cout << "connecting index " << i << std::endl;
+                    //std::cout << "connecting index " << i << std::endl;
                     std::ostringstream oss;
                     oss << p.get_name() << "[" << i << "]";
                     net *net_ptr = nets_table.find(oss.str())->second;
                     net_ptr->append_pin(this);
                     nets_.push_back(net_ptr);
-                    std::cout << "index " << i << " connected" << std::endl;
+                    //std::cout << "index " << i << " connected" << std::endl;
                     ++i;
                     temp.str("");
                     temp << p.get_name() << "[" << i << "]";
@@ -68,16 +82,16 @@ bool pin::create(
             return false;
         }
     } else if(p.get_msb() >= 0) {
-        std::cout << "in msb != -1" << std::endl;
+        //std::cout << "in msb != -1" << std::endl;
         if(p.get_lsb() == -1) {
-            std::cout << "  in lsb = -1" << std::endl;
+            //std::cout << "  in lsb = -1" << std::endl;
             std::ostringstream oss;
             oss << p.get_name() << "[" << p.get_msb() << "]";
             net *net_ptr = nets_table.find(oss.str())->second;
             net_ptr->append_pin(this);
             nets_.push_back(net_ptr);
         } else if((p.get_lsb() >= 0) && (p.get_lsb() <= p.get_msb())) {
-            std::cout << "in lsb != -1" << std::endl;
+            //std::cout << "in lsb != -1" << std::endl;
             for(int i = p.get_lsb(); i <= p.get_msb(); ++i) {
                 std::ostringstream oss;
                 oss << p.get_name() << "[" << i << "]";
@@ -94,17 +108,27 @@ bool pin::create(
         return false;
     }
 
-    //if(p.msb == -1) { //a 1-bit wire
-    //  net_name = p.name;
-    //  net_ = find net_name in nets_table
-    //  net_->append_pin(pin);
-    //}
-    std::cout << "Pin created" << std::endl;
+    //std::cout << "Pin created" << std::endl;
     return true;
+}
+
+void pin::display(
+    std::ostream &out) const {
+
+    if(!nets_.empty()) {
+        out << "    pin " << nets_.size();
+        for_each(nets_.begin(), nets_.end(),
+            [&] (net *n) {
+                out << " " << n->get_name();
+            }
+        );
+        out << std::endl;
+    }
 }
 
 //********************************************************
 //             Gate Member Functions
+//********************************************************
 
 bool gate::create(
     const evl_component &c,
@@ -128,6 +152,23 @@ bool gate::create(
 
     //return validate_structural_semantics()
     return true;
+}
+
+void gate::display(
+    std::ostream &out) const {
+
+    if(!pins_.empty()) {
+        out << "  component " << type_;
+        if(name_ != "") {
+            out << " " << name_;
+        }
+        out << " " << pins_.size() << std::endl;
+        for_each(pins_.begin(), pins_.end(),
+            [&] (pin *p) {
+                p->display(out);
+            }
+        );
+    }
 }
 
 //********************************************************
@@ -159,7 +200,6 @@ bool netlist::create(
             }
         }
     }
-
     for(evl_components::const_iterator c = module.components_begin();
         c != module.components_end(); ++c) {
 
@@ -168,53 +208,7 @@ bool netlist::create(
         if(!(g->create(*c, nets_table_, module.get_wires_table())))
             return false;
     }
-
     return true;
-}
-
-void net::display(
-    std::ostream &out) const {
-    out << "  net " << name_ << " " << connections_.size() << std::endl;
-    for_each(connections_.begin(), connections_.end(),
-        [&] (pin *p) {
-            out << "    " << p->get_gate()->get_type();
-            if(p->get_gate()->get_name() != "") {
-                out << " "  << p->get_gate()->get_name();
-            }
-            out << " " << p->get_index() << std::endl;
-        }
-    );
-}
-
-void gate::display(
-    std::ostream &out) const {
-
-    if(!pins_.empty()) {
-        out << "  component " << type_;
-        if(name_ != "") {
-            out << " " << name_;
-        }
-        out << " " << pins_.size() << std::endl;
-        for_each(pins_.begin(), pins_.end(),
-            [&] (pin *p) {
-                p->display(out);
-            }
-        );
-    }
-}
-
-void pin::display(
-    std::ostream &out) const {
-
-    if(!nets_.empty()) {
-        out << "    pin " << nets_.size();
-        for_each(nets_.begin(), nets_.end(),
-            [&] (net *n) {
-                out << " " << n->get_name();
-            }
-        );
-        out << std::endl;
-    }
 }
 
 void netlist::display(
