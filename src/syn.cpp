@@ -242,15 +242,9 @@ bool evl_module::get_component(
             }
             case PINS: {
                 if(tok.get_type() == evl_token::NAME) {
-                    if(wires_table.find(tok.get_str()) != wires_table.end()) {
-                        pin->set_name(tok.get_str());
-                        pin->set_msb(-1);
-                        pin->set_lsb(-1);
-                    } else {
-                        std::cerr << "Pin '" << tok.get_str()
-                            << "' is not declared" << std::endl;
-                        return false;
-                    }
+                    pin->set_name(tok.get_str());
+                    pin->set_msb(-1);
+                    pin->set_lsb(-1);
                     state = PIN_NAME;
                 } else {
                     std::cerr << "LINE " << tok.get_line()
