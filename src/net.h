@@ -39,6 +39,8 @@ public:
     std::list<pin *>::const_iterator connections_end()
         { return connections_.end(); }
 
+    bool validate_connections();
+
     void display(
         std::ostream &out
     ) const;
@@ -50,6 +52,8 @@ class gate{
     std::string name_;
     std::string type_;
     std::vector<pin *> pins_;
+
+    bool validate_structural_semantics();
 public:
     bool create(
         const evl_component &c,

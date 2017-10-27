@@ -19,6 +19,23 @@ void net::append_pin(pin *p) {
     connections_.push_back(p);
 }
 
+bool validate_connections() {
+    size_t counter = 0;
+    for_each(connections_.begin(), connections.end(),
+        [&] (pin *p) {
+            if(p->get_dir() == 'O') {
+                counter++;
+            }
+        }
+    );
+    if(counter != 1) {
+        std::cerr << "Error: signal wire '" << name_
+            << "' has multiple outputs" << std::endl;
+        return false;
+    }
+    return true;
+}
+
 void net::display(
     std::ostream &out) const {
     out << "  net " << name_ << " " << connections_.size() << std::endl;
@@ -130,6 +147,77 @@ void pin::display(
 //             Gate Member Functions
 //********************************************************
 
+bool gate::validate_structural_semantics() {
+    if((type_ == "and") || (type_ == "or") || (type_ == "xor")) {
+        if(pins_.size() < 3) {
+            std::cerr << "[" << type_ << "] " << name_
+                << ": invalid number of inputs" << std::endl;
+            return false;
+        }
+        pins_.front()->set_dir('O');
+        for_each(std::next(pins_.begin()), pins_.end(),
+            [&] (pin *p) {
+                p->set_dir('I');
+            }
+        );
+    } else if((type_ == "not") || (type_ == "buf")) {
+        if(pins_.size() != 2) {
+            std::cerr << "[" << type_ << "] " << name_
+                << ": invalid number of inputs" << std::endl;
+            return false;
+        }
+        pins_.front()->set_dir('O');
+        for_each(std::next(pins_.begin()), pins_.end(),
+            [&] (pin *p) {
+                p->set_dir('I');
+            }
+        );
+    } else if((type_ == "evl_dff") || (type_ == "tris")) {
+        if(pins_.size() != 3) {
+            std::cerr << "[" << type_ << "] " << name_
+                << ": invalid number of inputs" << std::endl;
+            return false;
+        }
+        pins_.front()->set_dir('O');
+        for_each(std::next(pins_.begin()), pins_.end(),
+            [&] (pin *p) {
+                p->set_dir('I');
+            }
+        );
+    } else if((type_ == "evl_clock")) {
+        if(pins_.size() != 1) {
+            std::cerr << "[" << type_ << "] " << name_
+                << ": invalid number of inputs" << std::endl;
+            return false;
+        }
+        pins_.front()->set_dir('O');
+    } else if((type_ == "evl_one") || (type_ == "evl_zero") || (type_ == "evl_input")) {
+        if(pins_.empty()) {
+            std::cerr << "[" << type_ << "] Warning: no input signals specified"
+                << std::endl;
+        }
+        for_each(pins_.begin(), pins_.end(),
+            [&] (pin *p) {
+                p->set_dir('O');
+            }
+        );
+    } else if((type_ == "evl_output")) {
+        if(pins_.empty()) {
+            std::cerr << "[" << type_ << "] Warning: no output signals specified"
+                << std::endl;
+        }
+        for_each(std::next(pins_.begin()), pins_.end(),
+            [&] (pin *p) {
+                p->set_dir('I');
+            }
+        );
+    } else {
+        std::cerr << "Type '" << type_ << "' does not exist" << std::endl;
+        return false;
+    }
+    return true;
+}
+
 bool gate::create(
     const evl_component &c,
     const std::map<std::string, net *> &nets_table,
@@ -150,8 +238,7 @@ bool gate::create(
         index++;
     }
 
-    //return validate_structural_semantics()
-    return true;
+    return validate_structural_semantics();
 }
 
 void gate::display(
@@ -208,6 +295,13 @@ bool netlist::create(
         if(!(g->create(*c, nets_table_, module.get_wires_table())))
             return false;
     }
+    for_each(nets_.begin(), nets_.end(),
+        [&] (net *n) {
+            if(!(n->validate_connections()) {
+                return false;
+            }
+        }
+    );
     return true;
 }
 
