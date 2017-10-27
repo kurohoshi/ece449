@@ -19,9 +19,9 @@ void net::append_pin(pin *p) {
     connections_.push_back(p);
 }
 
-bool validate_connections() {
+bool net::validate_connections() {
     size_t counter = 0;
-    for_each(connections_.begin(), connections.end(),
+    for_each(connections_.begin(), connections_.end(),
         [&] (pin *p) {
             if(p->get_dir() == 'O') {
                 counter++;
@@ -297,9 +297,10 @@ bool netlist::create(
     }
     for_each(nets_.begin(), nets_.end(),
         [&] (net *n) {
-            if(!(n->validate_connections()) {
+            if(!(n->validate_connections())) {
                 return false;
             }
+            return true;
         }
     );
     return true;
