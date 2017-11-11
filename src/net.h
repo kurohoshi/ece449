@@ -82,6 +82,7 @@ public:
         const std::map<std::string, net *> &nets_table);
 
     char get_dir() const { return dir_; }
+    void set_dir(char c) { dir_ = c; }
     gate* get_gate() const { return gate_; }
     size_t get_index() const { return index_; }
 
