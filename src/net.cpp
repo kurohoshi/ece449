@@ -19,6 +19,7 @@ void net::append_pin(pin *p) {
     connections_.push_back(p);
 }
 
+// This function can be improved
 bool net::validate_connections() {
     size_t counter = 0;
     for_each(connections_.begin(), connections_.end(),
@@ -212,8 +213,9 @@ bool gate::validate_structural_semantics() {
             }
         );
     } else {
-        std::cerr << "Type '" << type_ << "' does not exist" << std::endl;
-        return false;
+        std::cerr << "Warning: type '" << type_
+            << "' does not exist" << std::endl;
+        //return false;
     }
     return true;
 }
@@ -237,8 +239,8 @@ bool gate::create(
         }
         index++;
     }
-
-    return validate_structural_semantics();
+    return true;
+    //return validate_structural_semantics();
 }
 
 void gate::display(
@@ -303,6 +305,16 @@ bool netlist::create(
             return true;
         }
     );
+
+    if(gates_.empty()) {
+        if(nets_.empty()) {
+            std::cout << "[Module " << name_
+                << "] Warning: no gates declared" << std::endl;
+        } else {
+            std::cout << "[Module " << name_
+                << "] Warning: empty netlist" << std::endl;
+        }
+    }
     return true;
 }
 

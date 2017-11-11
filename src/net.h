@@ -28,7 +28,6 @@ public:
     void append_pin(pin *p);
 
     std::string get_name() const { return name_; }
-    void set_name(std::string new_name) { name_ = new_name; }
 
     char get_signal() const { return signal_; }
     void set_signal(char new_signal) { signal_ = new_signal; }
@@ -61,10 +60,7 @@ public:
         const evl_module::evl_wires_table &wires_table);
 
     std::string get_name() const { return name_; }
-    void set_name(std::string new_name) { name_ = new_name; }
-
     std::string get_type() const { return type_; }
-    void set_type(std::string new_type) { type_ = new_type; }
 
     void display(
         std::ostream &out
@@ -86,15 +82,8 @@ public:
         const std::map<std::string, net *> &nets_table);
 
     char get_dir() const { return dir_; }
-    void set_dir(char new_dir) { dir_ = new_dir; }
-
     gate* get_gate() const { return gate_; }
-    void set_get(gate *new_gate) { gate_ = new_gate; }
-
     size_t get_index() const { return index_; }
-    void set_index(size_t new_index) { index_ = new_index; }
-
-    int get_pin_width() const { return nets_.size(); }
 
     void display(
         std::ostream &out
