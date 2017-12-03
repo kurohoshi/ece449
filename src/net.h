@@ -50,14 +50,25 @@ public:
 class gate{
     std::string name_;
     std::string type_;
-    std::vector<pin *> pins_;
 
-    bool validate_structural_semantics();
+    gate(const gate &) = delete;
+    gate &operator=(const gate &) = delete;
+
+    virtual bool validate_structural_semantics();
+
+protected:
+    std::vector<pin *> pins_;
 public:
+    gate(std::string type, std::string name)
+        : type_(type), name_(name) {}
+
     bool create(
         const evl_component &c,
         const std::map<std::string, net *> &nets_table,
         const evl_module::evl_wires_table &wires_table);
+
+    virtual void compute_state_and_output();
+    virtual char compute_signal(int pin_index);
 
     std::string get_name() const { return name_; }
     std::string get_type() const { return type_; }
@@ -82,7 +93,8 @@ public:
         const std::map<std::string, net *> &nets_table);
 
     char get_dir() const { return dir_; }
-    void set_dir(char c) { dir_ = c; }
+    void set_as_input() { dir_ = 'I'; }
+    void set_as_output() { dir_ = 'O'; }
     gate* get_gate() const { return gate_; }
     size_t get_index() const { return index_; }
     size_t nets_size() const { return nets_.size(); }
