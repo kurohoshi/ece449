@@ -48,6 +48,8 @@ public:
 }; // net class
 
 class gate{
+    gate(const gate &) = delete;            // no copy
+    gate &operator=(const gate &) = delete; // no assignment
     std::string name_;
     std::string type_;
     std::vector<pin *> pins_;
@@ -113,5 +115,33 @@ public:
         std::string file_name
     ) const;
 }; // netlist class
+
+//********************************************************
+//             Inheritance (Flip_Flop)
+//********************************************************
+class flip_flop: public gate {
+    char state_, next_state_;
+public:
+    bool validate_structural_semantics();
+    void compute_next_state_or_output();
+    char compute_signal(int pin_index);
+}; // class flip_flop
+
+bool flip_flop::validate_structural_semantics() {
+    if(pins_.size() != 3)
+        return false;
+    pins_[0]->set_as_output(); // q
+    pins_[1]->set_as_input(); // d
+    pins_[2]->set_as_input(); // clk
+}
+
+void flip_flop::compute_next_state_or_output() {
+    next_state_ = pins_[1]->compute_signal(); // d
+}
+
+char flip_flop::compute_signal(int pin_index) {
+    assert pin_index == 0; // must be q
+    return state_;
+}
 
 #endif

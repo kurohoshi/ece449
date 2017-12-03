@@ -23,7 +23,7 @@ char net::get_signal() {
         if(it == connections_.end())
             throw std::runtime_exception("floating net");
         pin *driver = *it;
-        signal_ driver->compute_signal();
+        signal_ = driver->compute_signal();
     }
     return signal_;
 }
@@ -51,11 +51,20 @@ void gate::compute_state_or_output() {
     if(type_ == "evl_dff") {
         next_state_ = pins_[1]->compute_signal() // d
     } else if(type == "evl_output") {
-        // collect signal from all pins and write to file
-        // note: call compute signal to compute signal to compute the output of the gate connected to the output gate
-        for(pin *p, pins_) {
-            
+        std::string file_name = // file name here;
+        std::ofstream out(file_name.c_str());
+        if(!std::ifstream(file_name.c_str())) {
+            out << pins_.size() << std::endl;
+            for(pin *p: pins_)
+                out << p->nets_size() << std::endl;
         }
+        // collect signal from all pins and write to file
+        for(pin *p, pins_) {
+            out << p->compute_signal();
+            if(p != pins_.back())
+                out << " ";
+        }
+        out << std::endl;
     }
 }
 

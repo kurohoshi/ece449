@@ -85,6 +85,7 @@ public:
     void set_dir(char c) { dir_ = c; }
     gate* get_gate() const { return gate_; }
     size_t get_index() const { return index_; }
+    size_t nets_size() const { return nets_.size(); }
 
     void display(
         std::ostream &out
