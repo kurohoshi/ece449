@@ -4,6 +4,8 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <algorithm>
+#include <iostream>
 
 #include "net.h"
 
@@ -13,7 +15,7 @@ public:
         : gate("evl_output", name) {}
 
     bool validate_structural_semantics() override;
-    char compute_signal(int pin_index) override;
+    void compute_state_or_output() override;
 }; // class evl_output gate
 
 bool evl_output_gate::validate_structural_semantics() {
@@ -25,7 +27,7 @@ bool evl_output_gate::validate_structural_semantics() {
     );
 }
 
-void evl_output_gate::compute_next_state_or_output() {
+void evl_output_gate::compute_state_or_output() {
     std::string file__output_name = file_name
         + "." + name_ + ".evl_output";
     std::ofstream out(file_name.c_str());
@@ -43,10 +45,6 @@ void evl_output_gate::compute_next_state_or_output() {
         if(p != pins_.back())
             out << " ";
     }
-}
-
-char evl_output_gate::compute_signal(int pin_index) {
-    return '1';
 }
 
 #endif
