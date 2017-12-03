@@ -61,8 +61,7 @@ protected:
 public:
     gate(std::string type, std::string name)
         : type_(type), name_(name) {}
-    gate()
-        : {}
+    gate() {}
 
     bool create(
         const evl_component &c,
