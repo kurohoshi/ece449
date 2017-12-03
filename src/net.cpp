@@ -148,6 +148,7 @@ void pin::display(
 //             Gate Member Functions
 //********************************************************
 
+/*
 bool gate::validate_structural_semantics() {
     if((type_ == "and") || (type_ == "or") || (type_ == "xor")) {
         if(pins_.size() < 3) {
@@ -219,6 +220,7 @@ bool gate::validate_structural_semantics() {
     }
     return true;
 }
+*/
 
 bool gate::create(
     const evl_component &c,
