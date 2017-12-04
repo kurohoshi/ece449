@@ -15,7 +15,7 @@ public:
         : gate("evl_output", name) {}
 
     bool validate_structural_semantics();
-    void compute_state_or_output();
+    void compute_state_or_output(std::string file_name);
 }; // class evl_output gate
 
 bool evl_output_gate::validate_structural_semantics() {

@@ -30,12 +30,10 @@ bool xor_gate::validate_structural_semantics() {
 char xor_gate::compute_signal(int pin_index) {
     bool logic = false;
     assert(pin_index == 0); // must be q
-    for_each(std::next(pins_.begin()), pins_.end(),
-        [](pin *p, logic) {
-            if(p->compute_signal() == 1)
-                logic = not logic;
-        }
-    );
+    for(pin *p: pins_) {
+        if(p->compute_signal() == 1)
+            logic = not logic;
+    }
 
     if(logic)
         return '1';
