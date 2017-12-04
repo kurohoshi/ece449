@@ -67,7 +67,7 @@ bool gate::validate_structural_semantics() {
 //             Netlist Member Functions
 //********************************************************
 
-void netlist::compute_state_and_output(std::string file_name) {
+void netlist::compute_state_and_outputs(std::string file_name) {
     for(net *n: nets_)
         n->set_signal('?');
     for(gate *g: gates_)
