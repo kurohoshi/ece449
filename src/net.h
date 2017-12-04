@@ -134,7 +134,7 @@ public:
         std::string file_name
     ) const;
 
-    void compute_state_and_outputs();
+    void compute_state_and_outputs(std:string file_name);
 }; // netlist class
 
 #endif
