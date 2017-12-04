@@ -15,9 +15,9 @@ public:
     flip_flop(std::string name)
         : gate("evl_dff", name), state_('0'), next_state_('0') {}
 
-    bool validate_structural_semantics() override;
-    void compute_state_or_output() override;
-    char compute_signal(int pin_index) override;
+    bool validate_structural_semantics();
+    void compute_state_or_output();
+    char compute_signal(int pin_index);
 }; // class flip_flop
 
 bool flip_flop::validate_structural_semantics() {
