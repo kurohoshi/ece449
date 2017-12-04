@@ -71,7 +71,7 @@ public:
         const std::map<std::string, net *> &nets_table,
         const evl_module::evl_wires_table &wires_table);
 
-    virtual void compute_state_and_output(std::string file_name);
+    virtual void compute_state_or_output(std::string file_name);
     virtual char compute_signal(int pin_index);
 
     std::string get_name() const { return name_; }

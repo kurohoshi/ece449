@@ -7,6 +7,7 @@
 #include <cstring>
 #include <sstream>
 #include <algorithm>
+#include <exception>
 
 #include "net.h"
 #include "syn.h"
@@ -18,7 +19,7 @@
 char net::get_signal() {
     if(signal_ == '?') {
         auto it = std::find_if(connections_.begin(), connections_.end(),
-            [](pin *p) { p->get_dir() == 'O'; }
+            [](pin *p) { return p->get_dir() == 'O'; }
         );
         if(it == connections_.end())
             throw std::runtime_exception("floating net");
@@ -26,10 +27,6 @@ char net::get_signal() {
         signal_ = driver->compute_signal();
     }
     return signal_;
-}
-
-void net::set_signal(char c) {
-    signal_ = c;
 }
 
 //********************************************************
@@ -41,11 +38,11 @@ char pin::compute_signal() {
     if(dir_ == 'O')
         return gate_->compute_signal(index_);
     else
-        return net_->get_signal();
+        return nets_->get_signal();
 }
 
 std::string pin::compute_bus_signal() {
-    return "0000"
+    return "0000";
 }
 
 //********************************************************
@@ -56,7 +53,7 @@ void gate::compute_state_or_output(std::string file_name) {
     assert(false);
 }
 
-bool gate::compute_signal(int pin_index) {
+char gate::compute_signal(int pin_index) {
     assert(false);
     return 'X';
 }
