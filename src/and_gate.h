@@ -14,8 +14,8 @@ public:
     and_gate(std::string name)
         : gate("and", name) {}
 
-    bool validate_structural_semantics() override;
-    char compute_signal(int pin_index) override;
+    bool validate_structural_semantics();
+    char compute_signal(int pin_index);
 }; // class or gate
 
 bool and_gate::validate_structural_semantics() {
