@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <map>
+#include <assert.h>
 
 #include "net.h"
 

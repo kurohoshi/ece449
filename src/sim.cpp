@@ -22,7 +22,7 @@ char net::get_signal() {
             [](pin *p) { return p->get_dir() == 'O'; }
         );
         if(it == connections_.end())
-            throw std::runtime_exception("floating net");
+            throw std::runtime_error("floating net");
         pin *driver = *it;
         signal_ = driver->compute_signal();
     }
@@ -38,7 +38,7 @@ char pin::compute_signal() {
     if(dir_ == 'O')
         return gate_->compute_signal(index_);
     else
-        return nets_->get_signal();
+        return nets_.front()->get_signal();
 }
 
 std::string pin::compute_bus_signal() {

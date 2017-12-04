@@ -14,8 +14,8 @@ public:
     xor_gate(std::string name)
         : gate("xor", name) {}
 
-    bool validate_structural_semantics() override;
-    char compute_signal(int pin_index) override;
+    bool validate_structural_semantics();
+    char compute_signal(int pin_index);
 }; // class or gate
 
 bool xor_gate::validate_structural_semantics() {
@@ -23,7 +23,7 @@ bool xor_gate::validate_structural_semantics() {
         return false;
     pins_[0]->set_as_output(); // output
     for_each(std::next(pins_.begin()), pins_.end(),
-        [](pin *p) { p->set_as_input() } // inputs
+        [](pin *p) { p->set_as_input(); } // inputs
     );
 }
 

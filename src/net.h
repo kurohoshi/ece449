@@ -55,12 +55,13 @@ class gate{
     gate(const gate &) = delete;
     gate &operator=(const gate &) = delete;
 
-    virtual bool validate_structural_semantics();
-
 protected:
     std::string name_;
     std::string type_;
     std::vector<pin *> pins_;
+
+    virtual bool validate_structural_semantics();
+
 public:
     gate(std::string type, std::string name)
         : type_(type), name_(name) {}
