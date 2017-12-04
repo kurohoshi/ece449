@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <assert.h>
 
 #include "net.h"
 
@@ -24,7 +25,7 @@ bool buf_gate::validate_structural_semantics() {
 }
 
 char buf_gate::compute_signal(int pin_index) {
-    assert pin_index == 0; // must be q
+    assert(pin_index == 0); // must be q
     return pins_[1]->compute_signal();
 }
 

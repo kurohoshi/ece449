@@ -15,7 +15,7 @@ public:
         : gate("evl_dff", name), state_('0'), next_state_('0') {}
 
     bool validate_structural_semantics() override;
-    void compute_next_state_or_output() override;
+    void compute_state_or_output() override;
     char compute_signal(int pin_index) override;
 }; // class flip_flop
 
@@ -27,12 +27,12 @@ bool flip_flop::validate_structural_semantics() {
     pins_[2]->set_as_input(); // clk
 }
 
-void flip_flop::compute_next_state_or_output() {
+void flip_flop::compute_state_or_output() {
     next_state_ = pins_[1]->compute_signal(); // d
 }
 
 char flip_flop::compute_signal(int pin_index) {
-    assert pin_index == 0; // must be q
+    assert(pin_index == 0); // must be q
     return state_;
 }
 

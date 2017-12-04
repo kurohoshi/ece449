@@ -21,7 +21,7 @@ bool evl_one_gate::validate_structural_semantics() {
     if(pins_.size())
         return false;
     for_each(pins_.begin(), pins_.end(),
-        [](pin *p) { p->set_as_output() } // inputs
+        [](pin *p) { p->set_as_output(); } // inputs
     );
 }
 

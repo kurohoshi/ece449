@@ -28,6 +28,8 @@ public:
 
     void append_pin(pin *p);
 
+    char get_signal();
+
     std::string get_name() const { return name_; }
 
     char get_signal() const { return signal_; }
@@ -49,8 +51,6 @@ public:
 }; // net class
 
 class gate{
-    std::string name_;
-    std::string type_;
 
     gate(const gate &) = delete;
     gate &operator=(const gate &) = delete;
@@ -58,6 +58,8 @@ class gate{
     virtual bool validate_structural_semantics();
 
 protected:
+    std::string name_;
+    std::string type_;
     std::vector<pin *> pins_;
 public:
     gate(std::string type, std::string name)
@@ -69,7 +71,7 @@ public:
         const std::map<std::string, net *> &nets_table,
         const evl_module::evl_wires_table &wires_table);
 
-    virtual void compute_state_and_output();
+    virtual void compute_state_and_output(std::string file_name);
     virtual char compute_signal(int pin_index);
 
     std::string get_name() const { return name_; }
@@ -93,6 +95,9 @@ public:
         size_t index,
         const evl_pin &p,
         const std::map<std::string, net *> &nets_table);
+
+    char compute_signal();
+    std::string compute_bus_signal();
 
     char get_dir() const { return dir_; }
     void set_as_input() { dir_ = 'I'; }
@@ -127,6 +132,8 @@ public:
     bool store(
         std::string file_name
     ) const;
+
+    void compute_state_and_outputs();
 }; // netlist class
 
 #endif

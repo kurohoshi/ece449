@@ -23,8 +23,9 @@ bool evl_output_gate::validate_structural_semantics() {
         std::cout << "Warning: " << type_
             << " has no connected pins" << std::endl;
     for_each(pins_.begin(), pins_.end(),
-        [](pin *p) { p->set_as_input() } // inputs
+        [](pin *p) { p->set_as_input(); } // inputs
     );
+    return true;
 }
 
 void evl_output_gate::compute_state_or_output() {

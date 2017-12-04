@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include <assert.h>
 
 #include "net.h"
 
@@ -21,15 +22,15 @@ bool xor_gate::validate_structural_semantics() {
     if (pins_.size() < 3)
         return false;
     pins_[0]->set_as_output(); // output
-    for_each(pins_.begin().next(), pins_.end(),
+    for_each(std::next(pins_.begin()), pins_.end(),
         [](pin *p) { p->set_as_input() } // inputs
     );
 }
 
 char xor_gate::compute_signal(int pin_index) {
     bool logic = false;
-    assert pin_index == 0; // must be q
-    for_each(pins_.begin().next(), pins_.end(),
+    assert(pin_index == 0); // must be q
+    for_each(std::next(pins_.begin()), pins_.end(),
         [](pin *p, logic) {
             if(p->compute_signal() == 1)
                 logic = not logic;

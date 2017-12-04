@@ -37,15 +37,15 @@ void net::set_signal(char c) {
 //********************************************************
 
 char pin::compute_signal() {
-    assert(nets_.size() == 1)
+    assert(nets_.size() == 1);
     if(dir_ == 'O')
         return gate_->compute_signal(index_);
     else
         return net_->get_signal();
 }
 
-std::string pin::compute__bus_signal() {
-
+std::string pin::compute_bus_signal() {
+    return "0000"
 }
 
 //********************************************************
