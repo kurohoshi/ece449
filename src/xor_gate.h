@@ -14,8 +14,8 @@ public:
     xor_gate(std::string name)
         : gate("xor", name) {}
 
-    bool validate_structural_semantics();
-    char compute_signal(int pin_index);
+    bool validate_structural_semantics() override;
+    char compute_signal(int pin_index) override;
 }; // class or gate
 
 bool xor_gate::validate_structural_semantics() {
@@ -37,7 +37,7 @@ char xor_gate::compute_signal(int pin_index) {
 
     if(logic)
         return '1';
-    return '0';
+    return (logic ? '1' : '0');
 }
 
 #endif

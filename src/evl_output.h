@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iostream>
 #include <cstring>
+#include <fstream>
 
 #include "net.h"
 

@@ -13,8 +13,8 @@ public:
     evl_zero_gate(std::string name)
         : gate("evl_zero", name) {}
 
-    bool validate_structural_semantics();
-    char compute_signal(int pin_index);
+    bool validate_structural_semantics() override;
+    char compute_signal(int pin_index) override;
 }; // class buffer gate
 
 bool evl_zero_gate::validate_structural_semantics() {

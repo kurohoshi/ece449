@@ -13,8 +13,8 @@ public:
     not_gate(std::string name)
         : gate("not", name) {}
 
-    bool validate_structural_semantics();
-    char compute_signal(int pin_index);
+    bool validate_structural_semantics() override;
+    char compute_signal(int pin_index) override;
 }; // class buffer gate
 
 bool not_gate::validate_structural_semantics() {
