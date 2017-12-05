@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include <iomanip>
 
 #include "net.h"
 
@@ -46,7 +47,19 @@ void evl_output_gate::compute_state_or_output(std::string file_name) {
     // collect signal from all pins and write to file
     out << std::endl;
     for(pin *p: pins_) {
-        out << p->compute_bus_signal();
+        int hex_num = 0;
+        int hex_width = (p->nets_size() / 4)
+            + ((p->nets_size() % 4) != 0 ? 1 : 0);
+
+        for(net *n: p->get_nets()) {
+            hex_num *= 2;
+            hex_num += (n->get_signal() == '1') ? 1 : 0;
+        }
+
+        std::stringstream ss;
+        ss << std::hex << std::setw(hex_width) << std::setfill('0') << result;
+        out << ss.str();
+
         if(p != pins_.back())
             out << " ";
     }

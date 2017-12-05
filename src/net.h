@@ -106,6 +106,7 @@ public:
     gate* get_gate() const { return gate_; }
     size_t get_index() const { return index_; }
     size_t nets_size() const { return nets_.size(); }
+    std::list<net *> get_nets() const { return nets_; }
 
     void display(
         std::ostream &out

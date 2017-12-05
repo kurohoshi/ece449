@@ -41,10 +41,6 @@ char pin::compute_signal() {
         return nets_.front()->get_signal();
 }
 
-std::string pin::compute_bus_signal() {
-    return "0000";
-}
-
 //********************************************************
 //             Gate Member Functions
 //********************************************************
