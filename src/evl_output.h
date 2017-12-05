@@ -9,6 +9,7 @@
 #include <cstring>
 #include <fstream>
 #include <iomanip>
+#include <sstream>
 
 #include "net.h"
 
@@ -57,7 +58,7 @@ void evl_output_gate::compute_state_or_output(std::string file_name) {
         }
 
         std::stringstream ss;
-        ss << std::hex << std::setw(hex_width) << std::setfill('0') << result;
+        ss << std::hex << std::setw(hex_width) << std::setfill('0') << hex_num;
         out << ss.str();
 
         if(p != pins_.back())
