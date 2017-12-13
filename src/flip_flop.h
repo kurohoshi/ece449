@@ -26,6 +26,7 @@ bool flip_flop::validate_structural_semantics() {
     pins_[0]->set_as_output(); // q
     pins_[1]->set_as_input(); // d
     pins_[2]->set_as_input(); // clk
+    return true;
 }
 
 void flip_flop::compute_state_or_output() {

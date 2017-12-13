@@ -25,6 +25,7 @@ bool xor_gate::validate_structural_semantics() {
     for_each(std::next(pins_.begin()), pins_.end(),
         [](pin *p) { p->set_as_input(); } // inputs
     );
+    return true;
 }
 
 char xor_gate::compute_signal(int pin_index) {

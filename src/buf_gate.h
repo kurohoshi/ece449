@@ -22,6 +22,7 @@ bool buf_gate::validate_structural_semantics() {
         return false;
     pins_[0]->set_as_output(); // o
     pins_[1]->set_as_input(); // i
+    return true;
 }
 
 char buf_gate::compute_signal(int pin_index) {

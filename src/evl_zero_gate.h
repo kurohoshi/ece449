@@ -23,6 +23,7 @@ bool evl_zero_gate::validate_structural_semantics() {
     for_each(pins_.begin(), pins_.end(),
         [](pin *p) { p->set_as_output(); } // inputs
     );
+    return true;
 }
 
 char evl_zero_gate::compute_signal(int pin_index) {

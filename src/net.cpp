@@ -11,6 +11,17 @@
 #include "net.h"
 #include "syn.h"
 
+#include "flip_flop.h"
+#include "and_gate.h"
+#include "or_gate.h"
+#include "xor_gate.h"
+#include "not_gate.h"
+#include "buf_gate.h"
+#include "evl_one_gate.h"
+#include "evl_zero_gate.h"
+#include "evl_output.h"
+//#include "evl_input.h"
+
 //********************************************************
 //             Net Member Functions
 //********************************************************
@@ -26,12 +37,15 @@ bool net::validate_connections() {
         [&] (pin *p) {
             if(p->get_dir() == 'O') {
                 counter++;
+                std::cout << "inside iterator" << counter << std::endl;
             }
+            std::cout << p->get_dir() << " is not output" << std::endl;
         }
     );
     if(counter != 1) {
         std::cerr << "Error: signal wire '" << name_
             << "' has multiple outputs" << std::endl;
+        std::cerr << "count is " << counter << std::endl;
         return false;
     }
     return true;
@@ -227,8 +241,8 @@ bool gate::create(
     const std::map<std::string, net *> &nets_table,
     const evl_module::evl_wires_table &wires_table) {
 
-    name_ = c.get_name();
-    type_ = c.get_type();
+    //name_ = c.get_name();
+    //type_ = c.get_type();
 
     size_t index = 0;
     for(evl_pins::const_iterator pin_ = c.pins_begin();
@@ -293,11 +307,51 @@ bool netlist::create(
     }
     for(evl_components::const_iterator c = module.components_begin();
         c != module.components_end(); ++c) {
+        std::cout << "Creating gate: " << c->get_type() << std::endl;
+        gate *g = NULL;
+        if(c->get_type() == "evl_dff") {
+            g = new flip_flop(c->get_name());
+            gates_.push_back(g);
+        } else if(c->get_type() == "and") {
+            g = new and_gate(c->get_name());
+            gates_.push_back(g);
+        } else if(c->get_type() == "or") {
+            g = new or_gate(c->get_name());
+            gates_.push_back(g);
+        } else if(c->get_type() == "xor") {
+            g = new xor_gate(c->get_name());
+            gates_.push_back(g);
+        } else if(c->get_type() == "not") {
+            g = new not_gate(c->get_name());
+            gates_.push_back(g);
+        } else if(c->get_type() == "buf") {
+            g = new buf_gate(c->get_name());
+            gates_.push_back(g);
+        } else if(c->get_type() == "evl_one") {
+            g = new evl_one_gate(c->get_name());
+            gates_.push_back(g);
+        } else if(c->get_type() == "evl_zero") {
+            g = new evl_zero_gate(c->get_name());
+            gates_.push_back(g);
+        } else if(c->get_type() == "evl_output") {
+            g = new evl_output_gate(c->get_name());
+            gates_.push_back(g);
+        //} else if(c->get_type() == "evl_input") {
+        //    gates_.push_back(new evl_input_gate(c->get_name()));
+        } else {
+            std::cout << "  Warning: unknown gate '" << c->get_type() << "'" << std::endl;
+        }
 
-        gate *g = new gate;
-        gates_.push_back(g);
-        if(!(g->create(*c, nets_table_, module.get_wires_table())))
-            return false;
+        if(g == NULL) {
+            //return false;
+        } else {
+            if(!(gates_.back()->create(*c, nets_table_, module.get_wires_table())))
+                return false;
+        }
+        //gate *g = new gate;
+        //gates_.push_back(g);
+        //if(!(g->create(*c, nets_table_, module.get_wires_table())))
+        //    return false;
     }
     for_each(nets_.begin(), nets_.end(),
         [&] (net *n) {
