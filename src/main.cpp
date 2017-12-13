@@ -51,5 +51,6 @@ int main(int argc, char *argv[]){
 
     //net.display(CONSOLE);
     net.store(evl_file+".netlist");
+    net.simulate(evl_file, 1000);
     return 0;
 }

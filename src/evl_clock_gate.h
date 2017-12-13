@@ -14,6 +14,7 @@ public:
         : gate("evl_clock", name) {}
 
     bool validate_structural_semantics() override;
+    void compute_state_or_output(std::string file_name) override;
     char compute_signal(int pin_index) override;
 }; // class buffer gate
 
@@ -24,6 +25,9 @@ bool evl_clock_gate::validate_structural_semantics() {
     std::cout << "setting evl_clock pin dir" << std::endl;
     pins_[0]->set_as_output();
     return true;
+}
+
+void evl_clock_gate::compute_state_or_output(std::string file_name) {
 }
 
 char evl_clock_gate::compute_signal(int pin_index) {

@@ -136,6 +136,8 @@ public:
     ) const;
 
     void compute_state_and_outputs(std::string file_name);
+
+    void simulate(std::string file_name, int num_cycles);
 }; // netlist class
 
 #endif

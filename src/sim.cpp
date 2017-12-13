@@ -46,15 +46,18 @@ char pin::compute_signal() {
 //********************************************************
 
 void gate::compute_state_or_output(std::string file_name) {
+    std::cout << "computing state or output of " << type_ << std::endl;
     assert(false);
 }
 
 char gate::compute_signal(int pin_index) {
+    std::cout << "computing signal for " << type_ << std::endl;
     assert(false);
     return 'X';
 }
 
 bool gate::validate_structural_semantics() {
+    std::cout << "validating semantics of " << type_ << std::endl;
     assert(false);
     return false;
 }
@@ -68,4 +71,10 @@ void netlist::compute_state_and_outputs(std::string file_name) {
         n->set_signal('?');
     for(gate *g: gates_)
         g->compute_state_or_output(file_name);
+}
+
+void netlist::simulate(std::string file_name, int num_cycles) {
+    for(int i = 0; i < num_cycles; ++i) {
+        compute_state_and_outputs(file_name);
+    }
 }

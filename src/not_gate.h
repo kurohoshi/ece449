@@ -14,6 +14,7 @@ public:
         : gate("not", name) {}
 
     bool validate_structural_semantics() override;
+    void compute_state_or_output(std::string file_name) override;
     char compute_signal(int pin_index) override;
 }; // class buffer gate
 
@@ -23,6 +24,9 @@ bool not_gate::validate_structural_semantics() {
     pins_[0]->set_as_output(); // o
     pins_[1]->set_as_input(); // i
     return true;
+}
+
+void not_gate::compute_state_or_output(std::string file_name) {
 }
 
 char not_gate::compute_signal(int pin_index) {
