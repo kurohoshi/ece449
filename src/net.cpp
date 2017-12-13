@@ -20,6 +20,7 @@
 #include "evl_one_gate.h"
 #include "evl_zero_gate.h"
 #include "evl_output.h"
+#include "evl_clock_gate.h"
 //#include "evl_input.h"
 
 //********************************************************
@@ -255,8 +256,8 @@ bool gate::create(
         }
         index++;
     }
-    return true;
-    //return validate_structural_semantics();
+    //return true;
+    return validate_structural_semantics();
 }
 
 void gate::display(
@@ -335,6 +336,9 @@ bool netlist::create(
             gates_.push_back(g);
         } else if(c->get_type() == "evl_output") {
             g = new evl_output_gate(c->get_name());
+            gates_.push_back(g);
+        } else if(c->get_type() == "evl_clock") {
+            g = new evl_clock_gate(c->get_name());
             gates_.push_back(g);
         //} else if(c->get_type() == "evl_input") {
         //    gates_.push_back(new evl_input_gate(c->get_name()));
